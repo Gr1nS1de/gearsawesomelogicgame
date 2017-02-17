@@ -54,14 +54,16 @@ public class GearsController : Controller
 	{
 		Debug.Log ("Drag gear = " + selectedGear.gameObject.name + " point " + inputPoint);
 
-		Vector3 point = new Vector3 (inputPoint.x, inputPoint.y, 0f);
+		Vector3 selectedPoint = new Vector3 (inputPoint.x, inputPoint.y, -2f);
+		Vector3 gearPosition = selectedGear.transform.position;
+
 		switch (gesturePhase)
 		{
 			case ContinuousGesturePhase.Started:
 				{
 					isCanMove = false;
 
-					selectedGear.transform.DOMove ((Vector3)inputPoint, 0.1f)
+					selectedGear.transform.DOMove (selectedPoint, 0.1f)
 						.SetUpdate(UpdateType.Normal)
 						.SetEase (Ease.InOutCubic)
 						.OnComplete (() =>
@@ -75,7 +77,7 @@ public class GearsController : Controller
 				{
 					if (isCanMove)
 					{
-						selectedGear.transform.position = inputPoint;
+						selectedGear.transform.position = selectedPoint;
 					}
 					break;
 				}
@@ -83,6 +85,8 @@ public class GearsController : Controller
 			case ContinuousGesturePhase.Ended:
 				{
 					isCanMove = false;
+					gearPosition.z = -1f;
+					selectedGear.transform.position = gearPosition;
 					break;
 				}
 		}
