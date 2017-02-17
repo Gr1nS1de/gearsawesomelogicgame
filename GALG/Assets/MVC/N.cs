@@ -17,7 +17,7 @@ public class N : MonoBehaviour
 	public const string GameStart					= "game.start";
 	public const string GamePlay					= "game.play";
 	public const string GamePause					= "game.pause";
-	public const string GameOver_					= "game.over";
+	public const string GameOver					= "game.over";
 
 	public const string GamePlayerImpactObstacle__	= "game.player.impact.obstacle";
 	public const string GamePlayerGetScoreItem		= "game.player.get.score_item";
@@ -38,7 +38,7 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Input controller notification
-	public const string InputOnTouchDown			= "input.ontouch.down";
+	public const string InputOnDrag__				= "input.on.drag";
 	public const string InputOnTouchUp				= "input.ontouch.up";
 	#endregion
 

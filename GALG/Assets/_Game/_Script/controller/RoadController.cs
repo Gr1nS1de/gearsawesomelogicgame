@@ -39,7 +39,7 @@ public class RoadController : Controller
 				}
 
 		
-			case N.GameOver_:
+			case N.GameOver:
 				{
 				
 					break;

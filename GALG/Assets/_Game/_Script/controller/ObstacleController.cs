@@ -58,7 +58,7 @@ public class ObstacleController : Controller
 		{
 			case ObstacleState.HARD:
 				{
-					Notify(N.GameOver_, collisionPoint);
+					Notify(N.GameOver, collisionPoint);
 
 					break;
 				}

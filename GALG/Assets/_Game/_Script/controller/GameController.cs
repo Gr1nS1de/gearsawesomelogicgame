@@ -13,7 +13,7 @@ public class GameController : Controller
 	public ObstacleController				obstacleController				{ get { return _obstacleController			= SearchLocal<ObstacleController>(			_obstacleController,			typeof(ObstacleController).Name ); } }
 	public ObstacleFactoryController		obstacleFactoryController		{ get { return _obstacleFactoryController 	= SearchLocal<ObstacleFactoryController>(	_obstacleFactoryController,		typeof(ObstacleFactoryController).Name ); } }
 	//public DestructibleController			destructibleController			{ get { return _destructibleController 		= SearchLocal<DestructibleController>(		_destructibleController,		typeof(DestructibleController).Name ); } }
-	public PlayerController					playerController				{ get { return _playerController 			= SearchLocal<PlayerController>(			_playerController,				typeof(PlayerController).Name ); } }
+	public GearsController					playerController				{ get { return _playerController 			= SearchLocal<GearsController>(			_playerController,				typeof(GearsController).Name ); } }
 	public GameSoundController				gameSoundController				{ get { return _gameSoundController			= SearchLocal<GameSoundController>(			_gameSoundController,			typeof(GameSoundController).Name ); } }
 	public ResourcesController				resourcesController				{ get { return _resourcesController 		= SearchLocal<ResourcesController>(			_resourcesController,			typeof(ResourcesController).Name ); } }
 	public ObjectsPoolController			objectsPoolController			{ get { return _objectsPoolController 		= SearchLocal<ObjectsPoolController> (		_objectsPoolController, 		typeof(ObjectsPoolController).Name);}}
@@ -24,13 +24,13 @@ public class GameController : Controller
 	private ObstacleController				_obstacleController;
 	private ObstacleFactoryController 		_obstacleFactoryController;
 	//private DestructibleController			_destructibleController;
-	private PlayerController				_playerController;
+	private GearsController				_playerController;
 	private GameSoundController				_gameSoundController;
 	private ResourcesController				_resourcesController;
 	private ObjectsPoolController 			_objectsPoolController;
 	#endregion
 
-	private PlayerModel 					playerModel	{ get { return game.model.playerModel;}}
+	private GearModel 					playerModel	{ get { return game.model.playerModel;}}
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -65,7 +65,7 @@ public class GameController : Controller
 					break;
 				}
 
-			case N.GameOver_:
+			case N.GameOver:
 				{
 					var collisionPoint = (Vector2)data [0];
 
@@ -119,7 +119,7 @@ public class GameController : Controller
 			case ObstacleState.HARD:
 				{
 					//obstacleRenderObject.GetComponent<Rigidbody2D> ().isKinematic = true;
-					Notify(N.GameOver_, collisionPoint);
+					Notify(N.GameOver, collisionPoint);
 
 					break;
 				}

@@ -35,7 +35,7 @@ public class GameModel : Model
 	public RoadFactoryModel				roadFactoryModel		{ get { return _roadFactoryModel			= SearchLocal<RoadFactoryModel>(			_roadFactoryModel,			typeof(RoadFactoryModel).Name ); } }
 	public ObstacleFactoryModel			obstacleFactoryModel	{ get { return _obstacleFactoryModel 		= SearchLocal<ObstacleFactoryModel>(		_obstacleFactoryModel,		typeof(ObstacleFactoryModel).Name ); } }
 	public DestructibleModel			destructibleModel		{ get { return _destructibleModel 			= SearchLocal<DestructibleModel>( 			_destructibleModel, 		typeof(DestructibleModel).Name ); } }
-	public PlayerModel					playerModel				{ get { return _playerModel 				= SearchLocal<PlayerModel>(					_playerModel,				typeof(PlayerModel).Name ); } }
+	public GearModel					playerModel				{ get { return _playerModel 				= SearchLocal<GearModel>(					_playerModel,				typeof(GearModel).Name ); } }
 	public GameSoundModel				soundModel				{ get { return _soundModel 					= SearchLocal<GameSoundModel>(				_soundModel,				typeof(GameSoundModel).Name ); } }
 	public RCModel						RCModel					{ get { return _RCModel 					= SearchLocal<RCModel>(						_RCModel,					typeof(RCModel).Name ); } }
 	public ObjectsPoolModel				objectsPoolModel		{ get { return _objectsPoolModel			= SearchLocal<ObjectsPoolModel>(			_objectsPoolModel,			typeof(ObjectsPoolModel).Name );}}
@@ -44,7 +44,7 @@ public class GameModel : Model
 	private RoadFactoryModel			_roadFactoryModel;
 	private ObstacleFactoryModel		_obstacleFactoryModel;
 	private DestructibleModel   		_destructibleModel;
-	private PlayerModel					_playerModel;
+	private GearModel					_playerModel;
 	private GameSoundModel				_soundModel;
 	private RCModel						_RCModel;
 	private ObjectsPoolModel			_objectsPoolModel;

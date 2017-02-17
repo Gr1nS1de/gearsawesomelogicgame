@@ -11,7 +11,7 @@ public enum PlayerPositionState
 	OUT_CIRCLE
 }
 	
-public class PlayerModel : Model
+public class GearModel : Model
 {
 	public Gradient						sfLightGradient			{ get { return _lightGradient; } }	
 	//public D2dDestructible				playerDestructible		{ get { return game.view.playerSpriteView.GetComponent<D2dDestructible> ();}}

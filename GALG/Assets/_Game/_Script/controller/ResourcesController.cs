@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ResourcesController : Controller
 {
 	private RCModel 				_RCModel				{ get { return game.model.RCModel; } }
-	private PlayerModel 			_playerModel			{ get { return game.model.playerModel; } }
+	private GearModel 			_playerModel			{ get { return game.model.playerModel; } }
 	private ObstacleFactoryModel 	_obstacleFactoryModel 	{ get { return game.model.obstacleFactoryModel; } }
 	private RoadFactoryModel 		_roadFactoryModel 		{ get { return game.model.roadFactoryModel; } }
 
