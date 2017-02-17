@@ -38,7 +38,7 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Input controller notification
-	public const string InputOnDrag__				= "input.on.drag";
+	public const string InputOnDrag___				= "input.on.drag";
 	public const string InputOnTouchUp				= "input.ontouch.up";
 	#endregion
 

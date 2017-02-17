@@ -15,7 +15,7 @@ public class InputController : Controller
 		// Total drag motion from initial to current position
 		Vector2 totalMove = gesture.TotalMove;
 
-		if(gesture.Selection != null)
-			Notify (N.InputOnDrag__, gesture.Selection, gesture.Raycast.Hit2D.point);
+		if(gesture.StartSelection != null && gesture.Raycast.Hit2D.rigidbody != null)
+			Notify (N.InputOnDrag___, gesture.StartSelection, gesture.Raycast.Hit2D.centroid, gesture.Phase);
 	}
 }
