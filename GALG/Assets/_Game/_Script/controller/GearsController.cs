@@ -29,8 +29,6 @@ public class GearsController : Controller
 
 					GearView gearElement = dragItem.GetComponent<GearView> ();
 
-					Debug.LogError ("Dragged " + dragItem.name+" input point " + inputPoint + " ");
-
 					if(gearElement)
 						OnDragGear (gearElement, inputPoint, gesturePhase);
 
@@ -62,6 +60,10 @@ public class GearsController : Controller
 			case ContinuousGesturePhase.Started:
 				{
 					isCanMove = false;
+
+					//Setup position for light
+					game.view.gearLightView.transform.SetParent (selectedGear.transform);
+					game.view.gearLightView.transform.localPosition = Vector3.zero;
 
 					selectedGear.transform.DOMove (selectedPoint, 0.1f)
 						.SetUpdate(UpdateType.Normal)

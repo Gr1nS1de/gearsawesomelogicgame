@@ -6,8 +6,8 @@ public class GameView : View
 	public CameraView					cameraView					{ get { return _cameralView 				= SearchLocal<CameraView>(					_cameralView,				typeof(CameraView).Name ); } }
 	public RoadView						currentRoadView				{ get { return _currentRoadView 			= game.model.roadFactoryModel.roadTemplates[(int)game.model.currentRoad - 1]; } }
 	public ObstacleView					obstacleView				{ get { return _obstacleView 				= SearchLocal<ObstacleView>(				_obstacleView,				typeof(ObstacleView).Name); } }
-	public GearView					playerView					{ get { return _playerView 					= SearchLocal<GearView>(					_playerView,				typeof(GearView).Name); } }
-	public PlayerSpriteContainerView	playerSpriteContainerView	{ get { return _playerSpriteContainerView 	= SearchLocal<PlayerSpriteContainerView>(	_playerSpriteContainerView,	typeof(PlayerSpriteContainerView).Name ); } }
+	public GearView						playerView					{ get { return _playerView 					= SearchLocal<GearView>(					_playerView,				typeof(GearView).Name); } }
+	public GearLightView				gearLightView				{ get { return _gearLightView 	= SearchLocal<GearLightView>(	_gearLightView,	typeof(GearLightView).Name ); } }
 	public PlayerSpriteView				playerSpriteView			{ get { return _playerSpriteView 			= SearchLocal<PlayerSpriteView>(			_playerSpriteView,			typeof(PlayerSpriteView).Name); } }
 	public PlayerTraceView				playerTraceView				{ get { return _playerTraceView 			= SearchLocal<PlayerTraceView>(				_playerTraceView,			typeof(PlayerTraceView).Name); } }
 	public ObjectsPoolView				objectsPoolView				{ get { return _objectsPoolView				= SearchLocal<ObjectsPoolView>(				_objectsPoolView,			typeof(ObjectsPoolView).Name);}}
@@ -17,7 +17,7 @@ public class GameView : View
 	private RoadView					_currentRoadView;
 	private ObstacleView				_obstacleView;
 	private GearView					_playerView;
-	private PlayerSpriteContainerView	_playerSpriteContainerView;
+	private GearLightView				_gearLightView;
 	private PlayerSpriteView			_playerSpriteView;
 	private PlayerTraceView				_playerTraceView;
 	private ObjectsPoolView				_objectsPoolView;
