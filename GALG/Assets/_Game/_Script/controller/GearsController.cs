@@ -7,7 +7,7 @@ public class GearsController : Controller
 	private GearModel 	currentGearModel 		{ get { return game.model.playerModel; } }
 
 	private GearView	_currentGearView; 
-	private bool 		_isCanMove				= false;
+	private bool 		_isCanMoveFlag				= false;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -25,7 +25,7 @@ public class GearsController : Controller
 				{
 					GameObject dragItem = (GameObject)data [0];
 					Vector2 inputPoint = (Vector2)data [1];
-					ContinuousGesturePhase gesturePhase = (ContinuousGesturePhase)data [2];
+					FingerMotionPhase gesturePhase = (FingerMotionPhase)data [2];
 
 					GearView gearElement = dragItem.GetComponent<GearView> ();
 
@@ -48,7 +48,7 @@ public class GearsController : Controller
 	{
 	}
 
-	private void OnDragGear (GearView selectedGear, Vector2 inputPoint, ContinuousGesturePhase gesturePhase)
+	private void OnDragGear (GearView selectedGear, Vector2 inputPoint, FingerMotionPhase gesturePhase)
 	{
 		Debug.Log ("Drag gear = " + selectedGear.gameObject.name + " point " + inputPoint);
 
@@ -57,37 +57,46 @@ public class GearsController : Controller
 
 		switch (gesturePhase)
 		{
-			case ContinuousGesturePhase.Started:
+			case FingerMotionPhase.Started:
 				{
-					_isCanMove = false;
+					if (_currentGearView)
+						return;
 
 					//Setup position for light
 					game.view.gearLightView.transform.SetParent (selectedGear.transform);
 					game.view.gearLightView.transform.localPosition = Vector3.zero;
 
 					_currentGearView = selectedGear;
+					_currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
 
-					selectedGear.transform.DOMove (selectedPoint, 0.1f)
+					selectedGear.transform.DOMove (selectedPoint, 0.2f)
 						.SetUpdate(UpdateType.Normal)
 						.SetEase (Ease.InOutCubic)
 						.OnComplete (() =>
 						{
-							_isCanMove = true;
-						});
+							_isCanMoveFlag = true;
+						}).SetId("START_MOVE");
 					break;
 				}
 
-			case ContinuousGesturePhase.Updated:
+			case FingerMotionPhase.Updated:
 				{
-					_currentGearView.transform.position = selectedPoint;
+					if(_isCanMoveFlag)
+						_currentGearView.transform.position = selectedPoint;
 					break;
 				}
 
-			case ContinuousGesturePhase.Ended:
+			case FingerMotionPhase.Ended:
 				{
-					_isCanMove = false;
-					gearPosition.z = -1f;
-					selectedGear.transform.position = gearPosition;
+					_isCanMoveFlag = false;
+					if (_currentGearView)
+					{
+						gearPosition.z = -1f;
+						_currentGearView.transform.position = gearPosition;
+						_currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
+						_currentGearView = null;
+						DOTween.Kill ("START_MOVE");
+					}
 					break;
 				}
 		}
