@@ -5,9 +5,9 @@ using DG.Tweening;
 public class GearsController : Controller
 {
 	private GearModel 	currentGearModel 		{ get { return game.model.playerModel; } }
-	private GearView	currentGearView			{ get { return game.view.playerView; } } 
 
-	private bool 		isCanMove				= true;
+	private GearView	_currentGearView; 
+	private bool 		_isCanMove				= false;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -59,34 +59,33 @@ public class GearsController : Controller
 		{
 			case ContinuousGesturePhase.Started:
 				{
-					isCanMove = false;
+					_isCanMove = false;
 
 					//Setup position for light
 					game.view.gearLightView.transform.SetParent (selectedGear.transform);
 					game.view.gearLightView.transform.localPosition = Vector3.zero;
+
+					_currentGearView = selectedGear;
 
 					selectedGear.transform.DOMove (selectedPoint, 0.1f)
 						.SetUpdate(UpdateType.Normal)
 						.SetEase (Ease.InOutCubic)
 						.OnComplete (() =>
 						{
-							isCanMove = true;
+							_isCanMove = true;
 						});
 					break;
 				}
 
 			case ContinuousGesturePhase.Updated:
 				{
-					if (isCanMove)
-					{
-						selectedGear.transform.position = selectedPoint;
-					}
+					_currentGearView.transform.position = selectedPoint;
 					break;
 				}
 
 			case ContinuousGesturePhase.Ended:
 				{
-					isCanMove = false;
+					_isCanMove = false;
 					gearPosition.z = -1f;
 					selectedGear.transform.position = gearPosition;
 					break;
@@ -94,6 +93,7 @@ public class GearsController : Controller
 		}
 
 	}
+
 
 	private void OnGameOver()
 	{
