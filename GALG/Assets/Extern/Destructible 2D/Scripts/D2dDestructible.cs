@@ -1660,8 +1660,8 @@ namespace Destructible2D
 						if (clone.GetComponent<ObstacleView> ())
 							Destroy (clone.GetComponent<ObstacleView> ());
 
-						if (clone.GetComponent<PlayerSpriteView> ())
-							Destroy (clone.GetComponent<PlayerSpriteView>());
+						if (clone.GetComponent<GearColliderView> ())
+							Destroy (clone.GetComponent<GearColliderView>());
 
 						if (clone.GetComponent<D2dDestroyer> ())
 							clone.GetComponent<D2dDestroyer> ().enabled = true;

@@ -8,7 +8,7 @@ public class GameView : View
 	public ObstacleView					obstacleView				{ get { return _obstacleView 				= SearchLocal<ObstacleView>(				_obstacleView,				typeof(ObstacleView).Name); } }
 	public GearView						playerView					{ get { return _playerView 					= SearchLocal<GearView>(					_playerView,				typeof(GearView).Name); } }
 	public GearLightView				gearLightView				{ get { return _gearLightView 	= SearchLocal<GearLightView>(	_gearLightView,	typeof(GearLightView).Name ); } }
-	public PlayerSpriteView				playerSpriteView			{ get { return _playerSpriteView 			= SearchLocal<PlayerSpriteView>(			_playerSpriteView,			typeof(PlayerSpriteView).Name); } }
+	//public GearColliderView				playerSpriteView			{ get { return _playerSpriteView 			= SearchLocal<GearColliderView>(			_playerSpriteView,			typeof(GearColliderView).Name); } }
 	public PlayerTraceView				playerTraceView				{ get { return _playerTraceView 			= SearchLocal<PlayerTraceView>(				_playerTraceView,			typeof(PlayerTraceView).Name); } }
 	public ObjectsPoolView				objectsPoolView				{ get { return _objectsPoolView				= SearchLocal<ObjectsPoolView>(				_objectsPoolView,			typeof(ObjectsPoolView).Name);}}
 	//public RotatableComponent			rotatableComponent			{ get { return _rotatableComponent 			= SearchLocal<RotatableComponent>(			_rotatableComponent,		typeof(RotatableComponent).Name); } }
@@ -18,7 +18,7 @@ public class GameView : View
 	private ObstacleView				_obstacleView;
 	private GearView					_playerView;
 	private GearLightView				_gearLightView;
-	private PlayerSpriteView			_playerSpriteView;
+	//private GearColliderView			_playerSpriteView;
 	private PlayerTraceView				_playerTraceView;
 	private ObjectsPoolView				_objectsPoolView;
 	//private RotatableComponent        _rotatableComponent;

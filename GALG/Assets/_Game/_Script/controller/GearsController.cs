@@ -7,6 +7,7 @@ public class GearsController : Controller
 	private GearModel 	currentGearModel 		{ get { return game.model.playerModel; } }
 
 	private GearView	_currentGearView; 
+	private Vector3		_selectedPoint;
 	private bool 		_isCanMoveFlag				= false;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
@@ -24,17 +25,25 @@ public class GearsController : Controller
 			case N.InputOnDrag___:
 				{
 					GameObject dragItem = (GameObject)data [0];
-					Vector2 inputPoint = (Vector2)data [1];
+					Vector3 inputPoint = (Vector3)data [1];
 					FingerMotionPhase gesturePhase = (FingerMotionPhase)data [2];
 
-					GearView gearElement = dragItem.GetComponent<GearView> ();
+					if (dragItem != null)
+					{
+					
+						GearView gearElement = dragItem.GetComponent<GearView> ();
 
-					if(gearElement)
-						OnDragGear (gearElement, inputPoint, gesturePhase);
+						if (gearElement)
+							OnDragGear (gearElement, inputPoint, gesturePhase);
+					}
+					else if (_currentGearView)
+					{
+						OnDragGear (_currentGearView, inputPoint, gesturePhase);
+					}
 
 					break;
 				}
-
+					
 			case N.GameOver:
 				{
 					OnGameOver ();
@@ -48,9 +57,9 @@ public class GearsController : Controller
 	{
 	}
 
-	private void OnDragGear (GearView selectedGear, Vector2 inputPoint, FingerMotionPhase gesturePhase)
+	private void OnDragGear (GearView selectedGear, Vector3 inputPoint, FingerMotionPhase gesturePhase)
 	{
-		Debug.Log ("Drag gear = " + selectedGear.gameObject.name + " point " + inputPoint);
+		//Debug.Log ("Drag gear = " + selectedGear.gameObject.name + " point " + inputPoint);
 
 		Vector3 selectedPoint = new Vector3 (inputPoint.x, inputPoint.y, -2f);
 		Vector3 gearPosition = selectedGear.transform.position;
@@ -64,7 +73,7 @@ public class GearsController : Controller
 
 					//Setup position for light
 					game.view.gearLightView.transform.SetParent (selectedGear.transform);
-					game.view.gearLightView.transform.localPosition = Vector3.zero;
+					game.view.gearLightView.transform.DOLocalMove (Vector3.zero, 0.2f);
 
 					_currentGearView = selectedGear;
 					_currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
@@ -81,8 +90,12 @@ public class GearsController : Controller
 
 			case FingerMotionPhase.Updated:
 				{
-					if(_isCanMoveFlag)
-						_currentGearView.transform.position = selectedPoint;
+					
+					if (_isCanMoveFlag)
+					{
+						_currentGearView.transform.DOMove(selectedPoint, 0.2f);
+
+					}
 					break;
 				}
 
