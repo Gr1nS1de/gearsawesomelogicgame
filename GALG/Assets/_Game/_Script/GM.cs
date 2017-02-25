@@ -81,7 +81,7 @@ public class GM : Controller
 
 		switch(gameState)
 		{
-			case GameState.READY:
+			case GameState.MAIN_MENU:
 				{
 					currentBackgroundColor  = EvaluateColorFromGradient(backgroundMenuGradient, menuGradientDuration);
 					break;

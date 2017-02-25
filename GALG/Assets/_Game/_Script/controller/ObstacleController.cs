@@ -11,14 +11,14 @@ public class ObstacleController : Controller
 	{
 		switch ( alias )
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					OnStart ();
 
 					break;
 				}
 
-			case N.GamePlayerImpactObstacle__:
+			case N.GearsColliderTriggered___:
 				{
 					var obstacleView = (ObstacleView)data [0];
 					var collisionPoint = (Vector2)data [1];

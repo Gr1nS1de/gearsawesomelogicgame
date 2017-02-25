@@ -4,7 +4,7 @@ using System.Collections;
 
 public enum GameState
 {
-	READY,
+	MAIN_MENU,
 	PLAYING,
 	GAMEOVER
 }
@@ -15,13 +15,13 @@ public class GameModel : Model
 	#region Game model
 	public GameState					gameState				{ get { return _gameState; } 		set { _gameState 	= value; } }
 	public int							currentScore			{ get { return _currentScore; } 	set { _currentScore = value; } }
-	public Road							currentRoad				{ get { return _currentRoad;}		set { _prevRoad = _currentRoad; Notify(N.RCResetRoadModelTemplate, _currentRoad); _currentRoad = value; Notify (N.GameRoadChangeStart__, _prevRoad, _currentRoad); } }
+	public Road							currentRoad				{ get { return _currentRoad;}		set { _currentRoad = value;} }
 	public Road							prevRoad				{ get { return _prevRoad;}}
 	public RoadModel					currentRoadModel		{ get { return _currentRoadModel			= SearchLocal<RoadModel>(					_currentRoadModel,			typeof(RoadModel).Name); } }
 //	public Vector3[]					currentRoadWaypoints	{ get { return game.model.currentRoadModel.roadTweenPath.GetTween ().PathGetDrawPoints ();}}
 
 	[SerializeField]
-	private GameState					_gameState 				= GameState.READY;
+	private GameState					_gameState 				= GameState.MAIN_MENU;
 	[SerializeField]
 	private int 						_currentScore;
 	[SerializeField]
@@ -32,7 +32,7 @@ public class GameModel : Model
 
 	#region Declare models reference
 	public CameraModel					cameraModel				{ get { return _cameraModel 				= SearchLocal<CameraModel>(					_cameraModel,				typeof(CameraModel).Name); } }
-	public RoadFactoryModel				roadFactoryModel		{ get { return _roadFactoryModel			= SearchLocal<RoadFactoryModel>(			_roadFactoryModel,			typeof(RoadFactoryModel).Name ); } }
+	public GearsFactoryModel			gearsFactoryModel		{ get { return _gearsFactoryModel			= SearchLocal<GearsFactoryModel>(			_gearsFactoryModel,			typeof(GearsFactoryModel).Name ); } }
 	public ObstacleFactoryModel			obstacleFactoryModel	{ get { return _obstacleFactoryModel 		= SearchLocal<ObstacleFactoryModel>(		_obstacleFactoryModel,		typeof(ObstacleFactoryModel).Name ); } }
 	public DestructibleModel			destructibleModel		{ get { return _destructibleModel 			= SearchLocal<DestructibleModel>( 			_destructibleModel, 		typeof(DestructibleModel).Name ); } }
 	public GearModel					playerModel				{ get { return _playerModel 				= SearchLocal<GearModel>(					_playerModel,				typeof(GearModel).Name ); } }
@@ -41,7 +41,7 @@ public class GameModel : Model
 	public ObjectsPoolModel				objectsPoolModel		{ get { return _objectsPoolModel			= SearchLocal<ObjectsPoolModel>(			_objectsPoolModel,			typeof(ObjectsPoolModel).Name );}}
 
 	private CameraModel					_cameraModel;
-	private RoadFactoryModel			_roadFactoryModel;
+	private GearsFactoryModel			_gearsFactoryModel;
 	private ObstacleFactoryModel		_obstacleFactoryModel;
 	private DestructibleModel   		_destructibleModel;
 	private GearModel					_playerModel;

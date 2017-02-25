@@ -8,7 +8,7 @@ public class CameraController : Controller
 	{
 		switch ( alias )
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					OnStart ();
 

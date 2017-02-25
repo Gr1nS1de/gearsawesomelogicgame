@@ -7,7 +7,7 @@ public enum Road
 	SNOWMAN			= 2
 }
 
-public class RoadFactoryModel : Model
+public class GearsFactoryModel : Model
 {
 	public RoadView[]			roadTemplates		{ get { return _roadTemplates; } set { _roadTemplates = value;} }
 	public float				roadsGapLength		{ get { return _roadsGapLength; } }

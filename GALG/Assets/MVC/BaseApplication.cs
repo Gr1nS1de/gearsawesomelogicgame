@@ -22,7 +22,7 @@ public abstract class BaseApplication : Element
 	private void Start()
 	{		
 		
-		Notify(N.GameStart);
+		Notify(N.GameOnStart);
 	}
 		
 	public void Notify( string alias, Object target, params object[] data )

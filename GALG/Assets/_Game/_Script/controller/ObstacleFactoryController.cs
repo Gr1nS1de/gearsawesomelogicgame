@@ -11,14 +11,14 @@ public class ObstacleFactoryController : Controller
 	{
 		switch (alias)
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					OnStart ();
 
 					break;
 				}
 
-			case N.GamePlay:
+			case N.GamePlayLevel_:
 				{
 					OnGamePlay ();
 

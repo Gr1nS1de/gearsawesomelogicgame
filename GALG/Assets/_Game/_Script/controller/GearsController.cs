@@ -14,7 +14,7 @@ public class GearsController : Controller
 	{
 		switch ( alias )
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					OnStart();
 
@@ -41,6 +41,13 @@ public class GearsController : Controller
 						OnDragGear (_currentGearView, inputPoint, gesturePhase);
 					}
 
+					break;
+				}
+
+			case N.GearsColliderTriggered___:
+				{
+					
+					
 					break;
 				}
 					
@@ -102,6 +109,7 @@ public class GearsController : Controller
 			case FingerMotionPhase.Ended:
 				{
 					_isCanMoveFlag = false;
+
 					if (_currentGearView)
 					{
 						gearPosition.z = -1f;

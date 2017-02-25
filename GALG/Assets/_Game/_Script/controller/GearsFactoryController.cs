@@ -3,24 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 //using DG.Tweening;
 
-public class RoadFactoryController : Controller
+public class GearsFactoryController : Controller
 {
-	private RoadFactoryModel 	_roadFactoryModel	{ get { return game.model.roadFactoryModel; } }
+	private GearsFactoryModel 	_gearsFactoryModel	{ get { return game.model.gearsFactoryModel; } }
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
 		switch (alias)
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					OnStart ();
 
-					break;
-				}
-
-			case N.GamePlayerPlacedOnRoad:
-				{
-					//game.view.currentRoadView.OnPlayerPlaced ();
 					break;
 				}
 		}
@@ -28,16 +22,14 @@ public class RoadFactoryController : Controller
 
 	private void OnStart()
 	{
-		InitRoads ();
-
-		Notify (N.GameRoadsPlaced);
+		
 	}
-
+	/*
 	public RoadModel InitRoads()
 	{
 		RoadModel currentGameRoadModelCopy = null;
 
-		foreach(RoadView roadView in _roadFactoryModel.roadTemplates)
+		foreach(RoadView roadView in _gearsFactoryModel.roadTemplates)
 		{
 			RoadModel roadModel = roadView.GetComponent<RoadModel> ();
 
@@ -50,7 +42,7 @@ public class RoadFactoryController : Controller
 
 			var roadsContainerPosition = GM.instance.RoadContainer.transform.position;
 
-			roadsContainerPosition.x = -(_roadFactoryModel.roadsGapLength * ( (int)game.model.currentRoad - 1));
+			roadsContainerPosition.x = -(_gearsFactoryModel.roadsGapLength * ( (int)game.model.currentRoad - 1));
 
 			GM.instance.RoadContainer.transform.position = roadsContainerPosition;
 
@@ -60,6 +52,6 @@ public class RoadFactoryController : Controller
 
 		return currentGameRoadModelCopy;
 	}
-		
+		*/
 }
 	

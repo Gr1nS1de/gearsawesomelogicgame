@@ -9,7 +9,7 @@ public class GameSoundController : Controller
 	{
 		switch ( alias )
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					break;
 				}

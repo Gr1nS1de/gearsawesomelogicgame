@@ -4,7 +4,7 @@ using System.Collections;
 public class GameView : View
 {
 	public CameraView					cameraView					{ get { return _cameralView 				= SearchLocal<CameraView>(					_cameralView,				typeof(CameraView).Name ); } }
-	public RoadView						currentRoadView				{ get { return _currentRoadView 			= game.model.roadFactoryModel.roadTemplates[(int)game.model.currentRoad - 1]; } }
+	public RoadView						currentRoadView				{ get { return _currentRoadView 			= game.model.gearsFactoryModel.roadTemplates[(int)game.model.currentRoad - 1]; } }
 	public ObstacleView					obstacleView				{ get { return _obstacleView 				= SearchLocal<ObstacleView>(				_obstacleView,				typeof(ObstacleView).Name); } }
 	public GearView						playerView					{ get { return _playerView 					= SearchLocal<GearView>(					_playerView,				typeof(GearView).Name); } }
 	public GearLightView				gearLightView				{ get { return _gearLightView 	= SearchLocal<GearLightView>(	_gearLightView,	typeof(GearLightView).Name ); } }

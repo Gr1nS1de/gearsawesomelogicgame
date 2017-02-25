@@ -9,7 +9,7 @@ public class GameController : Controller
 	#region Declare controllers reference
 	public CameraController					cameraController				{ get { return _cameraController 			= SearchLocal<CameraController>(			_cameraController,				typeof(CameraController).Name ); } }
 	public RoadController					roadController					{ get { return _roadController 				= SearchLocal<RoadController>(				_roadController,				typeof(RoadController).Name ); } }
-	public RoadFactoryController			roadFactoryController			{ get { return _roadFactoryController 		= SearchLocal<RoadFactoryController>(		_roadFactoryController,			typeof(RoadFactoryController).Name ); } }
+	public GearsFactoryController			roadFactoryController			{ get { return _roadFactoryController 		= SearchLocal<GearsFactoryController>(		_roadFactoryController,			typeof(GearsFactoryController).Name ); } }
 	public ObstacleController				obstacleController				{ get { return _obstacleController			= SearchLocal<ObstacleController>(			_obstacleController,			typeof(ObstacleController).Name ); } }
 	public ObstacleFactoryController		obstacleFactoryController		{ get { return _obstacleFactoryController 	= SearchLocal<ObstacleFactoryController>(	_obstacleFactoryController,		typeof(ObstacleFactoryController).Name ); } }
 	//public DestructibleController			destructibleController			{ get { return _destructibleController 		= SearchLocal<DestructibleController>(		_destructibleController,		typeof(DestructibleController).Name ); } }
@@ -20,11 +20,11 @@ public class GameController : Controller
 
 	private CameraController				_cameraController;
 	private RoadController					_roadController;
-	private RoadFactoryController 			_roadFactoryController;
+	private GearsFactoryController 			_roadFactoryController;
 	private ObstacleController				_obstacleController;
 	private ObstacleFactoryController 		_obstacleFactoryController;
-	//private DestructibleController			_destructibleController;
-	private GearsController				_playerController;
+	//private DestructibleController		_destructibleController;
+	private GearsController					_playerController;
 	private GameSoundController				_gameSoundController;
 	private ResourcesController				_resourcesController;
 	private ObjectsPoolController 			_objectsPoolController;
@@ -36,32 +36,26 @@ public class GameController : Controller
 	{
 		switch ( alias )
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					//PlayerPrefs.DeleteAll ();
-					game.model.gameState = GameState.READY;
+					game.model.gameState = GameState.MAIN_MENU;
 					OnStart();
 					break;
 				}
 
-			case N.GamePlay:
+			case N.GamePlayLevel_:
 				{
 					game.model.gameState = GameState.PLAYING;
 					break;
 				}
 
 
-			case N.GamePlayerImpactObstacle__:
+			case N.GearsColliderTriggered___:
 				{
-					var obstacleView = (ObstacleView)data [0];
-					var collisionPoint = (Vector2)data [1];
+					//var obstacleView = (ObstacleView)data [0];
+					//var collisionPoint = (Vector2)data [1];
 
-					OnImpactObstacleByPlayer (obstacleView, collisionPoint);
-					break;
-				}
-
-			case N.GameRoadChangeStart__:
-				{
 					break;
 				}
 
@@ -95,7 +89,7 @@ public class GameController : Controller
 	{
 		game.model.currentScore++;
 
-		Notify (N.GameAddScore, 1);
+		//Notify (N.GameAddScore, 1);
 
 		//m_PointText.text = _pointScore.ToString();
 

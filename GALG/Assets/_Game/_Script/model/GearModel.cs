@@ -5,6 +5,12 @@ using System.Collections.Generic;
 //using Destructible2D;
 //using DG.Tweening;
 
+public enum GearColliderType
+{
+	BASE,
+	SPIN
+}
+
 public enum PlayerPositionState
 {
 	ON_CIRCLE,
@@ -14,7 +20,7 @@ public enum PlayerPositionState
 public class GearModel : Model
 {
 	public Gradient						sfLightGradient			{ get { return _lightGradient; } }	
-	//public D2dDestructible				playerDestructible		{ get { return game.view.playerSpriteView.GetComponent<D2dDestructible> ();}}
+	//public D2dDestructible			playerDestructible		{ get { return game.view.playerSpriteView.GetComponent<D2dDestructible> ();}}
 //	public Sprite						currentSprite			{ get { return _currentSprite; } 		set { _currentSprite = value; playerDestructible.ReplaceWith( _currentSprite ); } }
 	public Sprite[]						sprites					{ get { return _sprites; } 				set { _sprites = value;}}
 	//public SFLight					sfLight					{ get { return m_Light; } }

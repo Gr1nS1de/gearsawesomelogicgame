@@ -14,19 +14,20 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Game notifications
-	public const string GameStart					= "game.start";
-	public const string GamePlay					= "game.play";
+	public const string GameOnStart					= "game.onstart";
+	public const string GamePlayLevel_				= "game.play.level";
 	public const string GamePause					= "game.pause";
 	public const string GameOver					= "game.over";
 
-	public const string GamePlayerImpactObstacle__	= "game.player.impact.obstacle";
+	public const string GearsColliderTriggered___	= "gears_collider.triggered";
+	/*
 	public const string GamePlayerGetScoreItem		= "game.player.get.score_item";
 	public const string GamePlayerPlacedOnRoad		= "game.player.placed_on_road";
 
 	public const string GameAddScore				= "game.add.score";
 	public const string GameRoadChangeStart__		= "game.road.change.start";
 	public const string GameRoadChangeEnd 			= "game.road.change.end";
-	public const string GameRoadsPlaced				= "game.roads.placed";
+	public const string GameRoadsPlaced				= "game.roads.placed"*/
 	#endregion
 
 	#region UI notifications
@@ -39,7 +40,6 @@ public class N : MonoBehaviour
 
 	#region Input controller notification
 	public const string InputOnDrag___				= "input.on.drag";
-	public const string InputOnTouchUp				= "input.ontouch.up";
 	#endregion
 
 	#region ResourcesController notifications

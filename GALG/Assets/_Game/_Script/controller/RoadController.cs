@@ -3,38 +3,16 @@ using System.Collections.Generic;
 
 public class RoadController : Controller
 {
-	private RoadFactoryModel 	_roadFactoryModel		{ get { return game.model.roadFactoryModel; } }
+	private GearsFactoryModel 	_roadFactoryModel		{ get { return game.model.gearsFactoryModel; } }
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
 		switch (alias) 
 		{
-			case N.GameStart:
+			case N.GameOnStart:
 				{
 					OnStart ();
 
-					break;
-				}
-
-			case N.GameRoadChangeStart__:
-				{
-					var prevRoadAlias = (Road)data [0];
-					var newRoadAlias = (Road)data [1];
-
-					//ChangeCurrentRoad (newRoadAlias);
-
-					break;
-				}
-
-			case N.GameRoadsPlaced:
-				{
-					InitRoads ();
-
-					break;
-				}
-
-			case N.GameRoadChangeEnd:
-				{
 					break;
 				}
 
