@@ -22,7 +22,15 @@ public class GearsFactoryController : Controller
 
 	private void OnStart()
 	{
-		
+		InitLevel ();
+	}
+
+	private void InitLevel()
+	{
+		float screenHeight = Camera.main.orthographicSize * 2.0f;
+		float screenWidth = screenHeight * Camera.main.aspect;
+
+
 	}
 	/*
 	public RoadModel InitRoads()

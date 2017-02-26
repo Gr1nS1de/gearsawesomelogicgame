@@ -29,7 +29,7 @@ public class RoadController : Controller
 	{
 		//CommitStaticSprites (game.view.currentRoadView);
 	}
-
+	/*
 	private void InitRoads()
 	{
 		foreach (RoadView roadView in _roadFactoryModel.roadTemplates)
@@ -39,7 +39,7 @@ public class RoadController : Controller
 			roadView.OnInit (roadModel);
 		}
 	}
-		/*
+		
 	private void CommitStaticSprites(RoadView road)
 	{
 		Utils.ActivateTransformChildrens (road.transform, true);

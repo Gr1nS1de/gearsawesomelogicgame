@@ -18,7 +18,7 @@ public class ObstacleController : Controller
 					break;
 				}
 
-			case N.GearsColliderTriggered____:
+			case N.GearsColliderTriggered______:
 				{
 					var obstacleView = (ObstacleView)data [0];
 					var collisionPoint = (Vector2)data [1];

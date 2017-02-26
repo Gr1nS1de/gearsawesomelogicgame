@@ -5,21 +5,28 @@ using System.Collections;
 public class GearColliderView : View
 {
 	public GearColliderType ColliderType;
+	public bool 			isSendNotification = false;
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		//Debug.Log ( transform.parent.name+ " triggered with "+other.transform.parent.name + " type = " + ColliderType);
-		RaycastHit hit;
-		Vector3 collisionPoint = Vector3.zero;
+		if(isSendNotification)
+			SendNotification(true, other);
+	}
 
+	public void OnTriggerExit2D(Collider2D other)
+	{
+		if(isSendNotification)
+			SendNotification(false, other);
+	}
 
-		if (Physics.Raycast(transform.position, transform.forward, out hit))
-		{
-			Debug.Log("Point of contact: "+hit.point);
-			collisionPoint = hit.point;
-		}
+	private void SendNotification(bool isEnter, Collider2D other)
+	{
+		Debug.Log ( transform.parent.name+ " triggered with "+other.transform.parent.name + " type = " + ColliderType + " isEnter = " + isEnter);
 
-		Notify (N.GearsColliderTriggered____, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(), collisionPoint,  ColliderType);
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, other.transform.position);
+		Vector3 collisionPoint = hit.point;
+
+		Notify (N.GearsColliderTriggered______, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(), collisionPoint,  ColliderType, other.GetComponent<GearColliderView>().ColliderType, isEnter);
 	}
 
 }

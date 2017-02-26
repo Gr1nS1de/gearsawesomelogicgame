@@ -9,13 +9,13 @@ public enum Road
 
 public class GearsFactoryModel : Model
 {
-	public RoadView[]						roadTemplates			{ get { return _roadTemplates; } set { _roadTemplates = value;} }
-	public float							roadsGapLength			{ get { return _roadsGapLength; } }
-	public Dictionary<GearView, GearModel> 	currentGearsDictionary 	{ get { return _currentGearsDictionary; } }
+	//public RoadView[]						roadTemplates			{ get { return _roadTemplates; } set { _roadTemplates = value;} }
+	public List<GearView>					loadedGears				{ get { return _loadedGears; } }
+	public Dictionary<GearView, GearModel> 	gearsDictionary 		{ get { return _gearsDictionary; } }
 
+	//[SerializeField]
+	//private RoadView[]					_roadTemplates 			= new RoadView[System.Enum.GetNames(typeof(Road)).Length];
 	[SerializeField]
-	private RoadView[]						_roadTemplates 			= new RoadView[System.Enum.GetNames(typeof(Road)).Length];
-	[SerializeField]
-	private float							_roadsGapLength;
-	public Dictionary<GearView, GearModel> 	_currentGearsDictionary = new Dictionary<GearView, GearModel>();
+	private List<GearView>					_loadedGears			= new List<GearView>();
+	public Dictionary<GearView, GearModel> 	_gearsDictionary		= new Dictionary<GearView, GearModel>();
 }

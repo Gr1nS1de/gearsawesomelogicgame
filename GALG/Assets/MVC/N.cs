@@ -19,7 +19,7 @@ public class N : MonoBehaviour
 	public const string GamePause					= "game.pause";
 	public const string GameOver					= "game.over";
 
-	public const string GearsColliderTriggered____	= "gears_collider.triggered";
+	public const string GearsColliderTriggered______	= "gears_collider.triggered";
 	/*
 	public const string GamePlayerGetScoreItem		= "game.player.get.score_item";
 	public const string GamePlayerPlacedOnRoad		= "game.player.placed_on_road";

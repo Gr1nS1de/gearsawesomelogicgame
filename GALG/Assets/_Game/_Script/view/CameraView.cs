@@ -15,7 +15,7 @@ public class CameraView : View<Game>
 
 	void Update()
 	{
-		cam.backgroundColor = GM.instance.currentBackgroundColor;
+		//cam.backgroundColor = GM.instance.currentBackgroundColor;
 	}
 
 	public void DOStart(System.Action callback)

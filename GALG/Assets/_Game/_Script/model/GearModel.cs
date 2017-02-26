@@ -33,9 +33,8 @@ public class GearModel : Model
 	public GearType						gearType				{ get { return _gearType; } }
 	public GearSizeType					gearSizeType			{ get { return _gearSizeType; } }	
 	public SpriteRenderer				shadow					{ get { return _shadow; }  /*playerDestructible.ReplaceWith( _currentSprite );*/ }
-
-	//public Sprite[]					sprites					{ get { return _sprites; } 				set { _sprites = value;}}
-	//public SFLight					sfLight					{ get { return m_Light; } }
+	public SpriteRenderer				statusIndicator			{ get { return _statusIndicator; } }
+	public Color						selectedIndicatorColor	{ get { return _selectedIndicatorColor; } }
 	//public float						sfLightDuration			{ get { return m_LightDuration; } }
 	//public float						deathDuration			{ get { return _deathDuration; } }
 	//public PlayerPositionState		positionState			{ get { return _positionState; } 		set { _positionState = value; } }
@@ -54,9 +53,10 @@ public class GearModel : Model
 	private GearSizeType				_gearSizeType;
 	[SerializeField]
 	private SpriteRenderer				_shadow;
-	//[SerializeField]
-	//private Sprite[]					_sprites;
-//	private SFLight						m_Light;
+	[SerializeField]
+	private SpriteRenderer				_statusIndicator;
+	[SerializeField]
+	private Color						_selectedIndicatorColor;
 //	private float						m_LightDuration;
 	//[SerializeField]
 	//private float						_deathDuration 	= 3f;
