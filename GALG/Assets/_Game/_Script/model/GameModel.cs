@@ -33,7 +33,7 @@ public class GameModel : Model
 	#region Declare models reference
 	public CameraModel					cameraModel				{ get { return _cameraModel 				= SearchLocal<CameraModel>(					_cameraModel,				typeof(CameraModel).Name); } }
 	public GearsFactoryModel			gearsFactoryModel		{ get { return _gearsFactoryModel			= SearchLocal<GearsFactoryModel>(			_gearsFactoryModel,			typeof(GearsFactoryModel).Name ); } }
-	public ObstacleFactoryModel			obstacleFactoryModel	{ get { return _obstacleFactoryModel 		= SearchLocal<ObstacleFactoryModel>(		_obstacleFactoryModel,		typeof(ObstacleFactoryModel).Name ); } }
+	public RobotsFactoryModel			robotsFactoryModel		{ get { return _robotsFactoryModel 			= SearchLocal<RobotsFactoryModel>(			_robotsFactoryModel,		typeof(RobotsFactoryModel).Name ); } }
 	public DestructibleModel			destructibleModel		{ get { return _destructibleModel 			= SearchLocal<DestructibleModel>( 			_destructibleModel, 		typeof(DestructibleModel).Name ); } }
 	public GearModel					playerModel				{ get { return _playerModel 				= SearchLocal<GearModel>(					_playerModel,				typeof(GearModel).Name ); } }
 	public GameSoundModel				soundModel				{ get { return _soundModel 					= SearchLocal<GameSoundModel>(				_soundModel,				typeof(GameSoundModel).Name ); } }
@@ -42,7 +42,7 @@ public class GameModel : Model
 
 	private CameraModel					_cameraModel;
 	private GearsFactoryModel			_gearsFactoryModel;
-	private ObstacleFactoryModel		_obstacleFactoryModel;
+	private RobotsFactoryModel			_robotsFactoryModel;
 	private DestructibleModel   		_destructibleModel;
 	private GearModel					_playerModel;
 	private GameSoundModel				_soundModel;

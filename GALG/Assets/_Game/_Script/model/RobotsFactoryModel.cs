@@ -8,7 +8,7 @@ public class ObstacleBundle
 	public ObstacleView[]	obstacleTemplates;
 }
 
-public class ObstacleFactoryModel : Model
+public class RobotsFactoryModel : Model
 {
 	public ObstacleView[]									obstacleTemplates				{ get { return _obstacleTemplates = System.Array.Find(obstacleBundles, o => o.roadAlias == game.model.currentRoad).obstacleTemplates; } }
 	public ObstacleBundle[]									obstacleBundles					{ get { return _obstacleBundles; } }

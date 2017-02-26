@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public class ObstacleFactoryController : Controller
+public class RobotsFactoryController : Controller
 {
-	private ObstacleFactoryModel 	obstacleFactoryModel	{ get { return game.model.obstacleFactoryModel; } }
+	private RobotsFactoryModel 	obstacleFactoryModel	{ get { return game.model.robotsFactoryModel; } }
 	private ObjectsPoolModel		objectsPoolModel		{ get { return game.model.objectsPoolModel;}}
 
 	public override void OnNotification (string alias, Object target, params object[] data)
@@ -35,9 +35,9 @@ public class ObstacleFactoryController : Controller
 
 	private void OnGamePlay()
 	{
-		StartCoroutine( ObstacleInstantiator() );
+		//StartCoroutine( ObstacleInstantiator() );
 	}
-
+	/*
 	IEnumerator ObstacleInstantiator()
 	{
 		while ( true )
@@ -139,6 +139,6 @@ public class ObstacleFactoryController : Controller
 		spriteForVisible.AddComponent<SpriteRenderer> ();
 
 		return spriteForVisible;
-	}
+	}*/
 		
 }

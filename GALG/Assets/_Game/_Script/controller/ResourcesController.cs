@@ -6,8 +6,8 @@ public class ResourcesController : Controller
 {
 	private RCModel 				_RCModel				{ get { return game.model.RCModel; } }
 	private GearModel 				_playerModel			{ get { return game.model.playerModel; } }
-	private ObstacleFactoryModel 	_obstacleFactoryModel 	{ get { return game.model.obstacleFactoryModel; } }
-	private GearsFactoryModel 		_roadFactoryModel 		{ get { return game.model.gearsFactoryModel; } }
+	private RobotsFactoryModel 		_robotsFactoryModel 	{ get { return game.model.robotsFactoryModel; } }
+	private GearsFactoryModel 		_gearsFactoryModel 		{ get { return game.model.gearsFactoryModel; } }
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{

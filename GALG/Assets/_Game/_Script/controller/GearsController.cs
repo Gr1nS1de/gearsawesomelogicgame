@@ -44,9 +44,12 @@ public class GearsController : Controller
 					break;
 				}
 
-			case N.GearsColliderTriggered___:
+			case N.GearsColliderTriggered____:
 				{
-					
+					GearView triggerGear = (GearView)data [0];
+					GearView triggeredGear = (GearView)data [1];
+					Vector3 collisionPoint = (Vector3)data [2];
+					GearColliderType collisedColliderType = (GearColliderType)data [4];
 					
 					break;
 				}

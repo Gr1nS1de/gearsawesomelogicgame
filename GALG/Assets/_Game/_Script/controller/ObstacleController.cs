@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class ObstacleController : Controller
 {
-	private ObstacleFactoryModel _obstacleFactoryModel	{ get { return game.model.obstacleFactoryModel; } }
+	private RobotsFactoryModel _obstacleFactoryModel	{ get { return game.model.robotsFactoryModel; } }
 	
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -18,7 +18,7 @@ public class ObstacleController : Controller
 					break;
 				}
 
-			case N.GearsColliderTriggered___:
+			case N.GearsColliderTriggered____:
 				{
 					var obstacleView = (ObstacleView)data [0];
 					var collisionPoint = (Vector2)data [1];
@@ -46,7 +46,7 @@ public class ObstacleController : Controller
 
 	public void BreakObstacle(ObstacleView obstacleView, Vector2 collisionPoint)
 	{
-		var obstacleModel = game.model.obstacleFactoryModel.currentModelsDictionary[obstacleView];
+		var obstacleModel = game.model.robotsFactoryModel.currentModelsDictionary[obstacleView];
 
 		if (!obstacleModel)
 		{

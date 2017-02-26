@@ -5,7 +5,7 @@ using System.Collections;
 public class ObstacleView : View
 {
 	public bool 			isVisible				{ get { return _isVisible; } 		private set { _isVisible = value; } }
-	private ObstacleModel	obstacleModel 			{ get { return game.model.obstacleFactoryModel.currentModelsDictionary[this]; } }
+	private ObstacleModel	obstacleModel 			{ get { return game.model.robotsFactoryModel.currentModelsDictionary[this]; } }
 	private Vector3			obstacleSpriteSize		{ get { return obstacleModel.spriteSize; } }
 	private Transform 		_obstacleWrapper;
 
