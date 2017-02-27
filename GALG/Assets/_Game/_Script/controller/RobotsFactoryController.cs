@@ -29,8 +29,8 @@ public class RobotsFactoryController : Controller
 
 	private void OnStart()
 	{
-		obstacleFactoryModel.obstaclesDynamicContainer.name = "ObstaclesContainer";
-		obstacleFactoryModel.obstaclesDynamicContainer.transform.SetParent (dynamic_objects.transform);
+		//obstacleFactoryModel.obstaclesDynamicContainer.name = "ObstaclesContainer";
+		//obstacleFactoryModel.obstaclesDynamicContainer.transform.SetParent (dynamic_objects.transform);
 	}
 
 	private void OnGamePlay()

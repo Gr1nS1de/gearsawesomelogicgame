@@ -31,9 +31,9 @@ public class UIController : Controller
 
 	void OnStart()
 	{
-		UpdateText();
-		UIGameModel.canvasGroupInGame.alpha = 0;
-		UIMenuModel.canvasGroupStart.alpha = 1f;
+		//UpdateText();
+		//UIGameModel.canvasGroupInGame.alpha = 0;
+		//UIMenuModel.canvasGroupStart.alpha = 1f;
 	}
 		
 	void UpdateText()

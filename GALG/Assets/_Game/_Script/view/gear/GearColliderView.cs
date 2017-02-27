@@ -26,7 +26,7 @@ public class GearColliderView : View
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, other.transform.position);
 		Vector3 collisionPoint = hit.point;
 
-		Notify (N.GearsColliderTriggered______, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(), collisionPoint,  ColliderType, other.GetComponent<GearColliderView>().ColliderType, isEnter);
+		Notify (N.GearsColliderTriggered______, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(),  ColliderType, other.GetComponent<GearColliderView>().ColliderType, isEnter);
 	}
 
 }
