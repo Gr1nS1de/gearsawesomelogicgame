@@ -5,10 +5,18 @@ using System.Collections;
 public class GearColliderView : View
 {
 	public GearColliderType ColliderType;
+	[HideInInspector]
+	public float			ColliderRadius;
 	public bool 			isSendNotification = false;
+
+	void Start()
+	{
+		ColliderRadius = GetComponent<CircleCollider2D> ().radius;
+	}
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
+
 		if(isSendNotification)
 			SendNotification(true, other);
 	}
@@ -26,7 +34,7 @@ public class GearColliderView : View
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, other.transform.position);
 		Vector3 collisionPoint = hit.point;
 
-		Notify (N.GearsColliderTriggered______, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(),  ColliderType, other.GetComponent<GearColliderView>().ColliderType, isEnter);
+		Notify (N.GearsColliderTriggered_____, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(),  this, other.GetComponent<GearColliderView>(), isEnter);
 	}
 
 }

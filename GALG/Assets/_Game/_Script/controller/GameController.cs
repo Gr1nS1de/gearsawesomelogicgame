@@ -51,7 +51,7 @@ public class GameController : Controller
 				}
 
 
-			case N.GearsColliderTriggered______:
+			case N.GearsColliderTriggered_____:
 				{
 					//var obstacleView = (ObstacleView)data [0];
 					//var collisionPoint = (Vector2)data [1];

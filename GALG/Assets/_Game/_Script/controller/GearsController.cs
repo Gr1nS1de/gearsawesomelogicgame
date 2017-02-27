@@ -50,12 +50,12 @@ public class GearsController : Controller
 					break;
 				}
 
-			case N.GearsColliderTriggered______:
+			case N.GearsColliderTriggered_____:
 				{
 					GearView triggerGear = (GearView)data [0];
 					GearView triggeredGear = (GearView)data [1];
-					GearColliderType triggerColliderType = (GearColliderType)data [2];
-					GearColliderType triggeredColliderType = (GearColliderType)data [3];
+					GearColliderView triggerColliderView = (GearColliderView)data [2];
+					GearColliderView triggeredColliderView = (GearColliderView)data [3];
 					bool isEnterCollision = (bool)data [4];
 
 					if (triggerGear != _currentGearView)
@@ -65,9 +65,9 @@ public class GearsController : Controller
 					}
 
 					if (isEnterCollision)
-						OnGearsEnterCollised (triggerGear, triggeredGear, triggerColliderType, triggeredColliderType);
+						OnGearsEnterCollised (triggerGear, triggeredGear, triggerColliderView, triggeredColliderView);
 					else
-						OnGearsExitCollised (triggerGear, triggeredGear, triggerColliderType, triggeredColliderType);
+						OnGearsExitCollised (triggerGear, triggeredGear, triggerColliderView, triggeredColliderView);
 					Debug.Log ("Collisions count = " + _baseCollisionsCount);
 					break;
 				}
@@ -107,6 +107,10 @@ public class GearsController : Controller
 					_isGearPositionCorrect = false;
 
 					SelectGear (selectedGear);
+
+					gearPosition.z = -2;
+
+					selectedGear.transform.position = gearPosition;
 
 					selectedGear.transform.DOMove (selectedPoint, 0.2f)
 						.SetUpdate(UpdateType.Normal)
@@ -194,23 +198,26 @@ public class GearsController : Controller
 		_isGearPositionCorrect = true;
 	}
 
-	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderType triggerColliderType, GearColliderType triggeredColliderType)
+	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
-		switch (triggerColliderType)
+		switch (triggerColliderView.ColliderType)
 		{
 			case GearColliderType.BASE:
 				{
-					switch (triggeredColliderType)
+					switch (triggeredColliderView.ColliderType)
 					{
 						case GearColliderType.BASE:
 							break;
 
 						case GearColliderType.SPIN:
 							{
+								float triggerGearGap = triggerColliderView.ColliderRadius * triggerGear.transform.localScale.x;
+								float triggeredGearGap = triggeredColliderView.ColliderRadius * triggeredGear.transform.localScale.x;
+								float baseGap = triggerGearGap + triggeredGearGap + 0.01f;
+
 								_baseCollisionsCount++;
-								_lastBaseCorrectPoint = triggerGear.transform.position + Vector3.ClampMagnitude (triggerGear.transform.position + new Vector3(0f,0f,1f) - triggeredGear.transform.position, 0.5f);
-								Debug.DrawLine (Vector3.zero, _lastBaseCorrectPoint, Color.white, 1f);
-								//Debug.Break ();
+								_lastBaseCorrectPoint = triggeredGear.transform.position - Vector3.ClampMagnitude( ( triggeredGear.transform.position - (triggerGear.transform.position + new Vector3(0f, 0f, 1f))) * 100f, baseGap);
+
 								break;
 							}
 					}
@@ -219,7 +226,7 @@ public class GearsController : Controller
 
 			case GearColliderType.SPIN:
 				{
-					switch (triggeredColliderType)
+					switch (triggeredColliderView.ColliderType)
 					{
 						case GearColliderType.BASE:
 							break;
@@ -237,13 +244,13 @@ public class GearsController : Controller
 	}
 
 
-	private void OnGearsExitCollised(GearView triggerGear, GearView triggeredGear, GearColliderType triggerColliderType, GearColliderType triggeredColliderType)
+	private void OnGearsExitCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
-		switch (triggerColliderType)
+		switch (triggerColliderView.ColliderType)
 		{
 			case GearColliderType.BASE:
 				{
-					switch (triggeredColliderType)
+					switch (triggeredColliderView.ColliderType)
 					{
 						case GearColliderType.BASE:
 							{
@@ -263,7 +270,7 @@ public class GearsController : Controller
 
 			case GearColliderType.SPIN:
 				{
-					switch (triggeredColliderType)
+					switch (triggeredColliderView.ColliderType)
 					{
 						case GearColliderType.BASE:
 								break;
