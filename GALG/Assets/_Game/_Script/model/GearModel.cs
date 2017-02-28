@@ -21,6 +21,12 @@ public enum GearSizeType
 	VERY_BIG	= 4
 }
 
+public enum GearIndicatorStatus
+{
+	SELECTED	= 0,
+	ERROR		= 1
+}
+
 public enum GearColliderType
 {
 	BASE,
@@ -34,7 +40,8 @@ public class GearModel : Model
 	public GearSizeType					gearSizeType			{ get { return _gearSizeType; } }	
 	public SpriteRenderer				shadow					{ get { return _shadow; }  /*playerDestructible.ReplaceWith( _currentSprite );*/ }
 	public SpriteRenderer				statusIndicator			{ get { return _statusIndicator; } }
-	public Color						selectedIndicatorColor	{ get { return _selectedIndicatorColor; } }
+	public Color						indicatorSelectedColor	{ get { return _indicatorSelectedColor; } }
+	public Color						indicatorErrorColor		{ get { return _indicatorErrorColor; } }
 	//public float						sfLightDuration			{ get { return m_LightDuration; } }
 	//public float						deathDuration			{ get { return _deathDuration; } }
 	//public PlayerPositionState		positionState			{ get { return _positionState; } 		set { _positionState = value; } }
@@ -56,7 +63,9 @@ public class GearModel : Model
 	[SerializeField]
 	private SpriteRenderer				_statusIndicator;
 	[SerializeField]
-	private Color						_selectedIndicatorColor;
+	private Color						_indicatorSelectedColor;
+	[SerializeField]
+	private Color						_indicatorErrorColor;
 //	private float						m_LightDuration;
 	//[SerializeField]
 	//private float						_deathDuration 	= 3f;

@@ -15,6 +15,8 @@ public class GearsController : Controller
 	private bool 							_isCanMoveFlag				= false;
 	private int 							_baseCollisionsCount		= 0;
 	private bool 							_isGearPositionCorrect 		= true;
+	private Color							_lastGearStatusIndicatorColor;
+	private float							_lastGearShadowColorAlpha;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -68,6 +70,8 @@ public class GearsController : Controller
 						OnGearsEnterCollised (triggerGear, triggeredGear, triggerColliderView, triggeredColliderView);
 					else
 						OnGearsExitCollised (triggerGear, triggeredGear, triggerColliderView, triggeredColliderView);
+
+					UpdateCurrentGearIndicator ();
 					Debug.Log ("Collisions count = " + _baseCollisionsCount);
 					break;
 				}
@@ -155,6 +159,8 @@ public class GearsController : Controller
 
 		_currentGearView = gear;
 		_currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
+
+		SetEnableSelectedGearHighlight (true);
 	}
 
 	private void DeselectCurrentGear()
@@ -178,24 +184,86 @@ public class GearsController : Controller
 
 			DOTween.Kill (this);
 
-			_currentGearView.transform.DOMove (gearPosition, 0.1f)
+			_currentGearView.transform.DOMove (gearPosition, 0.2f)
 				.OnComplete (() =>
 			{
 				ResetCurrentGear ();
 			});
+
+			SetEnableSelectedGearHighlight (false);
 			
+		}
+	}
+
+	private void UpdateCurrentGearIndicator()
+	{
+		if (_baseCollisionsCount == 0)
+		{
+			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
+		}
+		else
+		{
+			SetCurrentGearIndicator (GearIndicatorStatus.ERROR);
+		}
+	}
+
+	private void SetCurrentGearIndicator(GearIndicatorStatus status)
+	{
+		switch (status)
+		{
+			case GearIndicatorStatus.SELECTED:
+				{
+					currentGearModel.statusIndicator.DOColor(currentGearModel.indicatorSelectedColor, 0.1f); 
+					break;
+				}
+
+			case GearIndicatorStatus.ERROR:
+				{
+					currentGearModel.statusIndicator.DOColor(currentGearModel.indicatorErrorColor, 0.1f); 
+					break;
+				}
 		}
 	}
 
 	private void ResetCurrentGear()
 	{
-
 		_currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
 		_currentGearView = null;
 
 		_baseCollisionsCount = 0;
 
 		_isGearPositionCorrect = true;
+	}
+
+	private void SetEnableSelectedGearHighlight(bool isEnable)
+	{
+		var shadowColor = currentGearModel.shadow.color;
+
+		if (isEnable)
+		{
+			_lastGearShadowColorAlpha = shadowColor.a;
+			_lastGearStatusIndicatorColor = currentGearModel.statusIndicator.color;
+
+			shadowColor.a = 0f;
+			currentGearModel.shadow.color = shadowColor;
+			currentGearModel.shadow.enabled = true;
+
+			currentGearModel.shadow.DOFade (_lastGearShadowColorAlpha, 0.1f);
+
+			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
+		}
+		else
+		{
+			currentGearModel.shadow.DOFade (0f, 0.1f)
+				.OnComplete (() =>
+			{
+					currentGearModel.shadow.enabled = false;
+					shadowColor.a = _lastGearShadowColorAlpha;
+					currentGearModel.shadow.color = shadowColor;
+			});
+			
+			currentGearModel.statusIndicator.DOColor(_lastGearStatusIndicatorColor, 0.1f); 
+		}
 	}
 
 	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)

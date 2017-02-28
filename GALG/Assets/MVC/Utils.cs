@@ -11,6 +11,11 @@ public static class Utils
 	private const string LastScoreKey = "LAST_SCORE";
 	private const string BestScoreKey = "BEST_SCORE";
 
+	public static float GetSquare(Vector2 size)
+	{
+		return size.x * size.y;
+	}
+
 	public static Vector3[] MakeSmoothCurve(Vector3[] arrayToCurve,float smoothness){
 		List<Vector3> points;
 		List<Vector3> curvedPoints;
