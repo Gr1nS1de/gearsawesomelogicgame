@@ -11,7 +11,7 @@ public class GearsController : Controller
 
 	private GearView						_currentGearView; 
 	private Vector3							_selectedPoint;
-	private Vector3 						_lastBaseCorrectPoint;
+	private Vector3 						_currentGearCorrectPosition;
 	private bool 							_isCanMoveFlag				= false;
 	private int 							_baseCollisionsCount		= 0;
 	private bool 							_isGearPositionCorrect 		= true;
@@ -36,9 +36,11 @@ public class GearsController : Controller
 					Vector3 inputPoint = (Vector3)data [1];
 					FingerMotionPhase gesturePhase = (FingerMotionPhase)data [2];
 
+					//If just start drag
 					if (dragItem != null)
 					{
 					
+						//Get item gear view
 						GearView gearElement = dragItem.GetComponent<GearView> ();
 
 						if (gearElement)
@@ -115,7 +117,8 @@ public class GearsController : Controller
 					gearPosition.z = -2;
 
 					selectedGear.transform.position = gearPosition;
-
+					_isCanMoveFlag = true;
+					/*
 					selectedGear.transform.DOMove (selectedPoint, 0.2f)
 						.SetUpdate(UpdateType.Normal)
 						.SetEase (Ease.InOutCubic)
@@ -123,6 +126,7 @@ public class GearsController : Controller
 						{
 							_isCanMoveFlag = true;
 						}).SetId(this);
+						*/
 					break;
 				}
 
@@ -159,6 +163,7 @@ public class GearsController : Controller
 
 		_currentGearView = gear;
 		_currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
+		_currentGearCorrectPosition = gear.transform.position;
 
 		SetEnableSelectedGearHighlight (true);
 	}
@@ -177,7 +182,7 @@ public class GearsController : Controller
 			if (_baseCollisionsCount != 0)
 			{
 				//_lastBaseCorrectPoint = _lastBaseCorrectPoint;
-				gearPosition  = _lastBaseCorrectPoint;
+				gearPosition  = _currentGearCorrectPosition;
 			}
 
 			gearPosition.z = -1f;
@@ -279,12 +284,18 @@ public class GearsController : Controller
 
 						case GearColliderType.SPIN:
 							{
-								float triggerGearGap = triggerColliderView.ColliderRadius * triggerGear.transform.localScale.x;
-								float triggeredGearGap = triggeredColliderView.ColliderRadius * triggeredGear.transform.localScale.x;
-								float baseGap = triggerGearGap + triggeredGearGap + 0.01f;
+								float offsetBeetwenGears = 0.05f;
+								float triggerGearRadius = triggerColliderView.ColliderRadius * triggerGear.transform.localScale.x;
+								float triggeredGearRadius = triggeredColliderView.ColliderRadius * triggeredGear.transform.localScale.x;
+								float baseGap = triggerGearRadius + triggeredGearRadius + offsetBeetwenGears;
+								Vector3 beforeTriggerPosition = triggeredGear.transform.position - Vector3.ClampMagnitude( ( triggeredGear.transform.position - (triggerGear.transform.position + new Vector3(0f, 0f, 1f))) * 100f, baseGap);
 
 								_baseCollisionsCount++;
-								_lastBaseCorrectPoint = triggeredGear.transform.position - Vector3.ClampMagnitude( ( triggeredGear.transform.position - (triggerGear.transform.position + new Vector3(0f, 0f, 1f))) * 100f, baseGap);
+
+								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
+
+								if (Utils.IsCorrectGearBasePosition (beforeTriggerPosition, triggerGearRadius, true, "GearSpinCollider"))
+									_currentGearCorrectPosition = beforeTriggerPosition;
 
 								break;
 							}
@@ -354,6 +365,7 @@ public class GearsController : Controller
 				}
 		}
 	}
+		
 
 
 	private void OnGameOver()

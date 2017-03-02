@@ -100,5 +100,18 @@ public static class Utils
 		return PlayerPrefs.GetInt(LastScoreKey, 0);
 	}
 		
+	public static bool IsCorrectGearBasePosition(Vector3 gearPosition, float gearRadius, bool isIncludeSelf, string layerName)
+	{
+		List<Collider2D> overlapList = new List<Collider2D>( Physics2D.OverlapCircleAll ((Vector2)gearPosition, gearRadius, 1<<LayerMask.NameToLayer (layerName)));
+		bool isCorrectPosition = false;
+
+		//Check for no overlap with other gear
+		if (overlapList.Count == 1 && isIncludeSelf || overlapList.Count == 0 && !isIncludeSelf )
+		{
+			isCorrectPosition = true;
+		}
+
+		return isCorrectPosition;
+	}
 
 }
