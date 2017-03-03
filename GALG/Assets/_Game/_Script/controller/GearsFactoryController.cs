@@ -53,15 +53,17 @@ public class GearsFactoryController : Controller
 
 			Debug.Log ("- Maximum possible "+sizeName+" = " + (int)(properScreenSquare / Utils.GetSquare(rendererSize)));
 
-			gearsInstantiateCount = (int)(properScreenSquare / Utils.GetSquare(rendererSize));
+			gearsInstantiateCount  = (int)(properScreenSquare / Utils.GetSquare(rendererSize));
 
-			InstantiateGears (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount);
+			InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount );
 		}
 
+		InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.MEDIUM, 1);
 
+		InstantiateGear (GearType.IDLE_GEAR, GearSizeType.MEDIUM, 2);
 	}
 
-	private void InstantiateGears(GearType gearType, GearSizeType gearSizeType, int count = 1)
+	private void InstantiateGear(GearType gearType, GearSizeType gearSizeType, int count = 1)
 	{
 		Debug.Log ("Instantiate "+gearType + " sizeType " + gearSizeType + " count = " + count);
 

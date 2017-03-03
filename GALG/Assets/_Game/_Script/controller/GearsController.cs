@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
+using Thinksquirrel.Phys2D;
 
 public class GearsController : Controller
 {
@@ -112,11 +113,14 @@ public class GearsController : Controller
 
 					_isGearPositionCorrect = false;
 
+					//Init vars for control gear and visual effects
 					SelectGear (selectedGear);
 
+					//Move forward to camera
 					gearPosition.z = -2;
 
 					selectedGear.transform.position = gearPosition;
+
 					_isCanMoveFlag = true;
 					/*
 					selectedGear.transform.DOMove (selectedPoint, 0.2f)
@@ -134,7 +138,7 @@ public class GearsController : Controller
 				{
 					if (_isCanMoveFlag)
 					{
-						_currentGearView.transform.DOMove(selectedPoint, 0.2f).SetId(this);
+						MoveCurrentGear (selectedPoint);
 					}
 					break;
 				}
@@ -150,6 +154,7 @@ public class GearsController : Controller
 
 	}
 
+	#region Gear input control methods
 	private void SelectGear(GearView gear)
 	{
 		//Setup position for light
@@ -165,9 +170,26 @@ public class GearsController : Controller
 		_currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
 		_currentGearCorrectPosition = gear.transform.position;
 
+		//DetachCurrentGear ();
+
 		SetEnableSelectedGearHighlight (true);
 	}
 
+	private void MoveCurrentGear(Vector3 selectedPoint)
+	{
+		
+		_currentGearView.transform.DOMove(selectedPoint, 0.2f).SetId(this);
+	}
+
+	private void AttachCurrentGear()
+	{
+		_currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)_currentGearView.transform.position;
+	}
+	/*
+	private void DetachCurrentGear()
+	{
+	}
+*/
 	private void DeselectCurrentGear()
 	{
 		if (_currentGearView)
@@ -200,6 +222,8 @@ public class GearsController : Controller
 		}
 	}
 
+	#endregion Gear input control methods
+
 	private void UpdateCurrentGearIndicator()
 	{
 		if (_baseCollisionsCount == 0)
@@ -229,47 +253,7 @@ public class GearsController : Controller
 				}
 		}
 	}
-
-	private void ResetCurrentGear()
-	{
-		_currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
-		_currentGearView = null;
-
-		_baseCollisionsCount = 0;
-
-		_isGearPositionCorrect = true;
-	}
-
-	private void SetEnableSelectedGearHighlight(bool isEnable)
-	{
-		var shadowColor = currentGearModel.shadow.color;
-
-		if (isEnable)
-		{
-			_lastGearShadowColorAlpha = shadowColor.a;
-			_lastGearStatusIndicatorColor = currentGearModel.statusIndicator.color;
-
-			shadowColor.a = 0f;
-			currentGearModel.shadow.color = shadowColor;
-			currentGearModel.shadow.enabled = true;
-
-			currentGearModel.shadow.DOFade (_lastGearShadowColorAlpha, 0.1f);
-
-			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
-		}
-		else
-		{
-			currentGearModel.shadow.DOFade (0f, 0.1f)
-				.OnComplete (() =>
-			{
-					currentGearModel.shadow.enabled = false;
-					shadowColor.a = _lastGearShadowColorAlpha;
-					currentGearModel.shadow.color = shadowColor;
-			});
-			
-			currentGearModel.statusIndicator.DOColor(_lastGearStatusIndicatorColor, 0.1f); 
-		}
-	}
+		
 
 	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
@@ -363,6 +347,51 @@ public class GearsController : Controller
 
 					break;
 				}
+		}
+	}
+
+	private void ResetCurrentGear()
+	{
+		AttachCurrentGear ();
+		_currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
+		_currentGearView = null;
+
+		_baseCollisionsCount = 0;
+
+		_isGearPositionCorrect = true;
+	}
+
+	private void SetEnableSelectedGearHighlight(bool isEnable)
+	{
+		var gearShadow = currentGearModel.shadow;
+		var shadowColor = gearShadow.color;
+
+		if (isEnable)
+		{
+			_lastGearShadowColorAlpha = shadowColor.a;
+			_lastGearStatusIndicatorColor = currentGearModel.statusIndicator.color;
+
+			shadowColor.a = 0f;
+			gearShadow.transform.rotation = Quaternion.Euler (Vector3.zero);
+			gearShadow.color = shadowColor;
+			gearShadow.enabled = true;
+
+			gearShadow.DOFade (_lastGearShadowColorAlpha, 0.1f);
+
+			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
+		}
+		else
+		{
+			currentGearModel.shadow.DOFade (0f, 0.1f)
+				.OnComplete (() =>
+				{
+					gearShadow.enabled = false;
+					shadowColor.a = _lastGearShadowColorAlpha;
+					gearShadow.color = shadowColor;
+					gearShadow.transform.rotation = Quaternion.Euler (Vector3.zero);
+				});
+
+			currentGearModel.statusIndicator.DOColor(_lastGearStatusIndicatorColor, 0.1f); 
 		}
 	}
 		

@@ -24,7 +24,7 @@ namespace Thinksquirrel.Phys2D
         public HingeOrSliderJoint2DExt connectedJoint { get { return m_ConnectedJoint; } set { m_ConnectedJoint = value; } }
         public override sealed Rigidbody2D connectedBody
         {
-            get { return m_ConnectedJoint.cachedRigidbody2D; }
+			get { return m_ConnectedJoint != null ? m_ConnectedJoint.cachedRigidbody2D : null; }
             set { Debug.LogError("Cannot set the connected body for this joint type. Set the connectedJoint property instead."); }
         }
         public float gearRatio { get { return m_GearRatio; } set { m_GearRatio = value; } }
@@ -84,7 +84,7 @@ namespace Thinksquirrel.Phys2D
             {
                 if (!m_DisplayedError)
                 {
-                    Debug.LogError(string.Format("Gear Joint: {0}", error));
+                    Debug.LogWarning(string.Format("Gear Joint: {0}", error));
                     m_DisplayedError = true;
                 }
                 return;
