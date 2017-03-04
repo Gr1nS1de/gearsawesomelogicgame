@@ -26,6 +26,10 @@ public class ObjectsPoolController : Controller
 
 	private void OnGamePlay()
 	{
+	}
+	/*
+	private void OnGamePlay()
+	{
 		//Start moving pooler object
 		StartCoroutine (MovePoolerViewRoutine());
 		//Start pooling
@@ -103,6 +107,6 @@ public class ObjectsPoolController : Controller
 
 		obstacleView.OnInit (objectsPoolView.transform.position, obstacleRotation, isDownDirection );
 
-	}
+	}*/
 }
 

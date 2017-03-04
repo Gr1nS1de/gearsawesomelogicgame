@@ -17,8 +17,6 @@ public class GameModel : Model
 	public int							currentScore			{ get { return _currentScore; } 	set { _currentScore = value; } }
 	public Road							currentRoad				{ get { return _currentRoad;}		set { _currentRoad = value;} }
 	public Road							prevRoad				{ get { return _prevRoad;}}
-	public RoadModel					currentRoadModel		{ get { return _currentRoadModel			= SearchLocal<RoadModel>(					_currentRoadModel,			typeof(RoadModel).Name); } }
-//	public Vector3[]					currentRoadWaypoints	{ get { return game.model.currentRoadModel.roadTweenPath.GetTween ().PathGetDrawPoints ();}}
 
 	[SerializeField]
 	private GameState					_gameState 				= GameState.MAIN_MENU;
@@ -26,7 +24,6 @@ public class GameModel : Model
 	private int 						_currentScore;
 	[SerializeField]
 	private Road						_currentRoad;
-	private RoadModel 					_currentRoadModel;	
 	private Road 						_prevRoad;
 	#endregion
 
@@ -39,6 +36,8 @@ public class GameModel : Model
 	public GameSoundModel				soundModel				{ get { return _soundModel 					= SearchLocal<GameSoundModel>(				_soundModel,				typeof(GameSoundModel).Name ); } }
 	public RCModel						RCModel					{ get { return _RCModel 					= SearchLocal<RCModel>(						_RCModel,					typeof(RCModel).Name ); } }
 	public ObjectsPoolModel				objectsPoolModel		{ get { return _objectsPoolModel			= SearchLocal<ObjectsPoolModel>(			_objectsPoolModel,			typeof(ObjectsPoolModel).Name );}}
+	public CurrentGearModel				currentGearModel		{ get { return _currentGearModel 			= SearchLocal<CurrentGearModel>(			_currentGearModel,			typeof(CurrentGearModel).Name); } }
+
 
 	private CameraModel					_cameraModel;
 	private GearsFactoryModel			_gearsFactoryModel;
@@ -48,6 +47,7 @@ public class GameModel : Model
 	private GameSoundModel				_soundModel;
 	private RCModel						_RCModel;
 	private ObjectsPoolModel			_objectsPoolModel;
+	private CurrentGearModel			_currentGearModel;
 	#endregion
 }
 	

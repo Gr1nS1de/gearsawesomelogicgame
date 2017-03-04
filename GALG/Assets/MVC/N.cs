@@ -3,10 +3,8 @@ using System.Collections;
 
 public class N : MonoBehaviour
 {
-	#region Player notifications
-	public const string PlayerJumpStart				= "player.jump.start";
-	public const string PlayerJumpFinish			= "player.jump.finish";
-	public const string PlayerDie					= "player.die";
+	#region Gears notifications
+	public const string OnInputGear___				= "input.on.drag";
 	#endregion
 
 	#region Obstacle notifications
@@ -36,10 +34,6 @@ public class N : MonoBehaviour
 
 	#region Destructible notifications
 	public const string DestructibleBreakEntity___ 	= "destructible.break.entity";
-	#endregion
-
-	#region Input controller notification
-	public const string InputOnDrag___				= "input.on.drag";
 	#endregion
 
 	#region ResourcesController notifications

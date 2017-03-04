@@ -13,7 +13,7 @@ public class GameController : Controller
 	public ObstacleController				obstacleController				{ get { return _obstacleController			= SearchLocal<ObstacleController>(			_obstacleController,			typeof(ObstacleController).Name ); } }
 	public RobotsFactoryController			robotsFactoryController			{ get { return _robotsFactoryController 	= SearchLocal<RobotsFactoryController>(		_robotsFactoryController,		typeof(RobotsFactoryController).Name ); } }
 	//public DestructibleController			destructibleController			{ get { return _destructibleController 		= SearchLocal<DestructibleController>(		_destructibleController,		typeof(DestructibleController).Name ); } }
-	public GearsController					playerController				{ get { return _playerController 			= SearchLocal<GearsController>(				_playerController,				typeof(GearsController).Name ); } }
+	public GearsInputController					playerController				{ get { return _playerController 			= SearchLocal<GearsInputController>(				_playerController,				typeof(GearsInputController).Name ); } }
 	public GameSoundController				gameSoundController				{ get { return _gameSoundController			= SearchLocal<GameSoundController>(			_gameSoundController,			typeof(GameSoundController).Name ); } }
 	public ResourcesController				resourcesController				{ get { return _resourcesController 		= SearchLocal<ResourcesController>(			_resourcesController,			typeof(ResourcesController).Name ); } }
 	public ObjectsPoolController			objectsPoolController			{ get { return _objectsPoolController 		= SearchLocal<ObjectsPoolController> (		_objectsPoolController, 		typeof(ObjectsPoolController).Name);}}
@@ -24,7 +24,7 @@ public class GameController : Controller
 	private ObstacleController				_obstacleController;
 	private RobotsFactoryController 		_robotsFactoryController;
 	//private DestructibleController		_destructibleController;
-	private GearsController					_playerController;
+	private GearsInputController					_playerController;
 	private GameSoundController				_gameSoundController;
 	private ResourcesController				_resourcesController;
 	private ObjectsPoolController 			_objectsPoolController;

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UIGameController : Controller
 {
 	private UIGameModel UIGameModel				{ get { return ui.model.UIGameModel; } }
-	private RoadModel 	currentRoadModel		{ get { return game.model.currentRoadModel; } }
+	//private RoadModel 	currentRoadModel		{ get { return game.model.currentGearView; } }
 
 	public override void OnNotification ( string alias, Object target, params object[] data )
 	{
@@ -15,8 +15,8 @@ public class UIGameController : Controller
 		{
 			case N.GamePlayLevel_:
 				{
-					InitScoreBarItems ();
-					InitScoreBarSlider ();
+					//InitScoreBarItems ();
+					//InitScoreBarSlider ();
 
 					break;
 				}
@@ -32,7 +32,7 @@ public class UIGameController : Controller
 				}*/
 		}
 	}
-
+	/*
 	private void InitScoreBarItems ()
 	{
 		int currentRoadScore = Utils.GetRoadScore (game.model.currentRoad);
@@ -139,6 +139,6 @@ public class UIGameController : Controller
 
 		itemImage.color = UIGameModel.itemDeactivatedColor;
 		itemLineImage.enabled = false;
-	}
+	}*/
 
 }

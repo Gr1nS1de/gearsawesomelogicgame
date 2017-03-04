@@ -11,7 +11,7 @@ public class ObstacleView : View
 
 	[SerializeField]
 	private bool 			_isVisible 	= true;
-
+	/*
 	public void OnInit(Vector3 pathPosition, Quaternion rotation, bool isDownDirection)
 	{
 		_obstacleWrapper = transform.parent;
@@ -42,9 +42,9 @@ public class ObstacleView : View
 			StopAllCoroutines();
 
 			StartCoroutine(CheckVisibility());
-		});*/
+		});
 	}
-		
+		*/
 	private IEnumerator CheckVisibility () 
 	{
 		while (true)
