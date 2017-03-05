@@ -11,6 +11,7 @@ public class GearsInputController : Controller
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
 
 	private Vector3							_selectedPoint;
+	private Vector3							_selectedPointDelta;
 	private bool 							_isCanMoveFlag				= false;
 	private bool 							_isGearPositionCorrect 		= true;
 
@@ -88,6 +89,8 @@ public class GearsInputController : Controller
 					//Move forward to camera
 					gearPosition.z = -2;
 
+					_selectedPointDelta = gearPosition - selectedPoint;
+
 					selectedGear.transform.position = gearPosition;
 
 					_isCanMoveFlag = true;
@@ -144,8 +147,11 @@ public class GearsInputController : Controller
 
 	private void MoveCurrentGear(Vector3 selectedPoint)
 	{
-		
-		game.view.currentGearView.transform.DOMove(selectedPoint, 0.2f).SetId(this);
+		Vector3 position = selectedPoint + _selectedPointDelta;
+
+		position.z = -2f;
+
+		game.view.currentGearView.transform.DOMove(position, 0.2f).SetId(this);
 	}
 
 	private void AttachCurrentGear()
