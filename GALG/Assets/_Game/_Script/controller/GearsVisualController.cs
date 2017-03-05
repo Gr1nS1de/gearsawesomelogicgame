@@ -108,11 +108,15 @@ public class GearsVisualController : Controller
 
 		if (isEnable)
 		{
+			//Setup position for light
+			game.view.gearLightView.transform.SetParent (game.view.currentGearView.transform);
+			game.view.gearLightView.transform.DOLocalMove (Vector3.zero, 0.2f);
+
 			_lastGearShadowColorAlpha = shadowColor.a;
 			_lastGearStatusIndicatorColor = currentGearModel.gearModel.statusIndicator.color;
 
 			shadowColor.a = 0f;
-			gearShadow.transform.rotation = Quaternion.Euler (Vector3.zero);
+			//gearShadow.transform.rotation = Quaternion.Euler (Vector3.zero);
 			gearShadow.color = shadowColor;
 			gearShadow.enabled = true;
 

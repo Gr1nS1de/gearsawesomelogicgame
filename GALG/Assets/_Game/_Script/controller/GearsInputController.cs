@@ -129,10 +129,6 @@ public class GearsInputController : Controller
 	#region Gear input control methods
 	private void SelectGear(GearView gear)
 	{
-		//Setup position for light
-		game.view.gearLightView.transform.SetParent (gear.transform);
-		game.view.gearLightView.transform.DOLocalMove (Vector3.zero, 0.2f);
-
 		foreach (var gearEventCollider in gear.GetComponentsInChildren<GearColliderView> ())
 		{
 			gearEventCollider.isSendNotification = true;
@@ -154,15 +150,6 @@ public class GearsInputController : Controller
 		game.view.currentGearView.transform.DOMove(position, 0.2f).SetId(this);
 	}
 
-	private void AttachCurrentGear()
-	{
-		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)game.view.currentGearView.transform.position;
-	}
-	/*
-	private void DetachCurrentGear()
-	{
-	}
-*/
 	private void DeselectCurrentGear()
 	{
 		if (game.view.currentGearView)
@@ -198,6 +185,7 @@ public class GearsInputController : Controller
 	private void ResetCurrentGear()
 	{
 		AttachCurrentGear ();
+
 		game.view.currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
 		game.view.currentGearView = null;
 
@@ -205,8 +193,15 @@ public class GearsInputController : Controller
 
 		_isGearPositionCorrect = true;
 	}
-		
 
+	private void DetachCurrentGear()
+	{
+	}
+		
+	private void AttachCurrentGear()
+	{
+		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)game.view.currentGearView.transform.position;
+	}
 
 	private void OnGameOver()
 	{

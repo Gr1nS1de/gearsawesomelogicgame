@@ -42,8 +42,7 @@ public class GearModel : Model
 	public SpriteRenderer				statusIndicator			{ get { return _statusIndicator; } }
 	public Color						indicatorSelectedColor	{ get { return _indicatorSelectedColor; } }
 	public Color						indicatorErrorColor		{ get { return _indicatorErrorColor; } }
-	//public float						sfLightDuration			{ get { return m_LightDuration; } }
-	//public float						deathDuration			{ get { return _deathDuration; } }
+	public int							teethCount				{ get { return _teethCount; } }
 	//public PlayerPositionState		positionState			{ get { return _positionState; } 		set { _positionState = value; } }
 	//public float 						jumpWidth				{ get { return _jumpWidth 				= game.model.currentRoadModel.width / 2f - currentSprite.bounds.size.x * 0.5f * game.view.playerSpriteView.transform.localScale.x; } }
 	//public float						jumpDuration			{ get { return _jumpDuration;} 			set { _jumpDuration = value; }}
@@ -66,9 +65,8 @@ public class GearModel : Model
 	private Color						_indicatorSelectedColor;
 	[SerializeField]
 	private Color						_indicatorErrorColor;
-//	private float						m_LightDuration;
-	//[SerializeField]
-	//private float						_deathDuration 	= 3f;
+	[SerializeField]
+	private int							_teethCount;
 	//[SerializeField]
 	//private PlayerPositionState 		_positionState;
 	//private float						_jumpWidth;
