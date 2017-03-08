@@ -55,7 +55,7 @@ public class GearsFactoryController : Controller
 
 			gearsInstantiateCount  = (int)(properScreenSquare / Utils.GetSquare(rendererSize));
 
-			InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount );
+			InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount - 1 );
 		}
 
 		InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.MEDIUM, 1);

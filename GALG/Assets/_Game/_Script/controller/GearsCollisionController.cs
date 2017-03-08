@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Thinksquirrel.Phys2D;
 
 public class GearsCollisionController : Controller 
 {
+	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -39,7 +41,23 @@ public class GearsCollisionController : Controller
 					break;
 				}
 
+			case N.OnConnectGears__:
+				{
+					GearView triggerGear = (GearView)data [0];
+					GearView connectedGear = (GearView)data [1];
 
+					ConnectGears (triggerGear, connectedGear);
+					break;
+				}
+
+			case N.OnDisconnectGears__:
+				{
+					GearView triggerGear = (GearView)data [0];
+					GearView connectedGear = (GearView)data [1];
+
+					DisconnectGears (triggerGear, connectedGear);
+					break;
+				}
 
 			case N.GameOver:
 				{
@@ -48,6 +66,10 @@ public class GearsCollisionController : Controller
 					break;
 				}
 		}
+	}
+
+	private void OnStart()
+	{
 	}
 
 	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
@@ -73,6 +95,7 @@ public class GearsCollisionController : Controller
 
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
 
+								//Check for triggered saved position is empty for current gear size. 
 								if (Utils.IsCorrectGearBasePosition (beforeTriggerPosition, triggerGearRadius, true, "GearSpinCollider"))
 								{
 									game.model.currentGearModel.lastCorrectPosition = beforeTriggerPosition;
@@ -147,8 +170,34 @@ public class GearsCollisionController : Controller
 		}
 	}
 
-	private void OnStart()
+	private void ConnectGears (GearView triggerGear, GearView connectedGear)
 	{
+		GearModel triggerGearModel = gearsDictionary[triggerGear];
+		GearModel connectedGearModel = gearsDictionary[connectedGear];
+		GearJoint2DExt connectedGearJoint = connectedGear.gameObject.AddComponent<GearJoint2DExt> ();
+
+		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
+
+		connectedGearJoint.localJoint = connectedGearJoint.GetComponent<HingeJoint2DExt> ();
+		connectedGearJoint.connectedJoint = triggerGear.GetComponent<HingeJoint2DExt> ();
+		connectedGearJoint.gearRatio = (float)triggerGearModel.teethCount / connectedGearModel.teethCount;
+		connectedGearJoint.collideConnected = true;
+
+
+	}
+
+	private void DisconnectGears (GearView triggerGear, GearView connectedGear)
+	{
+		GearModel triggerGearModel = gearsDictionary[triggerGear];
+		GearModel connectedGearModel = gearsDictionary[connectedGear];
+
+		triggerGearModel.gearPositionState = GearPositionState.DEFAULT;
+
+		foreach (var gearJoint in connectedGear.GetComponents<GearJoint2DExt>())
+		{
+			if (gearJoint.connectedJoint == triggerGear.GetComponent<HingeJoint2DExt> ())
+				Destroy (gearJoint);
+		}
 	}
 
 	private void OnGameOver()

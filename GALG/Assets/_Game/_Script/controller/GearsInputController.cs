@@ -7,8 +7,8 @@ public class GearsInputController : Controller
 {
 	private GearModel 						currentGearModel 			{ get { return gearsDictionary[game.view.currentGearView]; } }
 	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
-	private List<GearView>					gearsList					{ get { return game.model.gearsFactoryModel.loadedGears; } }
-	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
+	private List<GearView>					gearsList					{ get { return gearsFactoryModel.loadedGears; } }
+	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
 
 	private Vector3							_selectedPoint;
 	private Vector3							_selectedPointDelta;
@@ -33,7 +33,7 @@ public class GearsInputController : Controller
 					Vector3 inputPoint = (Vector3)data [1];
 					FingerMotionPhase gesturePhase = (FingerMotionPhase)data [2];
 
-					//If just start drag
+					//If just start drag with new gear
 					if (dragItem != null)
 					{
 					
@@ -42,6 +42,8 @@ public class GearsInputController : Controller
 
 						if (gearElement)
 							OnDragGear (gearElement, inputPoint, gesturePhase);
+						else
+							Debug.LogError ("Input gear element == null. ");
 					}
 					else if (game.view.currentGearView)
 					{
@@ -94,15 +96,6 @@ public class GearsInputController : Controller
 					selectedGear.transform.position = gearPosition;
 
 					_isCanMoveFlag = true;
-					/*
-					selectedGear.transform.DOMove (selectedPoint, 0.2f)
-						.SetUpdate(UpdateType.Normal)
-						.SetEase (Ease.InOutCubic)
-						.OnComplete (() =>
-						{
-							_isCanMoveFlag = true;
-						}).SetId(this);
-						*/
 					break;
 				}
 
@@ -131,7 +124,7 @@ public class GearsInputController : Controller
 	{
 		foreach (var gearEventCollider in gear.GetComponentsInChildren<GearColliderView> ())
 		{
-			gearEventCollider.isSendNotification = true;
+			gearEventCollider.isSendEntryNotification = true;
 		}
 
 		game.view.currentGearView = gear;
@@ -158,7 +151,7 @@ public class GearsInputController : Controller
 
 			foreach (var gearEventCollider in game.view.currentGearView.GetComponentsInChildren<GearColliderView> ())
 			{
-				gearEventCollider.isSendNotification = false;
+				gearEventCollider.isSendEntryNotification = false;
 			}
 				
 			if (game.model.currentGearModel.collisionsCount != 0)
@@ -196,11 +189,13 @@ public class GearsInputController : Controller
 
 	private void DetachCurrentGear()
 	{
+		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().enabled = false;
 	}
 		
 	private void AttachCurrentGear()
 	{
 		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)game.view.currentGearView.transform.position;
+		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().enabled = true;
 	}
 
 	private void OnGameOver()
