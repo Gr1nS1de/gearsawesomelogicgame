@@ -7,7 +7,7 @@ public class GearsInputController : Controller
 {
 	private GearModel 						currentGearModel 			{ get { return gearsDictionary[game.view.currentGearView]; } }
 	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
-	private List<GearView>					gearsList					{ get { return gearsFactoryModel.loadedGears; } }
+	private List<GearView>					gearsList					{ get { return gearsFactoryModel.themeGearsPrefabsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
 
 	private Vector3							_selectedPoint;
@@ -131,7 +131,7 @@ public class GearsInputController : Controller
 		game.view.currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
 		game.model.currentGearModel.lastCorrectPosition = gear.transform.position;
 
-		//DetachCurrentGear ();
+		DetachCurrentGear ();
 	}
 
 	private void MoveCurrentGear(Vector3 selectedPoint)

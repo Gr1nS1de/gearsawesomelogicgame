@@ -6,7 +6,8 @@ using System.Collections.Generic;
 public class GearsFactoryController : Controller
 {
 	private GearsFactoryModel 				gearsFactoryModel	{ get { return game.model.gearsFactoryModel; } }
-	private List<GearView>					gearsList			{ get { return game.model.gearsFactoryModel.loadedGears; } }
+	private List<GearView>					gearsPrefabsList	{ get { return game.model.gearsFactoryModel.themeGearsPrefabsList; } }
+	private List<GearView>					gearsList			{ get { return game.model.gearsFactoryModel.instantiatedGearsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 	{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
 
 	private Vector2 						_screenSize;
@@ -67,7 +68,7 @@ public class GearsFactoryController : Controller
 	{
 		Debug.Log ("Instantiate "+gearType + " sizeType " + gearSizeType + " count = " + count);
 
-		foreach (GearView gearPrefab in gearsList)
+		foreach (GearView gearPrefab in gearsPrefabsList)
 		{
 			GearModel gearModel = gearPrefab.GetComponent<GearModel> ();
 
@@ -78,8 +79,12 @@ public class GearsFactoryController : Controller
 			//Counting gears for instantiate everyone
 			for (int i = 0; i < count; i++)
 			{
+				GameObject gearModelObject = new GameObject ();
+
+				gearModelObject.transform.SetParent (gearsFactoryModel.transform);
+
 				//Add new model component to factory model game object
-				gearModel = gearsFactoryModel.gameObject.AddComponent<GearModel>();
+				gearModel = gearModelObject.AddComponent<GearModel>();
 
 				GearView gearView = Instantiate (gearPrefab) as GearView;
 
@@ -96,28 +101,29 @@ public class GearsFactoryController : Controller
 				{
 					case GearType.PLAYER_GEAR:
 						{
-							gearView.transform.name = "PlayerGear_0" + i;
+							gearView.transform.name = gearModelObject.name = "PlayerGear_0" + i;
 							gearView.transform.SetParent (game.view.playerGearsContainer.transform);
 							break;
 						}
 
 					case GearType.IDLE_GEAR:
 						{
-							gearView.transform.name = "IdleGear_0" + i;
+							gearView.transform.name = gearModelObject.name = "IdleGear_0" + i;
 							gearView.transform.SetParent (game.view.gameGearsContainer.transform);
 							break;
 						}
 
 					case GearType.MOTOR_GEAR:
 						{
-							gearView.transform.name = "MotorGear_0" + i;
+							gearView.transform.name = gearModelObject.name = "MotorGear_0" + i;
 							gearView.transform.SetParent (game.view.gameGearsContainer.transform);
 							break;
 						}
 				}
 
-				gearView.transform.position = CalculateGearPosition (gearModel.gearSizeType, gearModel.gearType);
+				gearView.transform.position = gearModelObject.transform.position = CalculateGearPosition (gearModel.gearSizeType, gearModel.gearType);
 
+				gearsList.Add (gearView);
 				gearsDictionary.Add (gearView, gearModel);
 			}
 				
@@ -158,7 +164,7 @@ public class GearsFactoryController : Controller
 	{
 		Vector2 gearSize = Vector2.zero;
 
-		var gearObj = gearsList.Find (gear => gear.GetComponent<GearModel> ().gearSizeType == gearSizeType && gear.GetComponent<GearModel>().gearType == gearType);
+		var gearObj = gearsPrefabsList.Find (gear => gear.GetComponent<GearModel> ().gearSizeType == gearSizeType && gear.GetComponent<GearModel>().gearType == gearType);
 
 		if (gearObj == null)
 			return gearSize;

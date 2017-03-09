@@ -11,6 +11,7 @@ public class GearColliderView : View
 	public float			ColliderRadius;
 	public bool 			isSendEntryNotification = false;
 	public List<GearView>	ConnectedGears = new List<GearView>();
+	public List<GearView>	StayingCollisionList = new List<GearView>();
 
 	private GearModel 		_gearModel;
 
@@ -24,8 +25,8 @@ public class GearColliderView : View
 	{
 		if (isSendEntryNotification)
 		{
-			SendNotification (true, other);
-			Debug.LogError ("Triggered "+transform.parent.name + " with "+ other.transform.parent.name + " " + other.GetComponent<GearColliderView>().ColliderType);
+			SendEntryNotification (true, other);
+			//Debug.LogError ("Triggered "+transform.parent.name + " with "+ other.transform.parent.name + " " + other.GetComponent<GearColliderView>().ColliderType);
 		}
 	}
 
@@ -36,7 +37,11 @@ public class GearColliderView : View
 
 		GearView otherGearView = other.transform.parent.GetComponent<GearView> ();
 		GearModel otherGearModel = gearsDictionary[otherGearView];
-			
+		GearColliderView otherSpinCollider = other.GetComponent<GearColliderView> ();
+
+		if (!StayingCollisionList.Contains (otherGearView))
+			StayingCollisionList.Add (otherGearView);
+
 		switch (otherGearModel.gearPositionState)
 		{
 			case GearPositionState.DEFAULT:
@@ -46,7 +51,14 @@ public class GearColliderView : View
 						Notify (N.OnDisconnectGears__, transform.parent.GetComponent<GearView> (), otherGearView);
 
 						ConnectedGears.Remove (otherGearView);
-						other.GetComponent<GearColliderView> ().ConnectedGears.Remove (otherGearView);
+						otherSpinCollider.ConnectedGears.Remove (otherGearView);
+					}
+					else if (_gearModel.gearPositionState == GearPositionState.CONNECTED)
+					{
+						Notify (N.OnConnectGears__, otherGearView, transform.parent.GetComponent<GearView> ());
+
+						ConnectedGears.Add (otherGearView);
+						otherSpinCollider.ConnectedGears.Add(transform.parent.GetComponent<GearView>());
 					}
 					break;
 				}
@@ -60,7 +72,7 @@ public class GearColliderView : View
 					Notify (N.OnConnectGears__, transform.parent.GetComponent<GearView> (), otherGearView);
 
 					ConnectedGears.Add (otherGearView);
-					other.GetComponent<GearColliderView> ().ConnectedGears.Add (transform.parent.GetComponent<GearView>());
+					otherSpinCollider.ConnectedGears.Add (transform.parent.GetComponent<GearView>());
 
 					break;
 				}
@@ -69,15 +81,18 @@ public class GearColliderView : View
 
 	public void OnTriggerExit2D(Collider2D other)
 	{
+		GearView otherGearView = other.transform.parent.GetComponent<GearView> ();
+
+		if (StayingCollisionList.Contains (otherGearView))
+			StayingCollisionList.Remove (otherGearView);
+
 		if (isSendEntryNotification)
 		{
-			SendNotification (false, other);
-
-			GearView otherGearView = other.transform.parent.GetComponent<GearView> ();
+			SendEntryNotification (false, other);
 
 			if (otherGearView != null && ConnectedGears.Contains (otherGearView))
 			{
-				Notify (N.OnDisconnectGears__, transform.parent.GetComponent<GearView> (), otherGearView);
+				Notify (N.OnDisconnectGears__, otherGearView, transform.parent.GetComponent<GearView> ());
 
 				ConnectedGears.Remove (otherGearView);
 				other.GetComponent<GearColliderView> ().ConnectedGears.Remove (transform.parent.GetComponent<GearView> ());
@@ -85,9 +100,9 @@ public class GearColliderView : View
 		}
 	}
 
-	private void SendNotification(bool isEnter, Collider2D other)
+	private void SendEntryNotification(bool isEnter, Collider2D other)
 	{
-		Debug.Log ( transform.parent.name+ " triggered with "+other.transform.parent.name + " type = " + ColliderType + " isEnter = " + isEnter);
+		//Debug.Log ( transform.parent.name+ " triggered with "+other.transform.parent.name + " type = " + ColliderType + " isEnter = " + isEnter);
 
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, other.transform.position);
 		Vector3 collisionPoint = hit.point;

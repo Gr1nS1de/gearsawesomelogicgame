@@ -5,7 +5,10 @@ using Thinksquirrel.Phys2D;
 
 public class GearsCollisionController : Controller 
 {
-	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
+	private GearModel 						currentGearModel 			{ get { return gearsDictionary[game.view.currentGearView]; } }
+	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
+	private List<GearView>					gearsList					{ get { return gearsFactoryModel.instantiatedGearsList; } }
+	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -99,6 +102,7 @@ public class GearsCollisionController : Controller
 								if (Utils.IsCorrectGearBasePosition (beforeTriggerPosition, triggerGearRadius, true, "GearSpinCollider"))
 								{
 									game.model.currentGearModel.lastCorrectPosition = beforeTriggerPosition;
+									UpdateConnectedGearsChain ();
 								}
 
 								break;
@@ -176,6 +180,8 @@ public class GearsCollisionController : Controller
 		GearModel connectedGearModel = gearsDictionary[connectedGear];
 		GearJoint2DExt connectedGearJoint = connectedGear.gameObject.AddComponent<GearJoint2DExt> ();
 
+		Debug.LogError ("Connect gears: " + triggerGear.name + " to " + connectedGear.name);
+
 		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
 
 		connectedGearJoint.localJoint = connectedGearJoint.GetComponent<HingeJoint2DExt> ();
@@ -191,13 +197,72 @@ public class GearsCollisionController : Controller
 		GearModel triggerGearModel = gearsDictionary[triggerGear];
 		GearModel connectedGearModel = gearsDictionary[connectedGear];
 
-		triggerGearModel.gearPositionState = GearPositionState.DEFAULT;
+		if(triggerGearModel.gearType != GearType.MOTOR_GEAR)
+			triggerGearModel.gearPositionState = GearPositionState.DEFAULT;
+
+		Debug.LogError ("Disconnect gears: " + triggerGear.name + " to " + connectedGear.name);
 
 		foreach (var gearJoint in connectedGear.GetComponents<GearJoint2DExt>())
 		{
 			if (gearJoint.connectedJoint == triggerGear.GetComponent<HingeJoint2DExt> ())
 				Destroy (gearJoint);
 		}
+
+		foreach (var gearJoint in triggerGear.GetComponents<GearJoint2DExt>())
+		{
+			if (gearJoint.connectedJoint == connectedGear.GetComponent<HingeJoint2DExt> ())
+				Destroy (gearJoint);
+		}
+
+		UpdateConnectedGearsChain ();
+	}
+
+	private void UpdateConnectedGearsChain()
+	{
+		gearsList.ForEach(gearView=>
+		{
+			GearModel gearModel = gearsDictionary[gearView];
+			GearColliderView spinCollider = new List<GearColliderView>( gearView.GetComponentsInChildren<GearColliderView>()).Find(gearCollider=>gearCollider.ColliderType == GearColliderType.SPIN);
+
+			foreach(var connectedGear in spinCollider.ConnectedGears)
+			{
+				if(gearsDictionary[connectedGear].gearPositionState == GearPositionState.DEFAULT && gearModel.gearPositionState == GearPositionState.CONNECTED)
+				{
+					var gearJoinComponent = new List<GearJoint2DExt>(gearView.GetComponents<GearJoint2DExt>()).Find(gearJoint=>gearJoint.connectedJoint == connectedGear.GetComponent<HingeJoint2DExt>());
+
+					if(gearJoinComponent == null)
+					{
+						ConnectGears(connectedGear, gearView);
+					}
+				}
+			}
+
+			switch(gearModel.gearPositionState)
+			{
+				case GearPositionState.DEFAULT:
+					{
+						break;
+					}
+
+				case GearPositionState.CONNECTED:
+					{
+						if(spinCollider.StayingCollisionList.Count == 0 && gearModel.gearType != GearType.MOTOR_GEAR)
+						{
+							gearModel.gearPositionState = GearPositionState.DEFAULT;
+
+							gearsList.ForEach(_gearView=>
+							{
+								foreach (var gearJoint in gearView.GetComponents<GearJoint2DExt>())
+								{
+									if (gearJoint.connectedJoint == gearView.GetComponent<HingeJoint2DExt> ())
+										Destroy (gearJoint);
+								}
+							});
+						}
+						break;
+					}
+			}
+		});
 	}
 
 	private void OnGameOver()
