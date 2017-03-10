@@ -10,7 +10,7 @@ public class GearsChainController : Controller
 	private List<GearView>					gearsList					{ get { return gearsFactoryModel.instantiatedGearsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
 
-	private List<GearJoint2DExt>			_gearJointsDestroyList		= new List<GearJoint2DExt>();
+	private int _checksMotorConnectedCount = 0;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -25,11 +25,15 @@ public class GearsChainController : Controller
 
 			case N.UpdateGearsChain:
 				{
-					//Debug.Log ("Update gear chain");
+					Debug.Log ("Update gear chain");
+
+					//Update gears connected_state for all gears
 					UpdateConnectedGearsChain ();
 
+					//Check for disconnected parts of chain
 					UpdateRedundantGearsChains ();
 
+					//Update connected_state one more time for proper gears_state after destroying redundant gears.
 					UpdateConnectedGearsChain ();
 					break;
 				}
@@ -42,52 +46,16 @@ public class GearsChainController : Controller
 
 	}
 
-	private void ConnectGears (GearView triggerGear, GearView connectGear)
-	{
-		GearModel triggerGearModel = gearsDictionary[triggerGear];
-		GearModel connectGearModel = gearsDictionary[connectGear];
-		GearJoint2DExt connectGearJoint = connectGear.gameObject.AddComponent<GearJoint2DExt> ();
-
-		Debug.Log ("Connect gears: " + triggerGear.name + " to " + connectGear.name);
-
-		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
-
-		connectGearJoint.localJoint = connectGearJoint.GetComponent<HingeJoint2DExt> ();
-		connectGearJoint.connectedJoint = triggerGear.GetComponent<HingeJoint2DExt> ();
-		connectGearJoint.gearRatio = (float)triggerGearModel.teethCount / connectGearModel.teethCount;
-		connectGearJoint.collideConnected = true;
-	}
-
-	private void DisconnectGears (GearView triggerGear, GearView connectedGear)
-	{
-		GearModel triggerGearModel = gearsDictionary[triggerGear];
-		GearModel connectedGearModel = gearsDictionary[connectedGear];
-
-		if(triggerGearModel.gearType != GearType.MOTOR_GEAR)
-			triggerGearModel.gearPositionState = GearPositionState.DEFAULT;
-
-		Debug.Log ("Disconnect gears: " + triggerGear.name + " to " + connectedGear.name);
-
-		foreach (var gearJoint in connectedGear.GetComponents<GearJoint2DExt>())
-		{
-			if (gearJoint.connectedJoint == triggerGear.GetComponent<HingeJoint2DExt> ())
-				Destroy (gearJoint);
-		}
-
-		foreach (var gearJoint in triggerGear.GetComponents<GearJoint2DExt>())
-		{
-			if (gearJoint.connectedJoint == connectedGear.GetComponent<HingeJoint2DExt> ())
-				Destroy (gearJoint);
-		}
-
-	}
-
 	private void UpdateConnectedGearsChain()
 	{
-		int a = 0;
+		int updateCount = 0;
 		for (int i = 0; i < gearsList.Count; i++)
 		{
-			if(a++>100)break;
+			if (updateCount++ > 10)
+			{
+				Debug.LogError ("Error. Updated gear more than "+updateCount +" times.");
+				break;
+			}
 
 			GearView gearView = gearsList [i];
 			GearModel gearModel = gearsDictionary [gearView];
@@ -100,21 +68,22 @@ public class GearsChainController : Controller
 				continue;
 			}
 
-			int defaultConnectionCount = 0;
+			int defaultConnectionsCount = 0;
 
 			CheckRedundantGearJoints (gearView, spinCollider.ConnectedGears);
 
 			foreach (var connectedGearView in spinCollider.ConnectedGears)
 			{
 				GearModel connectedGearModel = gearsDictionary [connectedGearView];
-				//var gearJoinComponent = new List<GearJoint2DExt>(gearView.GetComponents<GearJoint2DExt>()).Find(gearJoint=>gearJoint.connectedJoint == connectedGear.GetComponent<HingeJoint2DExt>());
+
+				Debug.Log ("Gear "+ gearView.name + " connected with "+connectedGearView.name);
 
 				//Check connected gear position state for update current connection
 				switch (connectedGearModel.gearPositionState)
 				{
 					case GearPositionState.DEFAULT:
 						{
-							defaultConnectionCount++;
+							defaultConnectionsCount++;
 							break;
 						}
 
@@ -135,11 +104,10 @@ public class GearsChainController : Controller
 			}
 
 			//If all connections are default - delete all gearJointComponents if have.
-			if (defaultConnectionCount == spinCollider.ConnectedGears.Count)
+			if (defaultConnectionsCount == spinCollider.ConnectedGears.Count)
 			{
 				ResetGearPositionState (gearView);
 			}
-
 		}
 	}
 
@@ -147,8 +115,7 @@ public class GearsChainController : Controller
 	{
 		List<GearView> alreadyConnectedGearsList = new List<GearView>();
 
-
-		Debug.LogError ("---------------");
+		//Debug.LogError ("---------------");
 
 		for (int i = 0; i < gearsList.Count; i++)
 		{
@@ -159,44 +126,70 @@ public class GearsChainController : Controller
 
 			if (gearModel.gearType != GearType.MOTOR_GEAR)
 			{
-				_checksCount = 0;
-				Debug.Log ("Start check gear "+ gearView.name);
+				_checksMotorConnectedCount = 0;
+				//Debug.Log ("Start check gear "+ gearView.name);
 
 				if(IsGearConnectedToMotor (gearView, alreadyConnectedGearsList))
 				{
 					alreadyConnectedGearsList.Add(gearView);
-					Debug.LogError ("Gear " + gearView.name + " connected to motor! +");
+					//Debug.LogError ("Gear " + gearView.name + " connected to motor! +");
 				}
 				else
 				{
 					ResetGearPositionState (gearView, true);
-					Debug.LogError ("Gear " + gearView.name + " not connected to motor! -");
+					//Debug.LogError ("Gear " + gearView.name + " not connected to motor! -");
 				}
 			}
 		}
 	}
 
+	private void ConnectGears (GearView triggerGear, GearView connectGear)
+	{
+		GearModel triggerGearModel = gearsDictionary[triggerGear];
+		GearModel connectGearModel = gearsDictionary[connectGear];
+		GearJoint2DExt connectGearJoint = connectGear.gameObject.AddComponent<GearJoint2DExt> ();
+
+		Debug.Log ("Connect gears: " + triggerGear.name + " to " + connectGear.name);
+
+		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
+
+		connectGearJoint.localJoint = connectGearJoint.GetComponent<HingeJoint2DExt> ();
+		connectGearJoint.connectedJoint = triggerGear.GetComponent<HingeJoint2DExt> ();
+		connectGearJoint.gearRatio = (float)triggerGearModel.teethCount / connectGearModel.teethCount;
+		connectGearJoint.collideConnected = true;
+	}
+
 	private void CheckRedundantGearJoints(GearView gearView, List<GearView> connectedGearsList)
 	{
+		GearModel gearModel = gearsDictionary [gearView];
+
 		//Debug.Log ("Start check redundant gear joints");
 
 		foreach(var gearJoint in gearView.GetComponents<GearJoint2DExt> ())
 		{
+			GearView connectedGearView = gearJoint.connectedJoint.GetComponent<GearView> ();
+
 			//if gearView have gearJoint connected to another gear which not realy connected to gearView - destroy gear joint
-			if(!connectedGearsList.Contains(gearJoint.connectedJoint.GetComponent<GearView>()))
+			if(!connectedGearsList.Contains(connectedGearView))
 				Destroy(gearJoint);
+			else
+			if(IsGearAlreadyConnected(gearView,	connectedGearView))
+			{
+				gearModel.gearPositionState = GearPositionState.CONNECTED;
+			}
 		}
 
 		//Debug.Log ("End check redundant gear joints. Is connected to motor" + gearView.name + " " + isGearConnectedToMotor);
 	}
-	private int _checksCount = 0;
 
 	private bool IsGearConnectedToMotor(GearView gearView, List<GearView> alreadyConnectedGearsList, GearView excludeGear = null)
 	{
-		if (_checksCount++ > 50)
+		if (_checksMotorConnectedCount++ > 50)
 		{
+			Debug.LogError ("Error. Searching way to motor iterated more than "+_checksMotorConnectedCount+ " times.");
 			return false;
 		}
+
 		bool isGearConnected = false;
 		GearColliderView spinCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
 
@@ -211,7 +204,6 @@ public class GearsChainController : Controller
 			if(gearsDictionary[connectedGear].gearType == GearType.MOTOR_GEAR)
 			{
 				//Debug.Log ("Gear " + gearView.name + " connected to motor!");
-				//actionIsGearConnected(true);
 				isGearConnected = true;
 				break;
 			}
@@ -223,16 +215,13 @@ public class GearsChainController : Controller
 				break;
 			}
 
-			//GearJoint2DExt gearJoint = connectedGear.GetComponent<GearJoint2DExt> ();
 			GearColliderView connectedSpinCollider = new List<GearColliderView> (connectedGear.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
 
-			if (connectedSpinCollider.ConnectedGears.Count>1)//.connectedJoint.GetComponents<GearJoint2DExt> ().Length > 0)
+			if (connectedSpinCollider.ConnectedGears.Count>1)
 			{
 				//Debug.Log ("Gear "+gearView.name+ " have more then 0 GearJoints");
 				return IsGearConnectedToMotor (connectedGear, alreadyConnectedGearsList, gearView);
 			}
-
-			//_gearJointsDestroyList.Add (gearJoint);
 		}
 
 		//Debug.Log ("End check gear "+gearView.name + "connected to motor.");

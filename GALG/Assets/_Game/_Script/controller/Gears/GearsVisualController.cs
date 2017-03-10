@@ -66,7 +66,7 @@ public class GearsVisualController : Controller
 
 	private void UpdateCurrentGearIndicator()
 	{
-		if (game.model.currentGearModel.collisionsCount == 0)
+		if (game.model.currentGearModel.baseCollisionsCount == 0)
 		{
 			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
 		}

@@ -22,6 +22,11 @@ public class GearColliderView : View
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
+		GearView otherGearView = other.transform.parent.GetComponent<GearView> ();
+
+		if (!ConnectedGears.Contains (otherGearView))
+			ConnectedGears.Add (otherGearView);
+
 		if (isSendEntryNotification)
 		{
 			SendEntryNotification (true, other);

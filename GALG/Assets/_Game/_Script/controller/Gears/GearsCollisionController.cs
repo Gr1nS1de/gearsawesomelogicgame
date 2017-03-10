@@ -43,24 +43,6 @@ public class GearsCollisionController : Controller
 
 					break;
 				}
-				/*
-			case N.OnConnectGears__:
-				{
-					GearView triggerGear = (GearView)data [0];
-					GearView connectedGear = (GearView)data [1];
-
-					ConnectGears (triggerGear, connectedGear);
-					break;
-				}
-
-			case N.OnDisconnectGears__:
-				{
-					GearView triggerGear = (GearView)data [0];
-					GearView connectedGear = (GearView)data [1];
-
-					DisconnectGears (triggerGear, connectedGear);
-					break;
-				}*/
 
 			case N.GameOver:
 				{
@@ -77,6 +59,8 @@ public class GearsCollisionController : Controller
 
 	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
+		Debug.Log ("Gear enter collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
+
 		switch (triggerColliderView.ColliderType)
 		{
 			case GearColliderType.BASE:
@@ -94,7 +78,7 @@ public class GearsCollisionController : Controller
 								float baseGap = triggerGearRadius + triggeredGearRadius + offsetBeetwenGears;
 								Vector3 beforeTriggerPosition = triggeredGear.transform.position - Vector3.ClampMagnitude( ( triggeredGear.transform.position - (triggerGear.transform.position + new Vector3(0f, 0f, 1f))) * 100f, baseGap);
 
-								game.model.currentGearModel.collisionsCount++;
+								game.model.currentGearModel.baseCollisionsCount++;
 
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
 
@@ -133,6 +117,8 @@ public class GearsCollisionController : Controller
 
 	private void OnGearsExitCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
+		Debug.Log ("Gear exit collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
+		
 		switch (triggerColliderView.ColliderType)
 		{
 			case GearColliderType.BASE:
@@ -147,7 +133,7 @@ public class GearsCollisionController : Controller
 
 						case GearColliderType.SPIN:
 							{
-								game.model.currentGearModel.collisionsCount--;
+								game.model.currentGearModel.baseCollisionsCount--;
 								break;
 							}
 					}
@@ -164,7 +150,7 @@ public class GearsCollisionController : Controller
 
 						case GearColliderType.SPIN:
 							{
-
+								Notify (N.UpdateGearsChain);
 								break;
 							}
 					}

@@ -140,7 +140,9 @@ public class GearsInputController : Controller
 
 		position.z = -2f;
 
-		game.view.currentGearView.transform.DOMove(position, 0.2f).SetId(this);
+		game.view.currentGearView.transform.DOMove(position, 0.1f).SetId(this);
+		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)game.view.currentGearView.transform.position;
+
 	}
 
 	private void DeselectCurrentGear()
@@ -154,7 +156,7 @@ public class GearsInputController : Controller
 				gearEventCollider.isSendEntryNotification = false;
 			}
 				
-			if (game.model.currentGearModel.collisionsCount != 0)
+			if (game.model.currentGearModel.baseCollisionsCount != 0)
 			{
 				//_lastBaseCorrectPoint = _lastBaseCorrectPoint;
 				gearPosition  = game.model.currentGearModel.lastCorrectPosition;
@@ -182,7 +184,7 @@ public class GearsInputController : Controller
 		game.view.currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
 		game.view.currentGearView = null;
 
-		game.model.currentGearModel.collisionsCount = 0;
+		game.model.currentGearModel.baseCollisionsCount = 0;
 
 		_isGearPositionCorrect = true;
 
