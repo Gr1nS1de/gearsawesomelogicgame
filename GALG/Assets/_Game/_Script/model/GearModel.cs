@@ -9,7 +9,8 @@ public enum GearType
 {
 	PLAYER_GEAR	= 0,
 	MOTOR_GEAR	= 1,
-	IDLE_GEAR	= 2
+	IDLE_GEAR	= 2,
+	TEST 		= 3
 }
 
 public enum GearSizeType

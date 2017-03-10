@@ -137,8 +137,6 @@ public class GearsFactoryController : Controller
 		float halfScreenWidth = _screenSize.x / 2f; 
 		float halfScreenHeight = _screenSize.y / 2f;
 
-		Debug.Log ("Calculate gear radius = " + gearRadius);
-
 		int i = 0;
 
 		while (true && i < 100)
@@ -148,7 +146,7 @@ public class GearsFactoryController : Controller
 			//Debug.LogError ("Random screen position = " + randomScreenPosition);
 
 			//If no overlap
-			if (Utils.IsCorrectGearBasePosition(randomScreenPosition, gearRadius, false, "GearBaseCollider"))
+			if (Utils.IsCorrectGearPosition(randomScreenPosition, gearRadius, false, "GearBaseCollider"))
 			{
 				position = randomScreenPosition;
 				break;

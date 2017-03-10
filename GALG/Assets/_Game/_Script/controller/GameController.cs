@@ -10,10 +10,14 @@ public class GameController : Controller
 	public CameraController					cameraController				{ get { return _cameraController 			= SearchLocal<CameraController>(			_cameraController,				typeof(CameraController).Name ); } }
 	public RoadController					roadController					{ get { return _roadController 				= SearchLocal<RoadController>(				_roadController,				typeof(RoadController).Name ); } }
 	public GearsFactoryController			gearsFactoryController			{ get { return _gearsFactoryController 		= SearchLocal<GearsFactoryController>(		_gearsFactoryController,		typeof(GearsFactoryController).Name ); } }
+	public GearsInputController				gearsInputController			{ get { return _gearsInputController 		= SearchLocal<GearsInputController>(		_gearsInputController,			typeof(GearsInputController).Name ); } }
+	public GearsCollisionController			gearsCollisionController		{ get { return _gearsCollisionController 	= SearchLocal<GearsCollisionController>(	_gearsCollisionController,		typeof(GearsCollisionController).Name ); } }
+	public GearsChainController				gearsChainController			{ get { return _gearsChainController 		= SearchLocal<GearsChainController>(		_gearsChainController,			typeof(GearsChainController).Name ); } }
+	public GearsVisualController			gearsVisualController			{ get { return _gearsVisualController 		= SearchLocal<GearsVisualController>(		_gearsVisualController,			typeof(GearsVisualController).Name ); } }
 	public ObstacleController				obstacleController				{ get { return _obstacleController			= SearchLocal<ObstacleController>(			_obstacleController,			typeof(ObstacleController).Name ); } }
 	public RobotsFactoryController			robotsFactoryController			{ get { return _robotsFactoryController 	= SearchLocal<RobotsFactoryController>(		_robotsFactoryController,		typeof(RobotsFactoryController).Name ); } }
 	//public DestructibleController			destructibleController			{ get { return _destructibleController 		= SearchLocal<DestructibleController>(		_destructibleController,		typeof(DestructibleController).Name ); } }
-	public GearsInputController					playerController				{ get { return _playerController 			= SearchLocal<GearsInputController>(				_playerController,				typeof(GearsInputController).Name ); } }
+	public GearsInputController				playerController				{ get { return _playerController 			= SearchLocal<GearsInputController>(		_playerController,				typeof(GearsInputController).Name ); } }
 	public GameSoundController				gameSoundController				{ get { return _gameSoundController			= SearchLocal<GameSoundController>(			_gameSoundController,			typeof(GameSoundController).Name ); } }
 	public ResourcesController				resourcesController				{ get { return _resourcesController 		= SearchLocal<ResourcesController>(			_resourcesController,			typeof(ResourcesController).Name ); } }
 	public ObjectsPoolController			objectsPoolController			{ get { return _objectsPoolController 		= SearchLocal<ObjectsPoolController> (		_objectsPoolController, 		typeof(ObjectsPoolController).Name);}}
@@ -21,10 +25,14 @@ public class GameController : Controller
 	private CameraController				_cameraController;
 	private RoadController					_roadController;
 	private GearsFactoryController 			_gearsFactoryController;
+	private GearsInputController 			_gearsInputController;
+	private GearsCollisionController 		_gearsCollisionController;
+	private GearsChainController 			_gearsChainController;
+	private GearsVisualController 			_gearsVisualController;
 	private ObstacleController				_obstacleController;
 	private RobotsFactoryController 		_robotsFactoryController;
 	//private DestructibleController		_destructibleController;
-	private GearsInputController					_playerController;
+	private GearsInputController			_playerController;
 	private GameSoundController				_gameSoundController;
 	private ResourcesController				_resourcesController;
 	private ObjectsPoolController 			_objectsPoolController;

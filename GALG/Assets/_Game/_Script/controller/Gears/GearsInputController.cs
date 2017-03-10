@@ -185,6 +185,8 @@ public class GearsInputController : Controller
 		game.model.currentGearModel.collisionsCount = 0;
 
 		_isGearPositionCorrect = true;
+
+		Notify (N.UpdateGearsChain);
 	}
 
 	private void DetachCurrentGear()

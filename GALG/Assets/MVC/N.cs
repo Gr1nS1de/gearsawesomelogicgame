@@ -5,8 +5,9 @@ public class N : MonoBehaviour
 {
 	#region Gears notifications
 	public const string OnInputGear___				= "on.input.gear";
-	public const string OnConnectGears__			= "on.connect.gears";
-	public const string OnDisconnectGears__			= "on.disconnect.gears";
+	public const string UpdateGearsChain			= "update.gears.chain";
+	//public const string OnConnectGears__			= "on.connect.gears";
+	//public const string OnDisconnectGears__		= "on.disconnect.gears";
 
 	#endregion
 
