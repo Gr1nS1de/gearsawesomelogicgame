@@ -5,7 +5,8 @@ public class N : MonoBehaviour
 {
 	#region Gears notifications
 	public const string OnInputGear___				= "on.input.gear";
-	public const string UpdateGearsChain			= "update.gears.chain";
+	public const string UpdateGearsChain			= "update.gears_chain";
+	public const string OnGearsChainStuck_			= "on.gears_chain.stuck";
 	//public const string OnConnectGears__			= "on.connect.gears";
 	//public const string OnDisconnectGears__		= "on.disconnect.gears";
 
@@ -16,7 +17,7 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Game notifications
-	public const string GameOnStart					= "game.onstart";
+	public const string GameOnStart					= "game.on.start";
 	public const string GamePlayLevel_				= "game.play.level";
 	public const string GamePause					= "game.pause";
 	public const string GameOver					= "game.over";

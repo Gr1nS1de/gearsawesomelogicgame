@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Thinksquirrel.Phys2D;
+using Thinksquirre.Phys2DExamples;
 
 public class GearsChainController : Controller
 {
@@ -11,6 +12,7 @@ public class GearsChainController : Controller
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
 
 	private int _checksMotorConnectedCount = 0;
+	private bool _gearsStuckFlag = false;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -25,7 +27,7 @@ public class GearsChainController : Controller
 
 			case N.UpdateGearsChain:
 				{
-					Debug.Log ("Update gear chain");
+					//Debug.Log ("Update gear chain");
 
 					//Update gears connected_state for all gears
 					UpdateConnectedGearsChain ();
@@ -35,6 +37,26 @@ public class GearsChainController : Controller
 
 					//Update connected_state one more time for proper gears_state after destroying redundant gears.
 					UpdateConnectedGearsChain ();
+
+					//Check if gears should stack
+					if (IsChainStuck ())
+						Notify (N.OnGearsChainStuck_, true);
+					else 
+						if (_gearsStuckFlag)
+							Notify (N.OnGearsChainStuck_, false);
+					
+					break;
+				}
+
+			case N.OnGearsChainStuck_:
+				{
+					_gearsStuckFlag = (bool)data[0];
+					GearView motorGearView = gearsList.Find ((gearView ) => gearsDictionary [gearView].gearType == GearType.MOTOR_GEAR);
+					GearModel motorGearModel = gearsDictionary[ motorGearView ];
+
+					motorGearView.GetComponent<SinusoidalMotor> ().enabled = _gearsStuckFlag;
+					//motorGearView.GetComponent<HingeJoint2DExt> ().jointSpeed = 150f;
+
 					break;
 				}
 		}
@@ -76,7 +98,7 @@ public class GearsChainController : Controller
 			{
 				GearModel connectedGearModel = gearsDictionary [connectedGearView];
 
-				Debug.Log ("Gear "+ gearView.name + " connected with "+connectedGearView.name);
+				//Debug.Log ("Gear "+ gearView.name + " connected with "+connectedGearView.name);
 
 				//Check connected gear position state for update current connection
 				switch (connectedGearModel.gearPositionState)
@@ -143,13 +165,41 @@ public class GearsChainController : Controller
 		}
 	}
 
+	private bool IsChainStuck()
+	{
+		bool isChainStuck = false;
+
+		for (int i = 0; i < gearsList.Count; i++)
+		{
+			GearView gearView = gearsList [i];
+			GearModel gearModel = gearsDictionary [gearView];
+			GearColliderView spinCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
+			GearView parentAttachedGear = spinCollider.ConnectedGears.Find((gear)=>new List<GearJoint2DExt>(gear.GetComponents<GearJoint2DExt>()).Find((gearJoint)=>gearJoint.connectedJoint == gearView.GetComponent<HingeJoint2DExt>())) ;
+
+			foreach (var connectedGear in spinCollider.ConnectedGears)
+			{
+				List<GearJoint2DExt> connectedGearJoints = new List<GearJoint2DExt>(connectedGear.GetComponents<GearJoint2DExt> ());
+
+				//If gear connected with another gear which connected with this gear parent gear joint. Chain stuck!
+				if (parentAttachedGear != null && connectedGearJoints.Find (gearJoint => gearJoint.connectedJoint == parentAttachedGear.GetComponent<HingeJoint2DExt> ()) != null)
+				{
+					isChainStuck = true;
+					i = gearsList.Count;
+					break;
+				}
+			}
+		}
+
+		return isChainStuck;
+	}
+
 	private void ConnectGears (GearView triggerGear, GearView connectGear)
 	{
 		GearModel triggerGearModel = gearsDictionary[triggerGear];
 		GearModel connectGearModel = gearsDictionary[connectGear];
 		GearJoint2DExt connectGearJoint = connectGear.gameObject.AddComponent<GearJoint2DExt> ();
 
-		Debug.Log ("Connect gears: " + triggerGear.name + " to " + connectGear.name);
+		//Debug.Log ("Connect gears: " + triggerGear.name + " to " + connectGear.name);
 
 		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
 

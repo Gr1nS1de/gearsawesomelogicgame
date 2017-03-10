@@ -21,7 +21,6 @@ public class GearsCollisionController : Controller
 					break;
 				}
 					
-
 			case N.GearsColliderTriggered_____:
 				{
 					GearView triggerGear = (GearView)data [0];
@@ -59,7 +58,7 @@ public class GearsCollisionController : Controller
 
 	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
-		Debug.Log ("Gear enter collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
+		//Debug.Log ("Gear enter collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
 
 		switch (triggerColliderView.ColliderType)
 		{
@@ -117,7 +116,7 @@ public class GearsCollisionController : Controller
 
 	private void OnGearsExitCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
 	{
-		Debug.Log ("Gear exit collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
+		//Debug.Log ("Gear exit collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
 		
 		switch (triggerColliderView.ColliderType)
 		{
