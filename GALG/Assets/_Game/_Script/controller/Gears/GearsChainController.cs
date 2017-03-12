@@ -41,7 +41,7 @@ public class GearsChainController : Controller
 					GearView motorGearView = gearsList.Find ((gearView ) => gearsDictionary [gearView].gearType == GearType.MOTOR_GEAR);
 					GearModel motorGearModel = gearsDictionary[ motorGearView ];
 
-					motorGearView.GetComponent<SinusoidalMotor> ().enabled = _gearsStuckFlag;
+					motorGearView.GetComponent<SinusoidalMotor> ().IsSinusoidal = _gearsStuckFlag;
 					//motorGearView.GetComponent<HingeJoint2DExt> ().jointSpeed = 150f;
 
 					break;

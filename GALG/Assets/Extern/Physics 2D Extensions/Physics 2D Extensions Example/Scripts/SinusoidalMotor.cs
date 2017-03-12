@@ -19,6 +19,8 @@ namespace Thinksquirre.Phys2DExamples
         [SerializeField] float m_MotorSpeed = 0.5f;
         [SerializeField] float m_TimeScale = 1.0f;
 
+		public bool IsSinusoidal = false;
+
         void FixedUpdate()
         {
             var hinge = m_Joint as HingeJoint2DExt;
@@ -27,7 +29,7 @@ namespace Thinksquirre.Phys2DExamples
             if (hinge)
             {
                 var motor = hinge.motor;
-                motor.motorSpeed = m_MotorSpeed * Mathf.Sin(Time.time * m_TimeScale);
+				motor.motorSpeed = m_MotorSpeed * (IsSinusoidal ? 10f : 1) * (IsSinusoidal ? Mathf.Sin(Time.time * m_TimeScale) : m_TimeScale);
                 hinge.motor = motor;
             }
             else if (slider)
