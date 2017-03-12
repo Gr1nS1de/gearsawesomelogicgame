@@ -29,21 +29,7 @@ public class GearsChainController : Controller
 				{
 					//Debug.Log ("Update gear chain");
 
-					//Update gears connected_state for all gears
-					UpdateConnectedGearsChain ();
-
-					//Check for disconnected parts of chain
-					UpdateRedundantGearsChains ();
-
-					//Update connected_state one more time for proper gears_state after destroying redundant gears.
-					UpdateConnectedGearsChain ();
-
-					//Check if gears should stack
-					if (IsChainStuck ())
-						Notify (N.OnGearsChainStuck_, true);
-					else 
-						if (_gearsStuckFlag)
-							Notify (N.OnGearsChainStuck_, false);
+					StartCoroutine( StartUpdateCicle ());
 					
 					break;
 				}
@@ -68,12 +54,33 @@ public class GearsChainController : Controller
 
 	}
 
+	private IEnumerator StartUpdateCicle()
+	{
+		yield return null; //Delay 1 frame for physix storing connections
+
+		//Update gears connected_state for all gears
+		UpdateConnectedGearsChain ();
+
+		//Check for disconnected parts of chain
+		UpdateRedundantGearsChains ();
+
+		//Update connected_state one more time for proper gears_state after destroying redundant gears.
+		UpdateConnectedGearsChain ();
+
+		//Check if gears should stack
+		if (IsChainStuck ())
+			Notify (N.OnGearsChainStuck_, true);
+		else 
+			if (_gearsStuckFlag)
+				Notify (N.OnGearsChainStuck_, false);
+	}
+
 	private void UpdateConnectedGearsChain()
 	{
 		int updateCount = 0;
 		for (int i = 0; i < gearsList.Count; i++)
 		{
-			if (updateCount++ > 10)
+			if (updateCount++ > 50)
 			{
 				Debug.LogError ("Error. Updated gear more than "+updateCount +" times.");
 				break;
@@ -86,6 +93,7 @@ public class GearsChainController : Controller
 			//If none trigger stay connection at all
 			if (spinCollider.ConnectedGears.Count <= 0)
 			{
+				//Debug.Break ();
 				ResetGearPositionState(gearView, true);
 				continue;
 			}
@@ -113,12 +121,9 @@ public class GearsChainController : Controller
 						{
 							if (gearModel.gearPositionState == GearPositionState.DEFAULT)
 							{
-								if (!IsGearAlreadyConnected (gearView, connectedGearView))
-								{
-									ConnectGears (gearView, connectedGearView);
+								ConnectGears (gearView, connectedGearView);
 
-									i = 0;
-								}
+								i = 0;
 							}
 							break;
 						}
@@ -197,9 +202,9 @@ public class GearsChainController : Controller
 	{
 		GearModel triggerGearModel = gearsDictionary[triggerGear];
 		GearModel connectGearModel = gearsDictionary[connectGear];
-		GearJoint2DExt connectGearJoint = connectGear.gameObject.AddComponent<GearJoint2DExt> ();
+		GearJoint2DExt connectGearJoint = !IsGearAlreadyConnected (triggerGear, connectGear) ? connectGear.gameObject.AddComponent<GearJoint2DExt> () : new List<GearJoint2DExt>(connectGear.GetComponents<GearJoint2DExt>()).Find(gearJoint=>gearJoint.connectedJoint == triggerGear.GetComponent<HingeJoint2DExt>());
 
-		//Debug.Log ("Connect gears: " + triggerGear.name + " to " + connectGear.name);
+		Debug.Log ("Connect gears: " + triggerGear.name + " to " + connectGear.name);
 
 		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
 
@@ -220,12 +225,15 @@ public class GearsChainController : Controller
 			GearView connectedGearView = gearJoint.connectedJoint.GetComponent<GearView> ();
 
 			//if gearView have gearJoint connected to another gear which not realy connected to gearView - destroy gear joint
-			if(!connectedGearsList.Contains(connectedGearView))
-				Destroy(gearJoint);
-			else
+			if (!connectedGearsList.Contains (connectedGearView))
+			{
+				Debug.Log ("Destroy redundant gear joint from "+gearJoint.name);
+				Destroy (gearJoint);
+			}else
 			if(IsGearAlreadyConnected(gearView,	connectedGearView))
 			{
 				gearModel.gearPositionState = GearPositionState.CONNECTED;
+				Debug.Log ("Gear "+gearView.name + " already connected to "+ connectedGearView);
 			}
 		}
 
@@ -282,13 +290,17 @@ public class GearsChainController : Controller
 	private void ResetGearPositionState(GearView gearView, bool isDeleteGearJoints = false, GearPositionState gearPositionState = GearPositionState.DEFAULT)
 	{
 		GearModel gearModel = gearsDictionary [gearView];
+		List<GearJoint2DExt> gearJoints = new List<GearJoint2DExt> (gearView.GetComponents<GearJoint2DExt> ());
 
 		switch(gearPositionState)
 		{
 			case GearPositionState.DEFAULT:
 				{
-					if(isDeleteGearJoints)
-						new List<GearJoint2DExt> (gearView.GetComponents<GearJoint2DExt> ()).ForEach ((gearJoin ) => Destroy (gearJoin));
+					if (isDeleteGearJoints && gearJoints.Count > 0)
+					{
+						Debug.Log ("Delete all gear joints from "+gearView.name);
+						gearJoints.ForEach ((gearJoint ) => Destroy (gearJoint));
+					}
 
 					if (gearModel.gearType != GearType.MOTOR_GEAR)
 						gearModel.gearPositionState = GearPositionState.DEFAULT;

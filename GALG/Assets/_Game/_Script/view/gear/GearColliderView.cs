@@ -107,12 +107,11 @@ public class GearColliderView : View
 
 	private void SendEntryNotification(bool isEnter, Collider2D other)
 	{
-		//Debug.Log ( transform.parent.name+ " triggered with "+other.transform.parent.name + " type = " + ColliderType + " isEnter = " + isEnter);
-
-		RaycastHit2D hit = Physics2D.Raycast(transform.position, other.transform.position);
+		RaycastHit2D hit = Physics2D.Raycast (transform.position, other.transform.position);
 		Vector3 collisionPoint = hit.point;
 
-		Notify (N.GearsColliderTriggered_____, transform.parent.GetComponent<GearView>(), other.transform.parent.GetComponent<GearView>(),  this, other.GetComponent<GearColliderView>(), isEnter);
+
+		Notify (N.GearsColliderTriggered_____, transform.parent.GetComponent<GearView> (), other.transform.parent.GetComponent<GearView> (), this, other.GetComponent<GearColliderView> (), isEnter);
 	}
 
 }

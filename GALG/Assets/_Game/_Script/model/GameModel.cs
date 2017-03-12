@@ -36,7 +36,7 @@ public class GameModel : Model
 	public GameSoundModel				soundModel				{ get { return _soundModel 					= SearchLocal<GameSoundModel>(				_soundModel,				typeof(GameSoundModel).Name ); } }
 	public RCModel						RCModel					{ get { return _RCModel 					= SearchLocal<RCModel>(						_RCModel,					typeof(RCModel).Name ); } }
 	public ObjectsPoolModel				objectsPoolModel		{ get { return _objectsPoolModel			= SearchLocal<ObjectsPoolModel>(			_objectsPoolModel,			typeof(ObjectsPoolModel).Name );}}
-	public CurrentGearModel				currentGearModel		{ get { return _currentGearModel 			= SearchLocal<CurrentGearModel>(			_currentGearModel,			typeof(CurrentGearModel).Name); } }
+	public SelectedGearModel			selectedGearModel		{ get { return _selectedGearModel 			= SearchLocal<SelectedGearModel>(			_selectedGearModel,			typeof(SelectedGearModel).Name); } }
 
 
 	private CameraModel					_cameraModel;
@@ -47,7 +47,7 @@ public class GameModel : Model
 	private GameSoundModel				_soundModel;
 	private RCModel						_RCModel;
 	private ObjectsPoolModel			_objectsPoolModel;
-	private CurrentGearModel			_currentGearModel;
+	private SelectedGearModel			_selectedGearModel;
 	#endregion
 }
 	

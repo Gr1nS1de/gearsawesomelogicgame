@@ -30,8 +30,9 @@ public enum GearPositionState
 
 public enum GearIndicatorStatus
 {
-	SELECTED	= 0,
-	ERROR		= 1
+	DEFAULT		= 0,
+	SELECTED	= 1,
+	ERROR		= 2
 }
 
 public enum GearColliderType
@@ -48,6 +49,7 @@ public class GearModel : Model
 	public GearPositionState			gearPositionState		{ get { return _gearPositionState; } set { _gearPositionState = value;} }	
 	public SpriteRenderer				shadow					{ get { return _shadow; }  /*playerDestructible.ReplaceWith( _currentSprite );*/ }
 	public SpriteRenderer				statusIndicator			{ get { return _statusIndicator; } }
+	public Color						indicatorDefaultColor	{ get { return _indicatorDefaultColor; } }
 	public Color						indicatorSelectedColor	{ get { return _indicatorSelectedColor; } }
 	public Color						indicatorErrorColor		{ get { return _indicatorErrorColor; } }
 	public int							teethCount				{ get { return _teethCount; } }
@@ -71,6 +73,8 @@ public class GearModel : Model
 	private SpriteRenderer				_shadow;
 	[SerializeField]
 	private SpriteRenderer				_statusIndicator;
+	[SerializeField]
+	private Color						_indicatorDefaultColor;
 	[SerializeField]
 	private Color						_indicatorSelectedColor;
 	[SerializeField]

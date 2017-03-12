@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Thinksquirrel.Phys2D;
 
+
 public class GearsInputController : Controller
 {
-	private GearModel 						currentGearModel 			{ get { return gearsDictionary[game.view.currentGearView]; } }
+	private GearView 						currentGearView 			{ get { return game.view.currentGearView; } set { game.view.currentGearView = value; } }
+	private GearModel 						currentGearModel 			{ get { return gearsDictionary[currentGearView]; } }
+	private SelectedGearModel				selectedGearModel			{ get { return game.model.selectedGearModel;}}
 	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
 	private List<GearView>					gearsList					{ get { return gearsFactoryModel.themeGearsPrefabsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
@@ -45,9 +49,9 @@ public class GearsInputController : Controller
 						else
 							Debug.LogError ("Input gear element == null. ");
 					}
-					else if (game.view.currentGearView)
+					else if (currentGearView)
 					{
-						OnDragGear (game.view.currentGearView, inputPoint, gesturePhase);
+						OnDragGear (currentGearView, inputPoint, gesturePhase);
 					}
 
 					break;
@@ -70,7 +74,7 @@ public class GearsInputController : Controller
 	{
 		//Debug.Log ("Drag gear = " + selectedGear.gameObject.name + " point " + inputPoint);
 
-		Vector3 selectedPoint = new Vector3 (inputPoint.x, inputPoint.y, -2f);
+		Vector3 selectedPoint = new Vector3 (inputPoint.x, inputPoint.y, -2f);// Z = -2 bcs move object forward to camera
 		Vector3 gearPosition = selectedGear.transform.position;
 
 		switch (gesturePhase)
@@ -80,7 +84,7 @@ public class GearsInputController : Controller
 					if (!_isGearPositionCorrect)
 						return;
 					
-					if (game.view.currentGearView)
+					if (currentGearView != null)
 						return;
 
 					_isGearPositionCorrect = false;
@@ -88,12 +92,8 @@ public class GearsInputController : Controller
 					//Init vars for control gear and visual effects
 					SelectGear (selectedGear);
 
-					//Move forward to camera
-					gearPosition.z = -2;
-
-					_selectedPointDelta = gearPosition - selectedPoint;
-
-					selectedGear.transform.position = gearPosition;
+					//Get delta between touch point and gear center position - for proper gear drag
+					_selectedPointDelta = new Vector3(gearPosition.x, gearPosition.y, selectedPoint.z) - selectedPoint;
 
 					_isCanMoveFlag = true;
 					break;
@@ -122,14 +122,15 @@ public class GearsInputController : Controller
 	#region Gear input control methods
 	private void SelectGear(GearView gear)
 	{
+		Debug.Log ("Select gear " + gear.name);
 		foreach (var gearEventCollider in gear.GetComponentsInChildren<GearColliderView> ())
 		{
 			gearEventCollider.isSendEntryNotification = true;
 		}
 
-		game.view.currentGearView = gear;
-		game.view.currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
-		game.model.currentGearModel.lastCorrectPosition = gear.transform.position;
+		currentGearView = gear;
+		currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
+		selectedGearModel.lastCorrectPosition = gear.transform.position;
 
 		DetachCurrentGear ();
 	}
@@ -140,37 +141,41 @@ public class GearsInputController : Controller
 
 		position.z = -2f;
 
-		game.view.currentGearView.transform.DOMove(position, 0.1f).SetId(this);
-		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)game.view.currentGearView.transform.position;
+		currentGearView.transform.DOMove(position, 0.1f).SetId(this);
+		currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)currentGearView.transform.position;
 
 	}
 
 	private void DeselectCurrentGear()
 	{
-		if (game.view.currentGearView)
+		if (currentGearView && !DOTween.IsTweening("TWEEN_RESETING_CURRENT_GEAR"))
 		{
-			Vector3 gearPosition = game.view.currentGearView.transform.position;
+			Vector3 gearCurrentPosition = currentGearView.transform.position;
 
-			foreach (var gearEventCollider in game.view.currentGearView.GetComponentsInChildren<GearColliderView> ())
+			//Stop send trigger events from Base & Spin colliders
+			foreach (var gearEventCollider in currentGearView.GetComponentsInChildren<GearColliderView> ())
 			{
 				gearEventCollider.isSendEntryNotification = false;
 			}
 				
-			if (game.model.currentGearModel.baseCollisionsCount != 0)
+			//If wrong position - set current position as last saved correct position
+			if (selectedGearModel.baseCollisionsCount != 0)
 			{
 				//_lastBaseCorrectPoint = _lastBaseCorrectPoint;
-				gearPosition  = game.model.currentGearModel.lastCorrectPosition;
+				gearCurrentPosition  = game.model.selectedGearModel.lastCorrectPosition;
 			}
 
-			gearPosition.z = -1f;
+			//Push gear back to normal Z for deselected player gear
+			gearCurrentPosition.z = -1f;
 
 			DOTween.Kill (this);
 
-			game.view.currentGearView.transform.DOMove (gearPosition, 0.2f)
+			currentGearView.transform.DOMove (gearCurrentPosition, 0.2f)
 				.OnComplete (() =>
-			{
-				ResetCurrentGear ();
-			});
+				{
+					ResetCurrentGear ();
+				})
+				.SetId("TWEEN_RESETING_CURRENT_GEAR");
 			
 		}
 	}
@@ -179,12 +184,15 @@ public class GearsInputController : Controller
 
 	private void ResetCurrentGear()
 	{
+		Debug.Log ("Reset current gear "+ currentGearView.name);
+
 		AttachCurrentGear ();
 
-		game.view.currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
-		game.view.currentGearView = null;
+		currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
 
-		game.model.currentGearModel.baseCollisionsCount = 0;
+		selectedGearModel.baseCollisionsCount = 0;
+
+		currentGearView = null;
 
 		_isGearPositionCorrect = true;
 
@@ -193,13 +201,13 @@ public class GearsInputController : Controller
 
 	private void DetachCurrentGear()
 	{
-		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().enabled = false;
+		currentGearView.GetComponent<HingeJoint2DExt> ().enabled = false;
 	}
 		
 	private void AttachCurrentGear()
 	{
-		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)game.view.currentGearView.transform.position;
-		game.view.currentGearView.GetComponent<HingeJoint2DExt> ().enabled = true;
+		currentGearView.GetComponent<HingeJoint2DExt> ().connectedAnchor = (Vector2)currentGearView.transform.position;
+		currentGearView.GetComponent<HingeJoint2DExt> ().enabled = true;
 	}
 
 	private void OnGameOver()

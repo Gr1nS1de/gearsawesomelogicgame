@@ -5,8 +5,10 @@ using DG.Tweening;
 
 public class GearsVisualController : Controller 
 {
+	private GearView 						currentGearView 			{ get { return game.view.currentGearView; } set { game.view.currentGearView = value; } }
+	private GearModel 						currentGearModel 			{ get { return gearsDictionary[currentGearView]; } }
+	private SelectedGearModel				selectedGearModel			{ get { return game.model.selectedGearModel;}}
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
-	private CurrentGearModel				currentGearModel 			{ get { return game.model.currentGearModel; } }
 
 	private Color							_lastGearStatusIndicatorColor;
 	private float							_lastGearShadowColorAlpha;
@@ -33,7 +35,7 @@ public class GearsVisualController : Controller
 						case FingerMotionPhase.Started:
 							{
 								//If just started
-								if (dragItem != null)
+								if (dragItem != null && game.view.currentGearView != null)
 								{
 									SetHighlightCurrentGear (true);
 								}
@@ -66,7 +68,7 @@ public class GearsVisualController : Controller
 
 	private void UpdateCurrentGearIndicator()
 	{
-		if (game.model.currentGearModel.baseCollisionsCount == 0)
+		if (game.model.selectedGearModel.baseCollisionsCount == 0)
 		{
 			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
 		}
@@ -80,15 +82,21 @@ public class GearsVisualController : Controller
 	{
 		switch (status)
 		{
+			case GearIndicatorStatus.DEFAULT:
+				{
+					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorDefaultColor, 0.1f); 
+					break;
+				}
+
 			case GearIndicatorStatus.SELECTED:
 				{
-					currentGearModel.gearModel.statusIndicator.DOColor(currentGearModel.gearModel.indicatorSelectedColor, 0.1f); 
+					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorSelectedColor, 0.1f); 
 					break;
 				}
 
 			case GearIndicatorStatus.ERROR:
 				{
-					currentGearModel.gearModel.statusIndicator.DOColor(currentGearModel.gearModel.indicatorErrorColor, 0.1f); 
+					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorErrorColor, 0.1f); 
 					break;
 				}
 		}
@@ -99,21 +107,21 @@ public class GearsVisualController : Controller
 
 		if (game.view.currentGearView == null)
 		{
-			Debug.LogError ("Can't highlight. Current gear view == null!");
+			Debug.LogError ("Can't highlight. Current gear view == null! isEnable = " + isEnable);
 			return;
 		}
 
-		var gearShadow = currentGearModel.gearModel.shadow;
+		var gearShadow = selectedGearModel.gearModel.shadow;
 		var shadowColor = gearShadow.color;
 
 		if (isEnable)
 		{
 			//Setup position for light
-			game.view.gearLightView.transform.SetParent (game.view.currentGearView.transform);
+			game.view.gearLightView.transform.SetParent (currentGearView.transform);
 			game.view.gearLightView.transform.DOLocalMove (Vector3.zero, 0.2f);
 
 			_lastGearShadowColorAlpha = shadowColor.a;
-			_lastGearStatusIndicatorColor = currentGearModel.gearModel.statusIndicator.color;
+			_lastGearStatusIndicatorColor = selectedGearModel.gearModel.statusIndicator.color;
 
 			shadowColor.a = 0f;
 			//gearShadow.transform.rotation = Quaternion.Euler (Vector3.zero);
@@ -126,7 +134,7 @@ public class GearsVisualController : Controller
 		}
 		else
 		{
-			currentGearModel.gearModel.shadow.DOFade (0f, 0.1f)
+			selectedGearModel.gearModel.shadow.DOFade (0f, 0.1f)
 				.OnComplete (() =>
 				{
 					gearShadow.enabled = false;
@@ -135,8 +143,8 @@ public class GearsVisualController : Controller
 					gearShadow.transform.rotation = Quaternion.Euler (Vector3.zero);
 				});
 
-			//Restore prev indicator color
-			currentGearModel.gearModel.statusIndicator.DOColor(_lastGearStatusIndicatorColor, 0.1f); 
+			//Restore default indicator color
+			SetCurrentGearIndicator (GearIndicatorStatus.DEFAULT);
 		}
 	}
 }

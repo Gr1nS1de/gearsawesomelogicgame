@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CurrentGearModel : Model 
+public class SelectedGearModel : Model 
 {
 	public GearModel 						gearModel 					{ get { return game.model.gearsFactoryModel.gearsDictionary[game.view.currentGearView]; } }
 	public Vector3							lastCorrectPosition			{ get { return _lastCorrectPosition; } 	set { _lastCorrectPosition = value; } }

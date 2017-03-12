@@ -77,15 +77,15 @@ public class GearsCollisionController : Controller
 								float baseGap = triggerGearRadius + triggeredGearRadius + offsetBeetwenGears;
 								Vector3 beforeTriggerPosition = triggeredGear.transform.position - Vector3.ClampMagnitude( ( triggeredGear.transform.position - (triggerGear.transform.position + new Vector3(0f, 0f, 1f))) * 100f, baseGap);
 
-								game.model.currentGearModel.baseCollisionsCount++;
+								game.model.selectedGearModel.baseCollisionsCount++;
 
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
 
 								//Check for triggered saved position is empty for current gear size. 
 								if (Utils.IsCorrectGearPosition (beforeTriggerPosition, triggerGearRadius, true, "GearSpinCollider"))
 								{
-									game.model.currentGearModel.lastCorrectPosition = beforeTriggerPosition;
-									Notify (N.UpdateGearsChain);
+									game.model.selectedGearModel.lastCorrectPosition = beforeTriggerPosition;
+									//Notify (N.UpdateGearsChain);
 								}
 
 								break;
@@ -132,7 +132,7 @@ public class GearsCollisionController : Controller
 
 						case GearColliderType.SPIN:
 							{
-								game.model.currentGearModel.baseCollisionsCount--;
+								game.model.selectedGearModel.baseCollisionsCount--;
 								break;
 							}
 					}
