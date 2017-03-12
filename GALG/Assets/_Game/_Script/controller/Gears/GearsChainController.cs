@@ -6,7 +6,9 @@ using Thinksquirre.Phys2DExamples;
 
 public class GearsChainController : Controller
 {
-	private GearModel 						currentGearModel 			{ get { return gearsDictionary[game.view.currentGearView]; } }
+	private GearView 						currentGearView 			{ get { return game.view.currentGearView; } set { game.view.currentGearView = value; } }
+	private GearModel 						currentGearModel 			{ get { return gearsDictionary[currentGearView]; } }
+	private SelectedGearModel				selectedGearModel			{ get { return game.model.selectedGearModel;}}
 	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
 	private List<GearView>					gearsList					{ get { return gearsFactoryModel.instantiatedGearsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
@@ -28,8 +30,7 @@ public class GearsChainController : Controller
 			case N.UpdateGearsChain:
 				{
 					//Debug.Log ("Update gear chain");
-
-					StartCoroutine( StartUpdateCicle ());
+					StartCoroutine (StartUpdateCicle ());
 					
 					break;
 				}
@@ -119,7 +120,7 @@ public class GearsChainController : Controller
 
 					case GearPositionState.CONNECTED:
 						{
-							if (gearModel.gearPositionState == GearPositionState.DEFAULT)
+							if(!IsGearAlreadyConnected(gearView, connectedGearView) && gearsDictionary[gearView].gearPositionState == GearPositionState.DEFAULT || (IsGearAlreadyConnected(gearView, connectedGearView) && gearsDictionary[gearView].gearPositionState != GearPositionState.CONNECTED))
 							{
 								ConnectGears (gearView, connectedGearView);
 
@@ -229,12 +230,12 @@ public class GearsChainController : Controller
 			{
 				Debug.Log ("Destroy redundant gear joint from "+gearJoint.name);
 				Destroy (gearJoint);
-			}else
-			if(IsGearAlreadyConnected(gearView,	connectedGearView))
-			{
-				gearModel.gearPositionState = GearPositionState.CONNECTED;
-				Debug.Log ("Gear "+gearView.name + " already connected to "+ connectedGearView);
-			}
+			}//else
+			//if(IsGearAlreadyConnected(gearView,	connectedGearView))
+			//{
+			//	gearModel.gearPositionState = GearPositionState.CONNECTED;
+			//	Debug.Log ("Gear "+gearView.name + " already connected to "+ connectedGearView);
+			//}
 		}
 
 		//Debug.Log ("End check redundant gear joints. Is connected to motor" + gearView.name + " " + isGearConnectedToMotor);
@@ -296,17 +297,18 @@ public class GearsChainController : Controller
 		{
 			case GearPositionState.DEFAULT:
 				{
-					if (isDeleteGearJoints && gearJoints.Count > 0)
-					{
-						Debug.Log ("Delete all gear joints from "+gearView.name);
-						gearJoints.ForEach ((gearJoint ) => Destroy (gearJoint));
-					}
 
 					if (gearModel.gearType != GearType.MOTOR_GEAR)
 						gearModel.gearPositionState = GearPositionState.DEFAULT;
 					
 					break;
 				}
+		}
+
+		if (isDeleteGearJoints && gearJoints.Count > 0)
+		{
+			Debug.Log ("Delete all gear joints from "+gearView.name);
+			gearJoints.ForEach ((gearJoint ) => Destroy (gearJoint));
 		}
 	}
 

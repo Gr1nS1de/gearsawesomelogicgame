@@ -22,6 +22,13 @@ public class GearsFactoryController : Controller
 
 					break;
 				}
+
+			case N.StartGenerateLevel:
+				{
+					ClearCurrentLevel ();
+					InitLevel (0);
+					break;
+				}
 		}
 	}
 
@@ -31,7 +38,6 @@ public class GearsFactoryController : Controller
 		float screenWidth = screenHeight * Camera.main.aspect;
 		_screenSize = new Vector2 (screenWidth, screenHeight);
 
-		InitLevel (0f);
 	}
 
 	private void InitLevel(float difficulty)
@@ -156,6 +162,18 @@ public class GearsFactoryController : Controller
 		}
 
 		return position;
+	}
+
+	private void ClearCurrentLevel()
+	{
+		gearsList.ForEach ((gearView ) =>
+		{
+			Destroy(gearsDictionary[gearView].gameObject);
+			Destroy(gearView.gameObject);
+		});
+
+		gearsDictionary.Clear ();
+		gearsList.Clear ();
 	}
 
 	private Vector2 GetGearRendererSize(GearSizeType gearSizeType, GearType gearType = GearType.PLAYER_GEAR)

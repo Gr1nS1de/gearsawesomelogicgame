@@ -5,10 +5,14 @@ using Thinksquirrel.Phys2D;
 
 public class GearsCollisionController : Controller 
 {
-	private GearModel 						currentGearModel 			{ get { return gearsDictionary[game.view.currentGearView]; } }
+	private GearView 						currentGearView 			{ get { return game.view.currentGearView; } set { game.view.currentGearView = value; } }
+	private GearModel 						currentGearModel 			{ get { return gearsDictionary[currentGearView]; } }
+	private SelectedGearModel				selectedGearModel			{ get { return game.model.selectedGearModel;}}
 	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
 	private List<GearView>					gearsList					{ get { return gearsFactoryModel.instantiatedGearsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
+
+	private GearPositionState				_storedGearPositionState;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -77,15 +81,16 @@ public class GearsCollisionController : Controller
 								float baseGap = triggerGearRadius + triggeredGearRadius + offsetBeetwenGears;
 								Vector3 beforeTriggerPosition = triggeredGear.transform.position - Vector3.ClampMagnitude( ( triggeredGear.transform.position - (triggerGear.transform.position + new Vector3(0f, 0f, 1f))) * 100f, baseGap);
 
-								game.model.selectedGearModel.baseCollisionsCount++;
+								selectedGearModel.baseCollisionsCount++;
+
 
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
 
 								//Check for triggered saved position is empty for current gear size. 
 								if (Utils.IsCorrectGearPosition (beforeTriggerPosition, triggerGearRadius, true, "GearSpinCollider"))
 								{
-									game.model.selectedGearModel.lastCorrectPosition = beforeTriggerPosition;
-									//Notify (N.UpdateGearsChain);
+									selectedGearModel.lastCorrectPosition = beforeTriggerPosition;
+									Notify (N.UpdateGearsChain);
 								}
 
 								break;
@@ -132,7 +137,11 @@ public class GearsCollisionController : Controller
 
 						case GearColliderType.SPIN:
 							{
-								game.model.selectedGearModel.baseCollisionsCount--;
+								selectedGearModel.baseCollisionsCount--;
+
+
+								Notify (N.UpdateGearsChain);
+
 								break;
 							}
 					}

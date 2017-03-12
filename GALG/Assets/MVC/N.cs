@@ -23,6 +23,7 @@ public class N : MonoBehaviour
 	public const string GameOver					= "game.over";
 
 	public const string GearsColliderTriggered_____	= "gears_collider.triggered";
+	public const string StartGenerateLevel			= "start.generate.level";
 	/*
 	public const string GamePlayerGetScoreItem		= "game.player.get.score_item";
 	public const string GamePlayerPlacedOnRoad		= "game.player.placed_on_road";
