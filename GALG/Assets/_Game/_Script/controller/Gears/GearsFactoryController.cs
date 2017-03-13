@@ -67,7 +67,7 @@ public class GearsFactoryController : Controller
 
 		InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.MEDIUM, 1);
 
-		InstantiateGear (GearType.IDLE_GEAR, GearSizeType.MEDIUM, 2);
+		InstantiateGear (GearType.CHECKPOINT_GEAR, GearSizeType.MEDIUM, 2);
 	}
 
 	private void InstantiateGear(GearType gearType, GearSizeType gearSizeType, int count = 1)
@@ -112,7 +112,7 @@ public class GearsFactoryController : Controller
 							break;
 						}
 
-					case GearType.IDLE_GEAR:
+					case GearType.CHECKPOINT_GEAR:
 						{
 							gearView.transform.name = gearModelObject.name = "IdleGear_0" + i;
 							gearView.transform.SetParent (game.view.gameGearsContainer.transform);

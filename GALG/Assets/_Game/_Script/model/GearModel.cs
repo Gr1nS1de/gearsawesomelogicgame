@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 public enum GearType
 {
-	PLAYER_GEAR	= 0,
-	MOTOR_GEAR	= 1,
-	IDLE_GEAR	= 2,
-	TEST 		= 3
+	PLAYER_GEAR		= 0,
+	MOTOR_GEAR		= 1,
+	CHECKPOINT_GEAR	= 2,
+	TEST 			= 3
 }
 
 public enum GearSizeType
@@ -29,7 +29,7 @@ public enum GearPositionState
 	WRONG
 }
 
-public enum GearIndicatorStatus
+public enum GearIndicatorState
 {
 	DEFAULT		= 0,
 	SELECTED	= 1,
@@ -48,6 +48,7 @@ public class GearModel : Model
 	public GearType						gearType				{ get { return _gearType; } }
 	public GearSizeType					gearSizeType			{ get { return _gearSizeType; } }	
 	public GearPositionState			gearPositionState		{ get { return _gearPositionState; } set { _gearPositionState = value;} }	
+	public GearIndicatorState			gearIndicatorState		{ get { return _gearIndicatorState; } set { _gearIndicatorState = value;} }	
 	public SpriteRenderer				shadow					{ get { return _shadow; }  /*playerDestructible.ReplaceWith( _currentSprite );*/ }
 	public SpriteRenderer				statusIndicator			{ get { return _statusIndicator; } }
 	public Color						indicatorDefaultColor	{ get { return _indicatorDefaultColor; } }
@@ -70,6 +71,8 @@ public class GearModel : Model
 	private GearSizeType				_gearSizeType;
 	[SerializeField]
 	private GearPositionState			_gearPositionState;
+	[SerializeField]
+	private GearIndicatorState			_gearIndicatorState;
 	[SerializeField]
 	private SpriteRenderer				_shadow;
 	[SerializeField]

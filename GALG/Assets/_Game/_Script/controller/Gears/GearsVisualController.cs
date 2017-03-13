@@ -35,7 +35,7 @@ public class GearsVisualController : Controller
 						case FingerMotionPhase.Started:
 							{
 								//If just started
-								if (dragItem != null && game.view.currentGearView != null)
+								if (dragItem != null)
 								{
 									SetHighlightCurrentGear (true);
 								}
@@ -70,36 +70,40 @@ public class GearsVisualController : Controller
 	{
 		if (game.model.selectedGearModel.baseCollisionsCount == 0)
 		{
-			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
+			SetCurrentGearIndicatorState (GearIndicatorState.SELECTED);
 		}
 		else
 		{
-			SetCurrentGearIndicator (GearIndicatorStatus.ERROR);
+			SetCurrentGearIndicatorState (GearIndicatorState.ERROR);
 		}
 	}
 
-	private void SetCurrentGearIndicator(GearIndicatorStatus status)
+	private void SetCurrentGearIndicatorState(GearIndicatorState state)
 	{
-		switch (status)
+
+		switch (state)
 		{
-			case GearIndicatorStatus.DEFAULT:
+			case GearIndicatorState.DEFAULT:
 				{
 					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorDefaultColor, 0.1f); 
 					break;
 				}
 
-			case GearIndicatorStatus.SELECTED:
+			case GearIndicatorState.SELECTED:
 				{
 					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorSelectedColor, 0.1f); 
 					break;
 				}
 
-			case GearIndicatorStatus.ERROR:
+			case GearIndicatorState.ERROR:
 				{
+					Notify (N.UpdateGearsChain);
 					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorErrorColor, 0.1f); 
 					break;
 				}
 		}
+
+		currentGearModel.gearIndicatorState = state;
 	}
 
 	private void SetHighlightCurrentGear(bool isEnable)
@@ -130,7 +134,7 @@ public class GearsVisualController : Controller
 
 			gearShadow.DOFade (_lastGearShadowColorAlpha, 0.1f);
 
-			SetCurrentGearIndicator (GearIndicatorStatus.SELECTED);
+			SetCurrentGearIndicatorState (GearIndicatorState.SELECTED);
 		}
 		else
 		{
@@ -144,7 +148,7 @@ public class GearsVisualController : Controller
 				});
 
 			//Restore default indicator color
-			SetCurrentGearIndicator (GearIndicatorStatus.DEFAULT);
+			SetCurrentGearIndicatorState (GearIndicatorState.DEFAULT);
 		}
 	}
 }

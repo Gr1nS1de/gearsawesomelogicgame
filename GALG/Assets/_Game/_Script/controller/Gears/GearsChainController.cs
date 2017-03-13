@@ -30,7 +30,8 @@ public class GearsChainController : Controller
 			case N.UpdateGearsChain:
 				{
 					//Debug.Log ("Update gear chain");
-					StartCoroutine (StartUpdateCicle ());
+					if(currentGearModel.gearIndicatorState != GearIndicatorState.ERROR)
+						StartCoroutine (StartUpdateCicle ());
 					
 					break;
 				}

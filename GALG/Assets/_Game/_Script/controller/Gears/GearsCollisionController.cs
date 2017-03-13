@@ -75,7 +75,7 @@ public class GearsCollisionController : Controller
 
 						case GearColliderType.SPIN:
 							{
-								float offsetBeetwenGears = 0.02f;
+								float offsetBeetwenGears = 0.03f;
 								float triggerGearRadius = triggerColliderView.ColliderRadius * triggerGear.transform.localScale.x;
 								float triggeredGearRadius = triggeredColliderView.ColliderRadius * triggeredGear.transform.localScale.x;
 								float baseGap = triggerGearRadius + triggeredGearRadius + offsetBeetwenGears;
