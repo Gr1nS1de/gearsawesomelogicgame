@@ -93,7 +93,7 @@ public class GearsChainController : Controller
 			GearColliderView spinCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
 
 			//If none trigger stay connection at all
-			if (spinCollider.ConnectedGears.Count <= 0)
+			if (spinCollider.ConnectedGears.Count <= 0 || gearModel.gearIndicatorState == GearIndicatorState.ERROR)
 			{
 				//Debug.Break ();
 				ResetGearPositionState(gearView, true);
@@ -210,6 +210,13 @@ public class GearsChainController : Controller
 
 		triggerGearModel.gearPositionState = GearPositionState.CONNECTED;
 
+		if (currentGearView != null && currentGearView == triggerGear)
+		{
+			Utils.SetGearLayer (currentGearView, GearLayer.SELECTED_CONNECTED);
+		}
+		else
+			Utils.SetGearLayer (triggerGear, GearLayer.CONNECTED);
+
 		connectGearJoint.localJoint = connectGearJoint.GetComponent<HingeJoint2DExt> ();
 		connectGearJoint.connectedJoint = triggerGear.GetComponent<HingeJoint2DExt> ();
 		connectGearJoint.gearRatio = (float)triggerGearModel.teethCount / connectGearModel.teethCount;
@@ -231,12 +238,7 @@ public class GearsChainController : Controller
 			{
 				Debug.Log ("Destroy redundant gear joint from "+gearJoint.name);
 				Destroy (gearJoint);
-			}//else
-			//if(IsGearAlreadyConnected(gearView,	connectedGearView))
-			//{
-			//	gearModel.gearPositionState = GearPositionState.CONNECTED;
-			//	Debug.Log ("Gear "+gearView.name + " already connected to "+ connectedGearView);
-			//}
+			}
 		}
 
 		//Debug.Log ("End check redundant gear joints. Is connected to motor" + gearView.name + " " + isGearConnectedToMotor);
@@ -292,7 +294,6 @@ public class GearsChainController : Controller
 	private void ResetGearPositionState(GearView gearView, bool isDeleteGearJoints = false, GearPositionState gearPositionState = GearPositionState.DEFAULT)
 	{
 		GearModel gearModel = gearsDictionary [gearView];
-		List<GearJoint2DExt> gearJoints = new List<GearJoint2DExt> (gearView.GetComponents<GearJoint2DExt> ());
 
 		switch(gearPositionState)
 		{
@@ -300,16 +301,22 @@ public class GearsChainController : Controller
 				{
 
 					if (gearModel.gearType != GearType.MOTOR_GEAR)
+					{
 						gearModel.gearPositionState = GearPositionState.DEFAULT;
+
+						if (currentGearView != null && currentGearView == gearView)
+							Utils.SetGearLayer (currentGearView, GearLayer.SELECTED);
+						else
+							Utils.SetGearLayer (gearView, GearLayer.PLAYER);
+					}
 					
 					break;
 				}
 		}
 
-		if (isDeleteGearJoints && gearJoints.Count > 0)
+		if (isDeleteGearJoints)
 		{
-			Debug.Log ("Delete all gear joints from "+gearView.name);
-			gearJoints.ForEach ((gearJoint ) => Destroy (gearJoint));
+			DeleteGearJoints (gearView, gearModel.gearIndicatorState == GearIndicatorState.ERROR ? true : false);
 		}
 	}
 
@@ -323,5 +330,36 @@ public class GearsChainController : Controller
 			isConnected = true;
 
 		return isConnected;
+	}
+
+	public void DeleteGearJoints(GearView gearView, bool isIncludeConnected)
+	{
+		List<GearJoint2DExt> gearJoints = new List<GearJoint2DExt> (gearView.GetComponents<GearJoint2DExt> ());
+
+		if (gearJoints.Count > 0)
+		{
+			Debug.Log ("Delete all gear joints from "+gearView.name);
+			gearJoints.ForEach ((gearJoint ) => Destroy (gearJoint));
+		}
+
+		if (!isIncludeConnected)
+			return;
+		
+		foreach(var gear in gearsList)
+		{
+			if (gear == gearView)
+				continue;
+
+			gearJoints = new List<GearJoint2DExt> (gear.GetComponents<GearJoint2DExt> ());
+
+			if (gearJoints.Count > 0)
+			{
+				gearJoints.ForEach ((gearJoint ) =>
+				{
+					if(gearJoint.connectedJoint == gearView.GetComponent<HingeJoint2DExt>())
+						Destroy (gearJoint);
+				});
+			}
+		}
 	}
 }

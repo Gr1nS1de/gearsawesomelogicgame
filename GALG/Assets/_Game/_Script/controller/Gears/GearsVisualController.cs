@@ -55,7 +55,23 @@ public class GearsVisualController : Controller
 
 			case N.GearsColliderTriggered_____:
 				{
-					UpdateCurrentGearIndicator ();
+					GearView triggerGear = (GearView)data [0];
+					GearView triggeredGear = (GearView)data [1];
+					GearColliderView triggerColliderView = (GearColliderView)data [2];
+					GearColliderView triggeredColliderView = (GearColliderView)data [3];
+					bool isEnterCollision = (bool)data [4];
+
+					if (triggerGear != game.view.currentGearView)
+					{
+						Debug.LogError ("Trigger gear is not current selected!");
+						return;
+					}
+
+					if (isEnterCollision)
+						OnGearsEnterCollised (triggerGear, triggeredGear, triggerColliderView, triggeredColliderView);
+					else
+						StartCoroutine( OnGearsExitCollised (triggerGear, triggeredGear, triggerColliderView, triggeredColliderView));
+
 					break;
 				}
 
@@ -64,6 +80,111 @@ public class GearsVisualController : Controller
 
 	private void OnStart()
 	{
+	}
+
+	private void OnGearsEnterCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
+	{
+		//Debug.Log ("Gear enter collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
+
+		switch (triggerColliderView.ColliderType)
+		{
+			case GearColliderType.BASE:
+				{
+					switch (triggeredColliderView.ColliderType)
+					{
+						case GearColliderType.BASE:
+							break;
+
+						case GearColliderType.SPIN:
+							{
+								UpdateCurrentGearIndicator ();
+								break;
+							}
+					}
+					break;
+				}
+
+			case GearColliderType.SPIN:
+				{
+					switch (triggeredColliderView.ColliderType)
+					{
+						case GearColliderType.BASE:
+							{
+								break;
+							}
+
+						case GearColliderType.SPIN:
+							{
+								break;
+							}
+					}
+
+					break;
+				}
+		}
+	}
+
+
+	private IEnumerator OnGearsExitCollised(GearView triggerGear, GearView triggeredGear, GearColliderView triggerColliderView, GearColliderView triggeredColliderView)
+	{
+		//Debug.Log ("Gear exit collised "+ triggerGear.name + " to "+ triggeredGear.name + " trigger collider type = "+ triggerColliderView.ColliderType + " triggered collider type = "+ triggeredColliderView.ColliderType);
+
+		//Wait 1 frame for collision variable update
+		yield return null;
+
+		switch (triggerColliderView.ColliderType)
+		{
+			case GearColliderType.BASE:
+				{
+					switch (triggeredColliderView.ColliderType)
+					{
+						case GearColliderType.BASE:
+							{
+
+								break;
+							}
+
+						case GearColliderType.SPIN:
+							{
+								UpdateCurrentGearIndicator ();
+
+								if (selectedGearModel.gearModel.gearPositionState == GearPositionState.CONNECTED)
+									Utils.SetGearLayer (currentGearView, GearLayer.SELECTED_CONNECTED);
+								else if (selectedGearModel.gearModel.gearPositionState == GearPositionState.DEFAULT)
+									Utils.SetGearLayer (currentGearView, GearLayer.SELECTED);
+								else if (selectedGearModel.gearModel.gearPositionState == GearPositionState.ERROR)
+									Utils.SetGearLayer (currentGearView, GearLayer.ERROR);
+
+								break;
+							}
+					}
+
+					break;
+				}
+
+			case GearColliderType.SPIN:
+				{
+					switch (triggeredColliderView.ColliderType)
+					{
+						case GearColliderType.BASE:
+							{
+								break;
+							}
+
+						case GearColliderType.SPIN:
+							{
+								if (selectedGearModel.gearModel.gearPositionState == GearPositionState.CONNECTED)
+									Utils.SetGearLayer (currentGearView, GearLayer.SELECTED_CONNECTED);
+								else if (selectedGearModel.gearModel.gearPositionState == GearPositionState.DEFAULT)
+									Utils.SetGearLayer (currentGearView, GearLayer.SELECTED);
+								
+								break;
+							}
+					}
+
+					break;
+				}
+		}
 	}
 
 	private void UpdateCurrentGearIndicator()
@@ -98,6 +219,7 @@ public class GearsVisualController : Controller
 			case GearIndicatorState.ERROR:
 				{
 					Notify (N.UpdateGearsChain);
+					Utils.SetGearLayer (currentGearView, GearLayer.ERROR);
 					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorErrorColor, 0.1f); 
 					break;
 				}

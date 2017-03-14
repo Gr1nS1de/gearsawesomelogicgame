@@ -26,7 +26,7 @@ public enum GearPositionState
 {
 	DEFAULT,
 	CONNECTED,
-	WRONG
+	ERROR
 }
 
 public enum GearIndicatorState
@@ -41,10 +41,18 @@ public enum GearColliderType
 	BASE,
 	SPIN
 }
+
+public enum GearLayer
+{
+	PLAYER,
+	SELECTED,
+	SELECTED_CONNECTED,
+	CONNECTED,
+	ERROR
+}
 	
 public class GearModel : Model
 {
-
 	public GearType						gearType				{ get { return _gearType; } }
 	public GearSizeType					gearSizeType			{ get { return _gearSizeType; } }	
 	public GearPositionState			gearPositionState		{ get { return _gearPositionState; } set { _gearPositionState = value;} }	

@@ -83,14 +83,13 @@ public class GearsCollisionController : Controller
 
 								selectedGearModel.baseCollisionsCount++;
 
-
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
 
 								//Check for triggered saved position is empty for current gear size. 
 								if (Utils.IsCorrectGearPosition (beforeTriggerPosition, triggerGearRadius, true, "GearSpinCollider"))
 								{
 									selectedGearModel.lastCorrectPosition = beforeTriggerPosition;
-									Notify (N.UpdateGearsChain);
+									//Notify (N.UpdateGearsChain);
 								}
 
 								break;
@@ -104,7 +103,10 @@ public class GearsCollisionController : Controller
 					switch (triggeredColliderView.ColliderType)
 					{
 						case GearColliderType.BASE:
-							break;
+							{
+								Notify (N.UpdateGearsChain);
+								break;
+							}
 
 						case GearColliderType.SPIN:
 							{
@@ -139,9 +141,6 @@ public class GearsCollisionController : Controller
 							{
 								selectedGearModel.baseCollisionsCount--;
 
-
-								Notify (N.UpdateGearsChain);
-
 								break;
 							}
 					}
@@ -154,7 +153,10 @@ public class GearsCollisionController : Controller
 					switch (triggeredColliderView.ColliderType)
 					{
 						case GearColliderType.BASE:
-							break;
+							{
+								Notify (N.UpdateGearsChain);
+								break;
+							}
 
 						case GearColliderType.SPIN:
 							{

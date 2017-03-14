@@ -122,6 +122,8 @@ public class GearsInputController : Controller
 	#region Gear input control methods
 	private void SelectGear(GearView gear)
 	{
+		int currentGearLayer = gear.gameObject.layer;
+
 		Debug.Log ("Select gear " + gear.name);
 		foreach (var gearEventCollider in gear.GetComponentsInChildren<GearColliderView> ())
 		{
@@ -129,7 +131,7 @@ public class GearsInputController : Controller
 		}
 
 		currentGearView = gear;
-		currentGearView.gameObject.layer = LayerMask.NameToLayer ("SelectedGear");
+		currentGearView.gameObject.layer = currentGearLayer == LayerMask.NameToLayer ("ConnectedGear") ? LayerMask.NameToLayer ("SelectedConnectedGear") : LayerMask.NameToLayer ("SelectedGear");
 		selectedGearModel.lastCorrectPosition = gear.transform.position;
 
 		DetachCurrentGear ();
@@ -188,15 +190,20 @@ public class GearsInputController : Controller
 
 		AttachCurrentGear ();
 
-		currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
+		//currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
 
 		selectedGearModel.baseCollisionsCount = 0;
-
-		currentGearView = null;
 
 		_isGearPositionCorrect = true;
 
 		Notify (N.UpdateGearsChain);
+
+		if (selectedGearModel.gearModel.gearPositionState == GearPositionState.DEFAULT)
+			Utils.SetGearLayer (currentGearView, GearLayer.PLAYER);
+		else if(selectedGearModel.gearModel.gearPositionState == GearPositionState.CONNECTED)
+			Utils.SetGearLayer (currentGearView, GearLayer.CONNECTED);
+
+		currentGearView = null;
 	}
 
 	private void DetachCurrentGear()

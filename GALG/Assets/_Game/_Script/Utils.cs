@@ -114,4 +114,45 @@ public static class Utils
 		return isCorrectPosition;
 	}
 
+
+	public static void SetGearLayer(GearView gearView, GearLayer gearLayer)
+	{
+		int gearViewLayer = gearView.gameObject.layer;
+		string layerName = "";
+
+		switch (gearLayer)
+		{
+			case GearLayer.CONNECTED:
+				{
+					layerName = "ConnectedGear";
+					break;
+				}
+
+			case GearLayer.PLAYER:
+				{
+					layerName = "PlayerGear";
+					break;
+				}
+
+			case GearLayer.SELECTED:
+				{
+					layerName = "SelectedGear";
+					break;
+				}
+
+			case GearLayer.SELECTED_CONNECTED:
+				{
+					layerName = "SelectedConnectedGear";
+					break;
+				}
+
+			case GearLayer.ERROR:
+				{
+					layerName = "ErrorGear";
+					break;
+				}
+		}
+				
+		gearView.gameObject.layer = LayerMask.NameToLayer (layerName);
+	}
 }
