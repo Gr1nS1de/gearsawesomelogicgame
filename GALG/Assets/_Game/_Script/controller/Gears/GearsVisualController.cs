@@ -177,6 +177,8 @@ public class GearsVisualController : Controller
 									Utils.SetGearLayer (currentGearView, GearLayer.SELECTED_CONNECTED);
 								else if (selectedGearModel.gearModel.gearPositionState == GearPositionState.DEFAULT)
 									Utils.SetGearLayer (currentGearView, GearLayer.SELECTED);
+
+								UpdateCurrentGearIndicator ();
 								
 								break;
 							}
@@ -218,7 +220,6 @@ public class GearsVisualController : Controller
 
 			case GearIndicatorState.ERROR:
 				{
-					Notify (N.UpdateGearsChain);
 					Utils.SetGearLayer (currentGearView, GearLayer.ERROR);
 					selectedGearModel.gearModel.statusIndicator.DOColor(selectedGearModel.gearModel.indicatorErrorColor, 0.1f); 
 					break;
@@ -243,8 +244,8 @@ public class GearsVisualController : Controller
 		if (isEnable)
 		{
 			//Setup position for light
-			game.view.gearLightView.transform.SetParent (currentGearView.transform);
-			game.view.gearLightView.transform.DOLocalMove (Vector3.zero, 0.2f);
+			//game.view.gearLightView.transform.SetParent (currentGearView.transform);
+			//game.view.gearLightView.transform.DOLocalMove (Vector3.zero, 0.2f);
 
 			_lastGearShadowColorAlpha = shadowColor.a;
 			_lastGearStatusIndicatorColor = selectedGearModel.gearModel.statusIndicator.color;

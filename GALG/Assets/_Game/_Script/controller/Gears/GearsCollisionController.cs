@@ -140,7 +140,7 @@ public class GearsCollisionController : Controller
 						case GearColliderType.SPIN:
 							{
 								selectedGearModel.baseCollisionsCount--;
-
+								Notify (N.UpdateGearsChain);
 								break;
 							}
 					}

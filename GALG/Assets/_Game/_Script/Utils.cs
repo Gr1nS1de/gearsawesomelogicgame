@@ -152,6 +152,8 @@ public static class Utils
 					break;
 				}
 		}
+
+		//Debug.LogError (gearView.name + " set layer " + layerName);
 				
 		gearView.gameObject.layer = LayerMask.NameToLayer (layerName);
 	}
