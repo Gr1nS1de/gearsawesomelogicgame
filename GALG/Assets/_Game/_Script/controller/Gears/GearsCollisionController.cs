@@ -140,6 +140,10 @@ public class GearsCollisionController : Controller
 						case GearColliderType.SPIN:
 							{
 								selectedGearModel.baseCollisionsCount--;
+
+								if (triggeredColliderView.ConnectedGears.Count == 0)
+									selectedGearModel.baseCollisionsCount = 0;
+								
 								Notify (N.UpdateGearsChain);
 								break;
 							}
