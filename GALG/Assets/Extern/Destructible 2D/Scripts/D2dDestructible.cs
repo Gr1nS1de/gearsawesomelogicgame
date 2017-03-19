@@ -1651,21 +1651,21 @@ namespace Destructible2D
 						// Retain name and tag
 						clone.name = name+"_piece";
 						clone.tag  = transform.tag;
-
+						/*
 						// Retain layer
 						clone.gameObject.layer = LayerMask.NameToLayer(GM.instance.destructibleObstaclePieceLayerName);
 
                         clone.GetComponent<Rigidbody2D>().isKinematic = false;
 
-						if (clone.GetComponent<ObstacleView> ())
-							Destroy (clone.GetComponent<ObstacleView> ());
+						if (clone.GetComponent<RobotView> ())
+							Destroy (clone.GetComponent<RobotView> ());
 
 						if (clone.GetComponent<GearColliderView> ())
 							Destroy (clone.GetComponent<GearColliderView>());
 
 						if (clone.GetComponent<D2dDestroyer> ())
 							clone.GetComponent<D2dDestroyer> ().enabled = true;
-
+						*/
 						// Retain clones in container
 						clone.transform.SetParent(transform.parent, false);
 
@@ -1674,7 +1674,7 @@ namespace Destructible2D
 						clone.transform.localScale    = transform.localScale;
 
                         // Disable childrens
-						Utils.ActivateTransformChildrens(clone.transform, false);
+						//Utils.ActivateTransformChildrens(clone.transform, false);
 						
                         //Reset all unity colliders on clones
 						if (clone.GetComponent<Collider2D> ())

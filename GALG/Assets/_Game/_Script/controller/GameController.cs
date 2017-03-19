@@ -14,7 +14,7 @@ public class GameController : Controller
 	public GearsCollisionController			gearsCollisionController		{ get { return _gearsCollisionController 	= SearchLocal<GearsCollisionController>(	_gearsCollisionController,		typeof(GearsCollisionController).Name ); } }
 	public GearsChainController				gearsChainController			{ get { return _gearsChainController 		= SearchLocal<GearsChainController>(		_gearsChainController,			typeof(GearsChainController).Name ); } }
 	public GearsVisualController			gearsVisualController			{ get { return _gearsVisualController 		= SearchLocal<GearsVisualController>(		_gearsVisualController,			typeof(GearsVisualController).Name ); } }
-	public ObstacleController				obstacleController				{ get { return _obstacleController			= SearchLocal<ObstacleController>(			_obstacleController,			typeof(ObstacleController).Name ); } }
+	public RobotController				obstacleController				{ get { return _obstacleController			= SearchLocal<RobotController>(			_obstacleController,			typeof(RobotController).Name ); } }
 	public RobotsFactoryController			robotsFactoryController			{ get { return _robotsFactoryController 	= SearchLocal<RobotsFactoryController>(		_robotsFactoryController,		typeof(RobotsFactoryController).Name ); } }
 	//public DestructibleController			destructibleController			{ get { return _destructibleController 		= SearchLocal<DestructibleController>(		_destructibleController,		typeof(DestructibleController).Name ); } }
 	public GearsInputController				playerController				{ get { return _playerController 			= SearchLocal<GearsInputController>(		_playerController,				typeof(GearsInputController).Name ); } }
@@ -29,7 +29,7 @@ public class GameController : Controller
 	private GearsCollisionController 		_gearsCollisionController;
 	private GearsChainController 			_gearsChainController;
 	private GearsVisualController 			_gearsVisualController;
-	private ObstacleController				_obstacleController;
+	private RobotController				_obstacleController;
 	private RobotsFactoryController 		_robotsFactoryController;
 	//private DestructibleController		_destructibleController;
 	private GearsInputController			_playerController;
@@ -105,8 +105,8 @@ public class GameController : Controller
 
 		//FindObjectOfType<Circle>().DOParticle();
 	}
-
-	public void OnImpactObstacleByPlayer(ObstacleView obstacleView, Vector2 collisionPoint)
+	/*
+	public void OnImpactObstacleByPlayer(RobotView obstacleView, Vector2 collisionPoint)
 	{
 		var obstacleModel = game.model.robotsFactoryModel.currentModelsDictionary[obstacleView];
 
@@ -116,9 +116,9 @@ public class GameController : Controller
 			return;
 		}
 			
-		switch (obstacleModel.state)
+		switch (obstacleModel.bodyType)
 		{
-			case ObstacleState.HARD:
+			case RobotBodyType.HEAD:
 				{
 					//obstacleRenderObject.GetComponent<Rigidbody2D> ().isKinematic = true;
 					Notify(N.GameOver, collisionPoint);
@@ -126,7 +126,7 @@ public class GameController : Controller
 					break;
 				}
 
-			case ObstacleState.DESTRUCTIBLE:
+			case RobotBodyType.BODY:
 				{
 					/*
 					var obstacleDestructible = obstacleView.GetComponent<D2dDestructible> ();
@@ -136,14 +136,14 @@ public class GameController : Controller
 					obstacleView.gameObject.layer = LayerMask.NameToLayer (GM.instance.destructibleObstaclePieceLayerName);
 
 					Notify (N.DestructibleBreakEntity___, obstacleDestructible, game.model.destructibleModel.destructibleObstacleFractureCount, collisionPoint);
-*/
+
 					break;
 				}
 			default:
 				break;
 		}
 	}
-
+*/
 	private void GameOver( Vector2 collisionPoint )
 	{
 		if (game.model.gameState == GameState.GAMEOVER)

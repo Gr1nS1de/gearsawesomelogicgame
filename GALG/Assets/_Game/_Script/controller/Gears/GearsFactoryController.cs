@@ -85,6 +85,7 @@ public class GearsFactoryController : Controller
 			//Counting gears for instantiate everyone
 			for (int i = 0; i < count; i++)
 			{
+				//Debug.Log ("Start create object "+gearModel.gearType);
 				GameObject gearModelObject = new GameObject ();
 
 				gearModelObject.transform.SetParent (gearsFactoryModel.transform);

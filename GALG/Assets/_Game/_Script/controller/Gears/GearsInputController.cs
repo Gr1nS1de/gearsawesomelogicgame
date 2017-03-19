@@ -196,7 +196,10 @@ public class GearsInputController : Controller
 
 		_isGearPositionCorrect = true;
 
-		Notify (N.UpdateGearsChain);
+		DOVirtual.DelayedCall (0.05f, () =>
+		{
+			Notify (N.UpdateGearsChain);
+		});
 
 		if (selectedGearModel.gearModel.gearPositionState == GearPositionState.DEFAULT)
 			Utils.SetGearLayer (currentGearView, GearLayer.PLAYER);

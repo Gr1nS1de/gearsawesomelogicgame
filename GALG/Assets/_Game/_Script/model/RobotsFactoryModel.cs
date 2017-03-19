@@ -5,28 +5,28 @@ using System.Collections.Generic;
 public class ObstacleBundle
 {
 	public Road 			roadAlias;
-	public ObstacleView[]	obstacleTemplates;
+	public RobotView[]	obstacleTemplates;
 }
 
 public class RobotsFactoryModel : Model
 {
-	public ObstacleView[]									obstacleTemplates				{ get { return _obstacleTemplates = System.Array.Find(obstacleBundles, o => o.roadAlias == game.model.currentRoad).obstacleTemplates; } }
+	/*public RobotView[]									obstacleTemplates				{ get { return _obstacleTemplates = System.Array.Find(obstacleBundles, o => o.roadAlias == game.model.currentRoad).obstacleTemplates; } }
 	public ObstacleBundle[]									obstacleBundles					{ get { return _obstacleBundles; } }
-	public Dictionary<ObstacleView, ObstacleModel>			currentModelsDictionary			{ get { return _currentModelsDictionary; } }		
-	public ObstacleView[]									hardObstacleTemplates			{ get { return System.Array.FindAll(obstacleTemplates, o => o.GetComponent<ObstacleModel>().state == ObstacleState.HARD);}}
-	public ObstacleView[]									destructibleObstacleTemplates	{ get { return System.Array.FindAll(obstacleTemplates, o => o.GetComponent<ObstacleModel>().state == ObstacleState.DESTRUCTIBLE);}}
-	public Dictionary<ObstacleState, ObstacleView[]>  		templatesByStateDictionary 		{ get { if(!InitTemplatesDictionaryFlag)InitTemplatesDictionary ();  return _templatesByStateDictionary ;} }
+	public Dictionary<RobotView, RobotModel>			currentModelsDictionary			{ get { return _currentModelsDictionary; } }		
+	public RobotView[]									hardObstacleTemplates			{ get { return System.Array.FindAll(obstacleTemplates, o => o.GetComponent<RobotModel>().bodyType == RobotBodyType.HEAD);}}
+	public RobotView[]									destructibleObstacleTemplates	{ get { return System.Array.FindAll(obstacleTemplates, o => o.GetComponent<RobotModel>().bodyType == RobotBodyType.BODY);}}
+	public Dictionary<RobotBodyType, RobotView[]>  		templatesByStateDictionary 		{ get { if(!InitTemplatesDictionaryFlag)InitTemplatesDictionary ();  return _templatesByStateDictionary ;} }
 	public GameObject										obstaclesDynamicContainer		{ get { return _obstaclesDynamicContainer = _obstaclesDynamicContainer ? _obstaclesDynamicContainer : new GameObject(); } }
-	public Dictionary<ObstacleState, List<ObstacleView>>	recyclableObstaclesDictionary 	{ get { if (!InitRecyclableDictionaryFlag)InitRecyclableDictionary (); return _recyclableObstaclesDictionary; } }
+	public Dictionary<RobotBodyType, List<RobotView>>	recyclableObstaclesDictionary 	{ get { if (!InitRecyclableDictionaryFlag)InitRecyclableDictionary (); return _recyclableObstaclesDictionary; } }
 
 	[SerializeField]
-	private ObstacleView[]									_obstacleTemplates;
+	private RobotView[]									_obstacleTemplates;
 	[SerializeField]
 	private ObstacleBundle[]								_obstacleBundles 				= new ObstacleBundle[System.Enum.GetNames(typeof(Road)).Length];
-	private Dictionary<ObstacleView, ObstacleModel> 		_currentModelsDictionary 		= new Dictionary<ObstacleView, ObstacleModel>();
-	private Dictionary<ObstacleState, ObstacleView[]>		_templatesByStateDictionary		= new Dictionary<ObstacleState, ObstacleView[]>();
+	private Dictionary<RobotView, RobotModel> 		_currentModelsDictionary 		= new Dictionary<RobotView, RobotModel>();
+	private Dictionary<RobotBodyType, RobotView[]>		_templatesByStateDictionary		= new Dictionary<RobotBodyType, RobotView[]>();
 	private GameObject										_obstaclesDynamicContainer;
-	private Dictionary<ObstacleState, List<ObstacleView>>	_recyclableObstaclesDictionary	= new Dictionary<ObstacleState, List<ObstacleView>>();
+	private Dictionary<RobotBodyType, List<RobotView>>	_recyclableObstaclesDictionary	= new Dictionary<RobotBodyType, List<RobotView>>();
 
 	private bool InitTemplatesDictionaryFlag = false;
 	private bool InitRecyclableDictionaryFlag = false;
@@ -34,23 +34,23 @@ public class RobotsFactoryModel : Model
 	private void InitTemplatesDictionary()
 	{
 		
-		if(!_templatesByStateDictionary.ContainsKey(ObstacleState.HARD))
-			_templatesByStateDictionary.Add (ObstacleState.HARD, hardObstacleTemplates); 
+		if(!_templatesByStateDictionary.ContainsKey(RobotBodyType.HEAD))
+			_templatesByStateDictionary.Add (RobotBodyType.HEAD, hardObstacleTemplates); 
 
-		if(!_templatesByStateDictionary.ContainsKey(ObstacleState.DESTRUCTIBLE))
-			_templatesByStateDictionary.Add (ObstacleState.DESTRUCTIBLE, destructibleObstacleTemplates);  
+		if(!_templatesByStateDictionary.ContainsKey(RobotBodyType.BODY))
+			_templatesByStateDictionary.Add (RobotBodyType.BODY, destructibleObstacleTemplates);  
 
 		InitTemplatesDictionaryFlag = true;
 	}
 
 	private void InitRecyclableDictionary()
 	{
-		foreach(ObstacleState obstacleState in System.Enum.GetValues(typeof(ObstacleState)))
+		foreach(RobotBodyType obstacleState in System.Enum.GetValues(typeof(RobotBodyType)))
 		{
 			if (!_recyclableObstaclesDictionary.ContainsKey (obstacleState))
-				_recyclableObstaclesDictionary.Add (obstacleState, new List<ObstacleView>());
+				_recyclableObstaclesDictionary.Add (obstacleState, new List<RobotView>());
 		}
 
 		InitRecyclableDictionaryFlag = true;
-	}
+	}*/
 }	

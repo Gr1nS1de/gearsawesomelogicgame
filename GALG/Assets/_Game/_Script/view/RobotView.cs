@@ -2,15 +2,18 @@
 using System.Collections;
 //using DG.Tweening;
 
-public class ObstacleView : View
+public class RobotView : View
 {
-	public bool 			isVisible				{ get { return _isVisible; } 		private set { _isVisible = value; } }
-	private ObstacleModel	obstacleModel 			{ get { return game.model.robotsFactoryModel.currentModelsDictionary[this]; } }
-	private Vector3			obstacleSpriteSize		{ get { return obstacleModel.spriteSize; } }
-	private Transform 		_obstacleWrapper;
+	public RobotBodyType	BodyType;
+	//public bool 			isVisible				{ get { return _isVisible; } 		private set { _isVisible = value; } }
+	//private RobotModel	robotModel 				{ get { return game.model.robotsFactoryModel.currentModelsDictionary[this]; } }
+	//private Vector3			obstacleSpriteSize		{ get { return obstacleModel.spriteSize; } }
+	//private Transform 		_obstacleWrapper;
 
-	[SerializeField]
-	private bool 			_isVisible 	= true;
+	//[SerializeField]
+	//private bool 			_isVisible 	= true;
+
+
 	/*
 	public void OnInit(Vector3 pathPosition, Quaternion rotation, bool isDownDirection)
 	{
@@ -44,7 +47,7 @@ public class ObstacleView : View
 			StartCoroutine(CheckVisibility());
 		});
 	}
-		*/
+		
 	private IEnumerator CheckVisibility () 
 	{
 		while (true)
@@ -73,5 +76,5 @@ public class ObstacleView : View
 			yield return null;	
 		}
 	}
-
+*/
 }
