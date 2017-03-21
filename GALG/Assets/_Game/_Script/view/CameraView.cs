@@ -6,7 +6,7 @@ public class CameraView : View<Game>
 {
 	public CameraModel 		cameraModel		{ get { return game.model.cameraModel; } }
 	public Camera 			cam				{ get { return GetComponent<Camera> (); } }
-	public Transform		player			{ get { return game.view.gearLightView.transform; } }
+	//public Transform		player			{ get { return game.view.gearLightView.transform; } }
 	public float			playZoomSize	{ get { return cameraModel.playZoomSize; } }
 
 	public void OnStart()

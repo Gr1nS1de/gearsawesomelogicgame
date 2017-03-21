@@ -10,8 +10,8 @@ public class GearsInputController : Controller
 	private GearView 						currentGearView 			{ get { return game.view.currentGearView; } set { game.view.currentGearView = value; } }
 	private GearModel 						currentGearModel 			{ get { return gearsDictionary[currentGearView]; } }
 	private SelectedGearModel				selectedGearModel			{ get { return game.model.selectedGearModel;}}
-	private GearsFactoryModel 				gearsFactoryModel 			{ get { return game.model.gearsFactoryModel; } }
-	private List<GearView>					gearsList					{ get { return gearsFactoryModel.themeGearsPrefabsList; } }
+	private GearsFactoryModel 				gearsFactoryModel 			{ get { return gearsFactoryModel; } }
+	private List<GearView>					gearsList					{ get { return gearsFactoryModel.instantiatedGearsList; } }
 	private Dictionary<GearView, GearModel> gearsDictionary 			{ get { return gearsFactoryModel.gearsDictionary; } }
 
 	private Vector3							_selectedPoint;
@@ -196,9 +196,15 @@ public class GearsInputController : Controller
 
 		_isGearPositionCorrect = true;
 
+		GearView storedCurrentGear = game.view.currentGearView;
+
+		//Bugfix. Fixing stuck of chain by overlaping on gear reset.
+		storedCurrentGear.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
 		DOVirtual.DelayedCall (0.05f, () =>
 		{
 			Notify (N.UpdateGearsChain);
+			storedCurrentGear.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 		});
 
 		if (selectedGearModel.gearModel.gearPositionState == GearPositionState.DEFAULT)

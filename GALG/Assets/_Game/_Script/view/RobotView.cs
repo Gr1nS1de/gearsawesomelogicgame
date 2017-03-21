@@ -4,7 +4,7 @@ using System.Collections;
 
 public class RobotView : View
 {
-	public RobotBodyType	BodyType;
+	public RobotPart	BodyType;
 	//public bool 			isVisible				{ get { return _isVisible; } 		private set { _isVisible = value; } }
 	//private RobotModel	robotModel 				{ get { return game.model.robotsFactoryModel.currentModelsDictionary[this]; } }
 	//private Vector3			obstacleSpriteSize		{ get { return obstacleModel.spriteSize; } }

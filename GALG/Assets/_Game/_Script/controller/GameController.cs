@@ -14,7 +14,7 @@ public class GameController : Controller
 	public GearsCollisionController			gearsCollisionController		{ get { return _gearsCollisionController 	= SearchLocal<GearsCollisionController>(	_gearsCollisionController,		typeof(GearsCollisionController).Name ); } }
 	public GearsChainController				gearsChainController			{ get { return _gearsChainController 		= SearchLocal<GearsChainController>(		_gearsChainController,			typeof(GearsChainController).Name ); } }
 	public GearsVisualController			gearsVisualController			{ get { return _gearsVisualController 		= SearchLocal<GearsVisualController>(		_gearsVisualController,			typeof(GearsVisualController).Name ); } }
-	public RobotController				obstacleController				{ get { return _obstacleController			= SearchLocal<RobotController>(			_obstacleController,			typeof(RobotController).Name ); } }
+	public RobotController					obstacleController				{ get { return _obstacleController			= SearchLocal<RobotController>(			_obstacleController,			typeof(RobotController).Name ); } }
 	public RobotsFactoryController			robotsFactoryController			{ get { return _robotsFactoryController 	= SearchLocal<RobotsFactoryController>(		_robotsFactoryController,		typeof(RobotsFactoryController).Name ); } }
 	//public DestructibleController			destructibleController			{ get { return _destructibleController 		= SearchLocal<DestructibleController>(		_destructibleController,		typeof(DestructibleController).Name ); } }
 	public GearsInputController				playerController				{ get { return _playerController 			= SearchLocal<GearsInputController>(		_playerController,				typeof(GearsInputController).Name ); } }
@@ -29,7 +29,7 @@ public class GameController : Controller
 	private GearsCollisionController 		_gearsCollisionController;
 	private GearsChainController 			_gearsChainController;
 	private GearsVisualController 			_gearsVisualController;
-	private RobotController				_obstacleController;
+	private RobotController					_obstacleController;
 	private RobotsFactoryController 		_robotsFactoryController;
 	//private DestructibleController		_destructibleController;
 	private GearsInputController			_playerController;

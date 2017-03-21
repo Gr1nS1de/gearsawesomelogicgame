@@ -119,9 +119,10 @@ public abstract class Element : MonoBehaviour
 				m_Storage.Remove (storeKey);
 			}
 
-		var searchFor = transform.GetComponents<T>().Length > 0 ? transform.GetComponents<T>() : transform.GetComponentsInChildren<T>();
+		List<T> searchFor = new List<T>( transform.GetComponents<T>());
+		searchFor.AddRange (transform.GetComponentsInChildren<T> ());
 
-		if ( searchFor.Length > 0 && storeKey != "" )
+		if ( searchFor.Count > 0 && storeKey != "" )
 		{
 			if ( update && m_Storage.ContainsKey( storeKey ) )
 				m_Storage.Remove( storeKey );
@@ -129,7 +130,7 @@ public abstract class Element : MonoBehaviour
 			m_Storage.Add( storeKey, searchFor );
 		}
 
-		return searchFor;
+		return searchFor.ToArray();
 	}
 
 	public void Traverse( System.Predicate<Transform> callback )

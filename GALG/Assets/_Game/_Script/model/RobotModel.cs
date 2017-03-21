@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public enum RobotBodyType
+public enum RobotPart
 {
 	ROOT,
 	HEAD,
 	BODY,
-	ARM_L,
-	ARM_R,
+	HAND_L,
+	HAND_R,
 	LEG_L,
 	LEG_R
 }
@@ -23,19 +24,19 @@ public class RobotModel : Model
 
 	public RobotModel(){}
 
-	public RobotBodyType			bodyType			{ get { return _bodyType; } }
-	public ObstacleRecyclableState 	recyclableState		{ get { return _recyclableState; } }
-	public RobotView				obstacleView		{ get { return _obstacleView;} 	set { _obstacleView = value;}}
-	public Vector3					spriteSize			{ get { return _spriteSize; } 	set { _spriteSize = value; } }
-	public SpriteRenderer			spriteForVisible	{ get { return _spriteForVisible;} set { _spriteForVisible = value;}}
+	public Dictionary<RobotPart, RobotView>			robotPartsDictionary	{ get { return _robotPartsDictionary; } }
+	public ObstacleRecyclableState 					recyclableState			{ get { return _recyclableState; } }
+	public RobotView								obstacleView			{ get { return _obstacleView;} 	set { _obstacleView = value;}}
+	public Vector3									spriteSize				{ get { return _spriteSize; } 	set { _spriteSize = value; } }
+	public SpriteRenderer							spriteForVisible		{ get { return _spriteForVisible;} set { _spriteForVisible = value;}}
 
 	[SerializeField]
-	private RobotBodyType			_bodyType;
+	private Dictionary<RobotPart, RobotView>		_robotPartsDictionary 	= new Dictionary<RobotPart, RobotView>();
 	[SerializeField]
-	private ObstacleRecyclableState _recyclableState;
-	private RobotView				_obstacleView;
+	private ObstacleRecyclableState 				_recyclableState;
+	private RobotView								_obstacleView;
 	[SerializeField]
-	private Vector3					_spriteSize;
-	private SpriteRenderer			_spriteForVisible;
+	private Vector3									_spriteSize;
+	private SpriteRenderer							_spriteForVisible;
 
 }

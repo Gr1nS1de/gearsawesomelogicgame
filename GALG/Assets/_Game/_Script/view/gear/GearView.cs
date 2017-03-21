@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GearView : View
 {
-	public GearModel gearModel;
+	[SerializeField]private GearModel gearModel;
 
 	void Start()
 	{

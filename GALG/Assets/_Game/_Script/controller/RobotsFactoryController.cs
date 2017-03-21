@@ -24,6 +24,13 @@ public class RobotsFactoryController : Controller
 
 					break;
 				}
+
+			case N.StartGenerateLevel:
+				{
+					CreateRobot ();
+
+					break;
+				}
 		}
 	}
 
@@ -37,6 +44,12 @@ public class RobotsFactoryController : Controller
 	{
 		//StartCoroutine( ObstacleInstantiator() );
 	}
+
+	private void CreateRobot()
+	{
+
+	}
+
 	/*
 	IEnumerator ObstacleInstantiator()
 	{
