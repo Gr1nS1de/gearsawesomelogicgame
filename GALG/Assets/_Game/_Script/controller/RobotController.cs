@@ -24,7 +24,7 @@ public class RobotController : Controller
 
 	private void OnStart()
 	{
-		Debug.LogError (game.view.robotViews.Length+ " robot parts");
+		Debug.LogError (ui.view.robotViews.Length+ " robot parts");
 	}
 
 
