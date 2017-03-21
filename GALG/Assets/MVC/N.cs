@@ -7,6 +7,10 @@ public class N : MonoBehaviour
 	public const string OnInputGear___				= "on.input.gear";
 	public const string UpdateGearsChain			= "update.gears_chain";
 	public const string OnGearsChainStuck_			= "on.gears_chain.stuck";
+	public const string OnGearSelected_				= "on.gear.selected";
+	public const string OnGearDeselected_			= "on.gear.deselected";
+	public const string OnCurrentGearError_			= "on.current_gear.error";
+	public const string OnGearsConnected__			= "on.gears.connected";
 	//public const string OnConnectGears__			= "on.connect.gears";
 	//public const string OnDisconnectGears__		= "on.disconnect.gears";
 

@@ -135,6 +135,8 @@ public class GearsInputController : Controller
 		selectedGearModel.lastCorrectPosition = gear.transform.position;
 
 		DetachCurrentGear ();
+
+		Notify (N.OnGearSelected_, gear);
 	}
 
 	private void MoveCurrentGear(Vector3 selectedPoint)
@@ -153,6 +155,8 @@ public class GearsInputController : Controller
 		if (currentGearView && !DOTween.IsTweening("TWEEN_RESETING_CURRENT_GEAR"))
 		{
 			Vector3 gearCurrentPosition = currentGearView.transform.position;
+
+			selectedGearModel.isError = false;
 
 			//Stop send trigger events from Base & Spin colliders
 			foreach (var gearEventCollider in currentGearView.GetComponentsInChildren<GearColliderView> ())
@@ -211,6 +215,8 @@ public class GearsInputController : Controller
 			Utils.SetGearLayer (currentGearView, GearLayer.PLAYER);
 		else if(selectedGearModel.gearModel.gearPositionState == GearPositionState.CONNECTED)
 			Utils.SetGearLayer (currentGearView, GearLayer.CONNECTED);
+
+		Notify (N.OnGearDeselected_, storedCurrentGear);
 
 		currentGearView = null;
 	}

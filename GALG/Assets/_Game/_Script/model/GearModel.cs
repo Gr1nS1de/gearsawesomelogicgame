@@ -25,8 +25,7 @@ public enum GearSizeType
 public enum GearPositionState
 {
 	DEFAULT,
-	CONNECTED,
-	ERROR
+	CONNECTED
 }
 
 public enum GearIndicatorState

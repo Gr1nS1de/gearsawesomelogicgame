@@ -83,6 +83,12 @@ public class GearsCollisionController : Controller
 
 								selectedGearModel.baseCollisionsCount++;
 
+								if (selectedGearModel.baseCollisionsCount == 1)
+								{
+									selectedGearModel.isError = true;
+									Notify (N.OnCurrentGearError_, true);
+								}
+
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
 
 								//Check for triggered saved position is empty for current gear size. 
@@ -143,6 +149,12 @@ public class GearsCollisionController : Controller
 
 								if (triggeredColliderView.ConnectedGears.Count == 0)
 									selectedGearModel.baseCollisionsCount = 0;
+
+								if (selectedGearModel.baseCollisionsCount == 0)
+								{
+									selectedGearModel.isError = false;
+									Notify (N.OnCurrentGearError_, false);
+								}
 								
 								Notify (N.UpdateGearsChain);
 								break;

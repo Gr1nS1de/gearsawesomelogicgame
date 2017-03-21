@@ -153,6 +153,10 @@ public static class Utils
 				}
 		}
 
+		if (gearViewLayer == LayerMask.NameToLayer ("CheckpointGear"))
+		{
+			layerName = "CheckpointGear";
+		}
 		//Debug.LogError (gearView.name + " set layer " + layerName);
 				
 		gearView.gameObject.layer = LayerMask.NameToLayer (layerName);

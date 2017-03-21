@@ -42,7 +42,7 @@ public class InputController : Controller
 		{
 			_isMovedStarted = false;
 			_isStationaryStarted = false;
-			Notify (N.OnInputGear___, e.Selection, Camera.main.ScreenToWorldPoint(e.Position), FingerMotionPhase.Ended);
+			Notify (N.OnInputGear___, null, Camera.main.ScreenToWorldPoint(e.Position), FingerMotionPhase.Ended);
 		}
 	}
 
