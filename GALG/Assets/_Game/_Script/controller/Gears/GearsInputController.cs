@@ -156,8 +156,6 @@ public class GearsInputController : Controller
 		{
 			Vector3 gearCurrentPosition = currentGearView.transform.position;
 
-			selectedGearModel.isError = false;
-
 			//Stop send trigger events from Base & Spin colliders
 			foreach (var gearEventCollider in currentGearView.GetComponentsInChildren<GearColliderView> ())
 			{

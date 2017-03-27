@@ -85,8 +85,8 @@ public class GearsCollisionController : Controller
 
 								if (selectedGearModel.baseCollisionsCount == 1)
 								{
-									selectedGearModel.isError = true;
 									Notify (N.OnCurrentGearError_, true);
+									Notify (N.UpdateGearsChain);
 								}
 
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
@@ -152,7 +152,6 @@ public class GearsCollisionController : Controller
 
 								if (selectedGearModel.baseCollisionsCount == 0)
 								{
-									selectedGearModel.isError = false;
 									Notify (N.OnCurrentGearError_, false);
 								}
 								

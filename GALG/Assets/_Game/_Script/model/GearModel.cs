@@ -62,6 +62,7 @@ public class GearModel : Model
 	public Color						indicatorSelectedColor	{ get { return _indicatorSelectedColor; } }
 	public Color						indicatorErrorColor		{ get { return _indicatorErrorColor; } }
 	public int							teethCount				{ get { return _teethCount; } }
+	public bool 						isRotateRight			{ get; set; }	
 	//public PlayerPositionState		positionState			{ get { return _positionState; } 		set { _positionState = value; } }
 	//public float 						jumpWidth				{ get { return _jumpWidth 				= game.model.currentRoadModel.width / 2f - currentSprite.bounds.size.x * 0.5f * game.view.playerSpriteView.transform.localScale.x; } }
 	//public float						jumpDuration			{ get { return _jumpDuration;} 			set { _jumpDuration = value; }}

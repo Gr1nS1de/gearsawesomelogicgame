@@ -89,17 +89,27 @@ public class GearsChainController : Controller
 
 	private void ConnectMotorChain(GearView gearView)
 	{
+		GearModel gearModel = gearsDictionary [gearView];
 		GearColliderView spinCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
 		List<GearView> attachedGearsList = new List<GearView> (spinCollider.ConnectedGears);
 
+
 		if (gearView == currentGearView && selectedGearModel.isError)
+		{
+			if(currentGearModel.gearPositionState == GearPositionState.CONNECTED)
+				ResetGearPositionState (gearView, true);
+			
 			return;
+		}
 
 		//Debug.LogError ("Start connected gears for "+ gearView.name);
 
 		foreach(var attachedGear in attachedGearsList)
 		{
 			GearModel attachedGearModel = gearsDictionary[attachedGear];
+
+			if (attachedGear == currentGearView && selectedGearModel.isError)
+				continue;
 
 			if (attachedGearModel.gearPositionState == GearPositionState.CONNECTED)
 			{
@@ -113,13 +123,15 @@ public class GearsChainController : Controller
 			}
 
 			//Debug.LogError ("Connect "+gearView.name + " with " + attachedGear.name);
+
+			attachedGearModel.isRotateRight = !gearModel.isRotateRight;
 			
 			ConnectGears (attachedGear, gearView);
 
 			ConnectMotorChain (attachedGear);
 		}
 
-		CheckRedundantGearJoints (gearView);
+		//CheckRedundantGearJoints (gearView);
 	}
 
 	private bool IsChainStuck()
@@ -132,18 +144,23 @@ public class GearsChainController : Controller
 			GearModel gearModel = gearsDictionary [gearView];
 			GearColliderView spinCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
 			GearView parentAttachedGear = spinCollider.ConnectedGears.Find((gear)=>new List<GearJoint2DExt>(gear.GetComponents<GearJoint2DExt>()).Find((gearJoint)=>gearJoint.connectedJoint == gearView.GetComponent<HingeJoint2DExt>())) ;
+			int leftRotatedGears = 0;
+			int rightRotatedGears = 0;
 
 			foreach (var connectedGear in spinCollider.ConnectedGears)
 			{
-				List<GearJoint2DExt> connectedGearJoints = new List<GearJoint2DExt>(connectedGear.GetComponents<GearJoint2DExt> ());
+				GearModel connectedGearModel = gearsDictionary[connectedGear];
 
-				//If gear connected with another gear which connected with this gear parent gear joint. Chain stuck!
-				if (parentAttachedGear != null && connectedGearJoints.Find (gearJoint => gearJoint.connectedJoint == parentAttachedGear.GetComponent<HingeJoint2DExt> ()) != null)
-				{
-					isChainStuck = true;
-					i = gearsList.Count;
-					break;
-				}
+				if (connectedGearModel.isRotateRight)
+					rightRotatedGears++;
+				else
+					leftRotatedGears++;
+			}
+
+			if (rightRotatedGears > 0 && leftRotatedGears > 0)
+			{
+				isChainStuck = true;
+				break;
 			}
 		}
 
@@ -229,7 +246,7 @@ public class GearsChainController : Controller
 
 		return isConnected;
 	}
-
+	/*
 	private void CheckRedundantGearJoints(GearView gearView)
 	{
 		GearModel gearModel = gearsDictionary [gearView];
@@ -251,7 +268,7 @@ public class GearsChainController : Controller
 		}
 
 		//Debug.Log ("End check redundant gear joints. Is connected to motor" + gearView.name + " " + isGearConnectedToMotor);
-	}
+	}*/
 
 	public void DeleteGearJoints(GearView gearView)
 	{

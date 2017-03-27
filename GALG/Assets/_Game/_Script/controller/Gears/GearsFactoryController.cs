@@ -26,7 +26,7 @@ public class GearsFactoryController : Controller
 			case N.StartGenerateLevel:
 				{
 					ClearCurrentLevel ();
-					InitLevel (0);
+					InitLevel_Old (0f);
 					break;
 				}
 		}
@@ -42,6 +42,11 @@ public class GearsFactoryController : Controller
 
 	private void InitLevel(float difficulty)
 	{
+
+	}
+
+	private void InitLevel_Old(float difficulty)
+	{
 		float screenSquare = _screenSize.x * _screenSize.y;
 		//Screen square without motor gear size
 		float properScreenSquare = screenSquare - Utils.GetSquare(GetGearRendererSize(GearSizeType.MEDIUM, GearType.MOTOR_GEAR));
@@ -56,7 +61,10 @@ public class GearsFactoryController : Controller
 			Vector2 rendererSize = GetGearRendererSize (gearSizeType);
 
 			if (rendererSize == Vector2.zero)
+			{
+				Debug.LogError (gearSizeType.ToString()+ " have renderer size = zero vector");
 				continue;
+			}
 
 			Debug.Log ("- Maximum possible "+sizeName+" = " + (int)(properScreenSquare / Utils.GetSquare(rendererSize)));
 
@@ -124,11 +132,12 @@ public class GearsFactoryController : Controller
 						{
 							gearView.transform.name = gearModelObject.name = "MotorGear_0" + i;
 							gearView.transform.SetParent (game.view.gameGearsContainer.transform);
+							gearModel.isRotateRight = true;
 							break;
 						}
 				}
 
-				gearView.transform.position = gearModelObject.transform.position = CalculateGearPosition (gearModel.gearSizeType, gearModel.gearType);
+				gearView.transform.position = GetGearRandomScreenPosition (gearModel.gearSizeType, gearModel.gearType);
 
 				gearsList.Add (gearView);
 				gearsDictionary.Add (gearView, gearModel);
@@ -137,7 +146,7 @@ public class GearsFactoryController : Controller
 		}
 	}
 
-	private Vector3 CalculateGearPosition(GearSizeType gearSizeType, GearType gearType, bool isInCameraViewField = true)
+	private Vector3 GetGearRandomScreenPosition(GearSizeType gearSizeType, GearType gearType, bool isInCameraViewField = true)
 	{
 		float gearRadius = GetGearRendererSize (gearSizeType, gearType).x / 2f;
 		Vector3 position = Vector3.zero;
@@ -146,7 +155,7 @@ public class GearsFactoryController : Controller
 
 		int i = 0;
 
-		while (true && i < 100)
+		while (true)
 		{
 			Vector3 randomScreenPosition = new Vector3 (Random.Range(-halfScreenWidth, halfScreenWidth), Random.Range(-halfScreenHeight, halfScreenHeight), -1f);
 
@@ -159,10 +168,55 @@ public class GearsFactoryController : Controller
 				break;
 			}
 				
-			i++;
+			if (i++ > 100)
+			{
+				Debug.LogError ("Random screen position searched more than 100 times");
+				break;
+			}
 		}
 
 		return position;
+	}
+
+	private Vector3 GetGearRandomPositionOutCircle(Vector3 centerPosition, float radius)
+	{
+		Vector3 gearProperPosition;
+		float randomX = 0;
+		float randomY = 0;
+		float angleRadians = 0;
+		float halfScreenWidth = _screenSize.x / 2f; 
+		float halfScreenHeight = _screenSize.y / 2f;
+		int searchRotationRadius = 0;
+
+		do
+		{
+			angleRadians = searchRotationRadius * Mathf.Deg2Rad;//* Mathf.PI / 180.0f;
+
+			// get the 2D dimensional coordinates
+			randomX = radius * Mathf.Cos (angleRadians);
+			randomY = radius * Mathf.Sin (angleRadians);
+
+			searchRotationRadius += 20;
+
+			if(searchRotationRadius > 380)
+			{
+				Debug.LogError("Searching position on circle over 380 deg");
+				break;
+			}
+			//If no overlap
+
+
+		} while(randomX > halfScreenWidth || randomX < -halfScreenWidth || randomY > halfScreenHeight || randomY < -halfScreenHeight);
+
+		gearProperPosition = new Vector3 (randomX, randomY, centerPosition.z);
+		/*
+		if (Utils.IsCorrectGearPosition(gearProperPosition, radius, false, "GearBaseCollider"))
+		{
+			return GetGearRandomPositionOutCircle(centerPosition, radius);
+		}*/
+
+		// return the vector info
+		return gearProperPosition;
 	}
 
 	private void ClearCurrentLevel()
