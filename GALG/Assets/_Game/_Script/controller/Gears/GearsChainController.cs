@@ -138,6 +138,9 @@ public class GearsChainController : Controller
 	{
 		bool isChainStuck = false;
 
+		if (selectedGearModel.isError)
+			return isChainStuck;
+
 		for (int i = 0; i < gearsList.Count; i++)
 		{
 			GearView gearView = gearsList [i];
@@ -185,7 +188,7 @@ public class GearsChainController : Controller
 		}
 		else
 			Utils.SetGearLayer (triggerGear, GearLayer.CONNECTED);
-
+		
 		connectGearJoint.localJoint = connectGearJoint.GetComponent<HingeJoint2DExt> ();
 		connectGearJoint.connectedJoint = triggerGear.GetComponent<HingeJoint2DExt> ();
 		connectGearJoint.gearRatio = (float)triggerGearModel.teethCount / connectGearModel.teethCount;
@@ -205,7 +208,7 @@ public class GearsChainController : Controller
 					{
 						gearModel.gearPositionState = GearPositionState.DEFAULT;
 
-						if (selectedGearModel.baseCollisionsCount == 0)
+						if (!selectedGearModel.isError)
 						{
 							if (currentGearView != null && currentGearView == gearView)
 								Utils.SetGearLayer (currentGearView, GearLayer.SELECTED);

@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Destructible 2D/Outline"
 {
 	Properties
@@ -75,7 +77,7 @@ Shader "Destructible 2D/Outline"
 				
 				void Vert(a2v i, out v2f o)
 				{
-					o.vertex    = mul(UNITY_MATRIX_MVP, i.vertex);
+					o.vertex    = UnityObjectToClipPos(i.vertex);
 					o.color     = i.color * _Color;
 					o.texcoord0 = i.texcoord0;
 					o.texcoord1 = (i.texcoord0 - _AlphaOffset) * _AlphaScale;

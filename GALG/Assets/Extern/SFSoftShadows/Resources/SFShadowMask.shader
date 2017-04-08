@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
 Shader "Hidden/SFSoftShadows/ShadowMask" {
 	SubShader {
@@ -58,7 +60,7 @@ Shader "Hidden/SFSoftShadows/ShadowMask" {
 					float2 segmentPosition = lerp(segmentA, segmentB, IN.occluderCoord.x);
 					float2 projectionOffset = lerp(lightOffsetA, lightOffsetB, IN.occluderCoord.x);
 					float4 projected = float4(segmentPosition - projectionOffset*IN.occluderCoord.y, 0.0, 1.0 - IN.occluderCoord.y);
-					float4 clipPosition = mul(UNITY_MATRIX_MVP, projected);
+					float4 clipPosition = UnityObjectToClipPos(projected);
 					OUT.position = clipPosition;
 
 					// Penumbras.

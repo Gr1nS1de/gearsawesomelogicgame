@@ -16,7 +16,7 @@ public abstract class BaseApplication : Element
 	private void Awake()
 	{
 		InitTweening ();
-		Notify( N.RCStartLoad, Road.SNOWMAN );
+		Notify( N.RCStartLoad );
 	}
 
 	private void Start()

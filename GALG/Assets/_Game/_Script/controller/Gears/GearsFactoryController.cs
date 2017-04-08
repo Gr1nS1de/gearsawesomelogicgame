@@ -11,6 +11,9 @@ public class GearsFactoryController : Controller
 	private Dictionary<GearView, GearModel> gearsDictionary 	{ get { return game.model.gearsFactoryModel.gearsDictionary; } }
 
 	private Vector2 						_screenSize;
+	private bool 							_isInstantiatedFirstGear = false;
+	private Vector3 						_lastGearPosition;
+	private float							_lastGearRadius;
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
@@ -26,7 +29,7 @@ public class GearsFactoryController : Controller
 			case N.StartGenerateLevel:
 				{
 					ClearCurrentLevel ();
-					InitLevel_Old (0f);
+					StartCoroutine( InitLevel_Old (0f));//_Old (0f);
 					break;
 				}
 		}
@@ -45,7 +48,7 @@ public class GearsFactoryController : Controller
 
 	}
 
-	private void InitLevel_Old(float difficulty)
+	private IEnumerator InitLevel_Old(float difficulty)
 	{
 		float screenSquare = _screenSize.x * _screenSize.y;
 		//Screen square without motor gear size
@@ -54,6 +57,9 @@ public class GearsFactoryController : Controller
 		int gearsInstantiateCount = 0;
 
 		Debug.Log ("Init level. screen size = " + _screenSize + ". S = "+screenSquare + " empty screen square = " + properScreenSquare);
+
+		StartCoroutine(InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.MEDIUM, 1));
+		yield return null;
 
 		foreach (var sizeName in sizesNamesArray)
 		{
@@ -70,15 +76,15 @@ public class GearsFactoryController : Controller
 
 			gearsInstantiateCount  = (int)(properScreenSquare / Utils.GetSquare(rendererSize));
 
-			InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount - 1 );
+			StartCoroutine(InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount - 1 ));
+			yield return null;
 		}
 
-		InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.MEDIUM, 1);
-
-		InstantiateGear (GearType.CHECKPOINT_GEAR, GearSizeType.MEDIUM, 2);
+		StartCoroutine( InstantiateGear (GearType.CHECKPOINT_GEAR, GearSizeType.MEDIUM, 2));
+		yield return null;
 	}
 
-	private void InstantiateGear(GearType gearType, GearSizeType gearSizeType, int count = 1)
+	private IEnumerator InstantiateGear(GearType gearType, GearSizeType gearSizeType, int count = 1)
 	{
 		Debug.Log ("Instantiate "+gearType + " sizeType " + gearSizeType + " count = " + count);
 
@@ -137,10 +143,25 @@ public class GearsFactoryController : Controller
 						}
 				}
 
-				gearView.transform.position = GetGearRandomScreenPosition (gearModel.gearSizeType, gearModel.gearType);
+				float gearRadius = GetGearRendererSize (gearSizeType, gearType).x / 2f;
+				Debug.Break ();
+
+				if (!_isInstantiatedFirstGear)
+				{
+					gearView.transform.position = _lastGearPosition = GetGearRandomPositionOutCircle (GetGearRandomScreenPosition (gearModel.gearSizeType, gearModel.gearType), gearRadius);
+					_lastGearRadius = gearRadius;
+					_isInstantiatedFirstGear = true;
+				}
+				else
+				{
+					gearView.transform.position = _lastGearPosition = GetGearRandomPositionOutCircle (_lastGearPosition, _lastGearRadius + gearRadius);
+					_lastGearRadius = gearRadius;
+				}
 
 				gearsList.Add (gearView);
 				gearsDictionary.Add (gearView, gearModel);
+
+				yield return null;
 			}
 				
 		}
@@ -186,7 +207,7 @@ public class GearsFactoryController : Controller
 		float angleRadians = 0;
 		float halfScreenWidth = _screenSize.x / 2f; 
 		float halfScreenHeight = _screenSize.y / 2f;
-		int searchRotationRadius = 0;
+		int searchRotationRadius = Random.Range(0, 360);
 
 		do
 		{
@@ -229,6 +250,8 @@ public class GearsFactoryController : Controller
 
 		gearsDictionary.Clear ();
 		gearsList.Clear ();
+
+		_isInstantiatedFirstGear = false;
 	}
 
 	private Vector2 GetGearRendererSize(GearSizeType gearSizeType, GearType gearType = GearType.PLAYER_GEAR)

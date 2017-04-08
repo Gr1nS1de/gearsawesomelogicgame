@@ -396,7 +396,7 @@ public class UMSettingEditor : Editor {
 			
 			#if UNITY_ANDROID
 			
-			PlayerSettings.bundleIdentifier = "com.unionassets.android.plugin.preview";
+			PlayerSettings.applicationIdentifier = "com.unionassets.android.plugin.preview";
 			
 			
 			#endif
