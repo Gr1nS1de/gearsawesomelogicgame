@@ -2,7 +2,7 @@
 using System.Collections;
 //using DG.Tweening;
 
-public class RoadView : View<Game>
+public class RoadView : View<GameActivity>
 {
 	private LineRenderer 	_line;
 	private RoadModel 		_roadModel;

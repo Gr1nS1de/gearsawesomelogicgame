@@ -86,7 +86,7 @@ public class UIController : Controller
 
 	public void OnClickedStart()
 	{
-		Notify (N.UIClickedStart);
+		Notify (N.UIClickedStart, NotifyType.GAME);
 
 		OnStartGame(null);
 

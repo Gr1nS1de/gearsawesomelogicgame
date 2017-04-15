@@ -66,10 +66,10 @@ public class GearsChainController : Controller
 
 		//Check if gears should stack
 		if (IsChainStuck ())
-			Notify (N.OnGearsChainStuck_, true);
+			Notify (N.OnGearsChainStuck_, NotifyType.GAME, true);
 		else 
 			if (_gearsStuckFlag)
-				Notify (N.OnGearsChainStuck_, false);
+				Notify (N.OnGearsChainStuck_, NotifyType.GAME, false);
 	}
 
 	private void UpdateConnectedGearsChain()

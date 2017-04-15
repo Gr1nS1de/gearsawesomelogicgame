@@ -85,8 +85,8 @@ public class GearsCollisionController : Controller
 
 								if (selectedGearModel.baseCollisionsCount == 1)
 								{
-									Notify (N.OnCurrentGearError_, true);
-									Notify (N.UpdateGearsChain);
+									Notify (N.OnCurrentGearError_, NotifyType.GAME, true);
+									Notify (N.UpdateGearsChain, NotifyType.GAME);
 								}
 
 								//Debug.LogError (_baseCollisionsCount + " beforeTrigPos = "+ beforeTriggerPosition + " raius = " + triggerColliderView.ColliderRadius  + " " + triggerGearRadius);
@@ -152,10 +152,10 @@ public class GearsCollisionController : Controller
 
 								if (selectedGearModel.baseCollisionsCount == 0)
 								{
-									Notify (N.OnCurrentGearError_, false);
+									Notify (N.OnCurrentGearError_, NotifyType.GAME, false);
 								}
 								
-								Notify (N.UpdateGearsChain);
+								Notify (N.UpdateGearsChain, NotifyType.GAME);
 								break;
 							}
 					}
@@ -169,13 +169,13 @@ public class GearsCollisionController : Controller
 					{
 						case GearColliderType.BASE:
 							{
-								Notify (N.UpdateGearsChain);
+								Notify (N.UpdateGearsChain, NotifyType.GAME);
 								break;
 							}
 
 						case GearColliderType.SPIN:
 							{
-								Notify (N.UpdateGearsChain);
+								Notify (N.UpdateGearsChain, NotifyType.GAME);
 								break;
 							}
 					}

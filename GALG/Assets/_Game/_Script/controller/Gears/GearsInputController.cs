@@ -136,7 +136,7 @@ public class GearsInputController : Controller
 
 		DetachCurrentGear ();
 
-		Notify (N.OnGearSelected_, gear);
+		Notify (N.OnGearSelected_, NotifyType.GAME, gear);
 	}
 
 	private void MoveCurrentGear(Vector3 selectedPoint)
@@ -169,9 +169,6 @@ public class GearsInputController : Controller
 				gearCurrentPosition  = game.model.selectedGearModel.lastCorrectPosition;
 			}
 
-			//Push gear back to normal Z for deselected player gear
-			gearCurrentPosition.z = -1f;
-
 			DOTween.Kill (this);
 
 			currentGearView.transform.DOMove (gearCurrentPosition, 0.2f)
@@ -190,6 +187,13 @@ public class GearsInputController : Controller
 	{
 		Debug.Log ("Reset current gear "+ currentGearView.name);
 
+		Vector3 gearCurrentPosition = currentGearView.transform.position;
+
+		//Push gear back to normal Z for deselected player gear
+		gearCurrentPosition.z = -1f;
+
+		currentGearView.transform.position = gearCurrentPosition;
+
 		AttachCurrentGear ();
 
 		//currentGearView.gameObject.layer = LayerMask.NameToLayer ("PlayerGear");
@@ -205,7 +209,7 @@ public class GearsInputController : Controller
 
 		DOVirtual.DelayedCall (0.05f, () =>
 		{
-			Notify (N.UpdateGearsChain);
+			Notify (N.UpdateGearsChain, NotifyType.GAME);
 			storedCurrentGear.GetComponent<Rigidbody2D>().collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 		});
 
@@ -214,7 +218,7 @@ public class GearsInputController : Controller
 		else if(selectedGearModel.gearModel.gearPositionState == GearPositionState.CONNECTED)
 			Utils.SetGearLayer (currentGearView, GearLayer.CONNECTED);
 
-		Notify (N.OnGearDeselected_, storedCurrentGear);
+		Notify (N.OnGearDeselected_, NotifyType.GAME, storedCurrentGear);
 
 		currentGearView = null;
 	}

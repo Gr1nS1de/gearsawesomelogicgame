@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DestructibleObstacleView : View<Game>
+public class DestructibleObstacleView : View<GameActivity>
 {
 
 

@@ -13,7 +13,7 @@ public class GearsFactoryController : Controller
 	private Vector2 						_screenSize;
 	private bool 							_isInstantiatedFirstGear = false;
 	private Vector3 						_lastGearPosition;
-	private float							_lastGearRadius;
+	private float							_lastGearRadius				= 0f;
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
@@ -143,19 +143,60 @@ public class GearsFactoryController : Controller
 						}
 				}
 
-				float gearRadius = GetGearRendererSize (gearSizeType, gearType).x / 2f;
+				GearColliderView baseCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.BASE);
+				float gearRadius = baseCollider.ColliderRadius * gearView.transform.localScale.x + 0.1f;//GetGearRendererSize (gearSizeType, gearType).x / 2f;
+
 				Debug.Break ();
+				Debug.LogError (gearView.name + " gearRadius = "+gearRadius);
 
 				if (!_isInstantiatedFirstGear)
 				{
-					gearView.transform.position = _lastGearPosition = GetGearRandomPositionOutCircle (GetGearRandomScreenPosition (gearModel.gearSizeType, gearModel.gearType), gearRadius);
+					gearView.transform.position = _lastGearPosition = GetGearRandomScreenPosition (gearModel.gearSizeType, gearModel.gearType);
 					_lastGearRadius = gearRadius;
 					_isInstantiatedFirstGear = true;
 				}
 				else
 				{
-					gearView.transform.position = _lastGearPosition = GetGearRandomPositionOutCircle (_lastGearPosition, _lastGearRadius + gearRadius);
-					_lastGearRadius = gearRadius;
+					//Just for save and non-infinity iterations
+					int p = 100;
+					bool isFoundProperPosition = true;
+					Vector3 randomPosition;
+					List<GearView> excludedRandomGearsList = new List<GearView> ();
+					GearType searchedRandomGearType = GearType.PLAYER_GEAR;
+
+					do
+					{
+						randomPosition = GetGearRandomPositionOutCircle (_lastGearPosition, gearRadius);
+
+						if (randomPosition == default(Vector3))
+						{
+							Debug.LogError ("Not found place for " + gearView.name);
+							isFoundProperPosition = false;
+
+							GearView anotherRandomPlayerGear = GetRandomGear(searchedRandomGearType, excludedRandomGearsList);
+
+							if(anotherRandomPlayerGear != null)
+							{
+								GearColliderView anotherBaseCollider = new List<GearColliderView> (anotherRandomPlayerGear.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.BASE);
+								float anotherGearRadius = anotherBaseCollider.ColliderRadius * anotherRandomPlayerGear.transform.localScale.x + 0.1f;
+
+								excludedRandomGearsList.Add(anotherRandomPlayerGear);
+
+								_lastGearPosition = anotherRandomPlayerGear.transform.position;
+								_lastGearRadius = anotherGearRadius;
+							}else
+							{
+								Debug.LogError("Not found non-checked another player gear!");
+								randomPosition = new Vector3(Random.Range(10f, 15f), Random.Range(10f, 15f), 1f);
+								isFoundProperPosition = true;
+							}
+						}
+						else
+							_lastGearRadius = gearRadius;
+						
+					} while (p-- > 0 && !isFoundProperPosition);
+
+					gearView.transform.position = _lastGearPosition = randomPosition;
 				}
 
 				gearsList.Add (gearView);
@@ -165,6 +206,8 @@ public class GearsFactoryController : Controller
 			}
 				
 		}
+
+		Notify (N.UpdateGearsChain, NotifyType.GAME);
 	}
 
 	private Vector3 GetGearRandomScreenPosition(GearSizeType gearSizeType, GearType gearType, bool isInCameraViewField = true)
@@ -208,28 +251,35 @@ public class GearsFactoryController : Controller
 		float halfScreenWidth = _screenSize.x / 2f; 
 		float halfScreenHeight = _screenSize.y / 2f;
 		int searchRotationRadius = Random.Range(0, 360);
+		float summaryRadius = _lastGearRadius + radius;
+		bool isFoundPosition = true;
 
 		do
 		{
 			angleRadians = searchRotationRadius * Mathf.Deg2Rad;//* Mathf.PI / 180.0f;
 
 			// get the 2D dimensional coordinates
-			randomX = radius * Mathf.Cos (angleRadians);
-			randomY = radius * Mathf.Sin (angleRadians);
+			randomX = centerPosition.x + summaryRadius * Mathf.Cos (angleRadians);
+			randomY = centerPosition.y + summaryRadius * Mathf.Sin (angleRadians);
 
-			searchRotationRadius += 20;
+			searchRotationRadius += Random.Range( 10, 40) ;
 
-			if(searchRotationRadius > 380)
+			if(searchRotationRadius > 740)
 			{
+				isFoundPosition = false;
 				Debug.LogError("Searching position on circle over 380 deg");
 				break;
 			}
 			//If no overlap
 
 
-		} while(randomX > halfScreenWidth || randomX < -halfScreenWidth || randomY > halfScreenHeight || randomY < -halfScreenHeight);
+		} while(!Utils.IsCorrectGearPosition(new Vector3(randomX, randomY, _lastGearPosition.z), radius, false, "GearBaseCollider") ||  randomX > halfScreenWidth || randomX < -halfScreenWidth || randomY > halfScreenHeight || randomY < -halfScreenHeight);
 
-		gearProperPosition = new Vector3 (randomX, randomY, centerPosition.z);
+		if (isFoundPosition)
+			gearProperPosition = new Vector3 (randomX, randomY, centerPosition.z);
+		else
+			gearProperPosition = default(Vector3);
+
 		/*
 		if (Utils.IsCorrectGearPosition(gearProperPosition, radius, false, "GearBaseCollider"))
 		{
@@ -266,6 +316,23 @@ public class GearsFactoryController : Controller
 		gearSize = gearObj.GetComponent<SpriteRenderer> ().bounds.size;
 
 		return gearSize;
+	}
+
+	private GearView GetRandomGear(GearType gearType, List<GearView> excludeList = null)
+	{
+		GearView randomGear = null;
+		List<GearView> typedGearsList = gearsList.FindAll (gear => gearsDictionary [gear].gearType == gearType);
+
+		foreach (GearView typedGear in typedGearsList)
+			if (excludeList.Contains (typedGear))
+				typedGearsList.Remove (typedGear);
+
+		if (typedGearsList.Count > 0)
+		{
+			randomGear = typedGearsList [Random.Range (0, typedGearsList.Count)];
+		}
+
+		return randomGear;
 	}
 }
 	

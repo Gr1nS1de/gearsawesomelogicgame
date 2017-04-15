@@ -2,7 +2,7 @@
 using System.Collections;
 //using DG.Tweening;
 
-public class CameraView : View<Game>
+public class CameraView : View<GameActivity>
 {
 	public CameraModel 		cameraModel		{ get { return game.model.cameraModel; } }
 	public Camera 			cam				{ get { return GetComponent<Camera> (); } }

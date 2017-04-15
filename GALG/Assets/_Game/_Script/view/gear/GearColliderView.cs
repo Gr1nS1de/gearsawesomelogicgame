@@ -14,9 +14,13 @@ public class GearColliderView : View
 
 	private GearModel 		_gearModel;
 
-	void Start()
+	void OnEnable()
 	{
 		ColliderRadius = GetComponent<CircleCollider2D> ().radius;
+	}
+
+	void Start()
+	{
 		_gearModel = gearsDictionary[transform.parent.GetComponent<GearView>()];
 	}
 
@@ -111,7 +115,7 @@ public class GearColliderView : View
 		Vector3 collisionPoint = hit.point;
 
 
-		Notify (N.GearsColliderTriggered_____, transform.parent.GetComponent<GearView> (), other.transform.parent.GetComponent<GearView> (), this, other.GetComponent<GearColliderView> (), isEnter);
+		Notify (N.GearsColliderTriggered_____, NotifyType.GAME, transform.parent.GetComponent<GearView> (), other.transform.parent.GetComponent<GearView> (), this, other.GetComponent<GearColliderView> (), isEnter);
 	}
 
 }
