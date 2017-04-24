@@ -15,11 +15,13 @@ public enum GearType
 
 public enum GearSizeType
 {
-	VERY_LITTLE = 0,
-	LITTLE		= 1,
-	MEDIUM		= 2,
-	BIG			= 3,
-	VERY_BIG	= 4
+	XSS = 0,
+	XS 	= 1,
+	S	= 2,
+	M	= 3,
+	L	= 4,
+	XL	= 5,
+	XXL	= 6
 }
 
 public enum GearPositionState

@@ -52,13 +52,13 @@ public class GearsFactoryController : Controller
 	{
 		float screenSquare = _screenSize.x * _screenSize.y;
 		//Screen square without motor gear size
-		float properScreenSquare = screenSquare - Utils.GetSquare(GetGearRendererSize(GearSizeType.MEDIUM, GearType.MOTOR_GEAR));
+		float properScreenSquare = screenSquare - Utils.GetSquare(GetGearRendererSize(GearSizeType.M, GearType.MOTOR_GEAR));
 		var sizesNamesArray = System.Enum.GetNames (typeof(GearSizeType));
 		int gearsInstantiateCount = 0;
 
 		Debug.Log ("Init level. screen size = " + _screenSize + ". S = "+screenSquare + " empty screen square = " + properScreenSquare);
 
-		StartCoroutine(InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.MEDIUM, 1));
+		StartCoroutine(InstantiateGear (GearType.MOTOR_GEAR, GearSizeType.M, 1));
 		yield return null;
 
 		foreach (var sizeName in sizesNamesArray)
@@ -76,11 +76,11 @@ public class GearsFactoryController : Controller
 
 			gearsInstantiateCount  = (int)(properScreenSquare / Utils.GetSquare(rendererSize));
 
-			StartCoroutine(InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount - 1 ));
+			StartCoroutine(InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount/3));
 			yield return null;
 		}
 
-		StartCoroutine( InstantiateGear (GearType.CHECKPOINT_GEAR, GearSizeType.MEDIUM, 2));
+		StartCoroutine( InstantiateGear (GearType.CHECKPOINT_GEAR, GearSizeType.M, 2));
 		yield return null;
 	}
 
@@ -313,8 +313,13 @@ public class GearsFactoryController : Controller
 		if (gearObj == null)
 			return gearSize;
 
-		gearSize = gearObj.GetComponent<SpriteRenderer> ().bounds.size;
+		GearColliderView spinCollider = new List<GearColliderView> (gearObj.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
+		float gearRadius = spinCollider.GetComponent<CircleCollider2D>().radius * gearObj.transform.localScale.x ;//GetGearRendererSize (gearSizeType, gearType).x / 2f;
 
+		//Debug.LogError ("Gear: "+gearType + "sizeType: "+gearSizeType+ " size = "+ gearRadius);
+		//gearSize = gearObj.GetComponent<SpriteRenderer> ().bounds.size;
+		gearSize = new Vector2(gearRadius*2f,gearRadius*2f);
+		Debug.LogError ("Gear: "+gearType + "sizeType: "+gearSizeType+ " size = "+ gearSize);
 		return gearSize;
 	}
 
