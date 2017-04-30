@@ -52,7 +52,7 @@ public class GearsFactoryController : Controller
 	{
 		float screenSquare = _screenSize.x * _screenSize.y;
 		//Screen square without motor gear size
-		float properScreenSquare = screenSquare - Utils.GetSquare(GetGearRendererSize(GearSizeType.M, GearType.MOTOR_GEAR));
+		float properScreenSquare = screenSquare - Utils.GetSquare(GetGearSpinSize(GearSizeType.M, GearType.MOTOR_GEAR));
 		var sizesNamesArray = System.Enum.GetNames (typeof(GearSizeType));
 		int gearsInstantiateCount = 0;
 
@@ -64,7 +64,7 @@ public class GearsFactoryController : Controller
 		foreach (var sizeName in sizesNamesArray)
 		{
 			GearSizeType gearSizeType = (GearSizeType)System.Enum.Parse (typeof(GearSizeType), sizeName);
-			Vector2 rendererSize = GetGearRendererSize (gearSizeType);
+			Vector2 rendererSize = GetGearSpinSize (gearSizeType);
 
 			if (rendererSize == Vector2.zero)
 			{
@@ -76,7 +76,7 @@ public class GearsFactoryController : Controller
 
 			gearsInstantiateCount  = (int)(properScreenSquare / Utils.GetSquare(rendererSize));
 
-			StartCoroutine(InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount/3));
+			StartCoroutine(InstantiateGear (GearType.PLAYER_GEAR, gearSizeType, gearsInstantiateCount/10));
 			yield return null;
 		}
 
@@ -146,7 +146,7 @@ public class GearsFactoryController : Controller
 				GearColliderView baseCollider = new List<GearColliderView> (gearView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.BASE);
 				float gearRadius = baseCollider.ColliderRadius * gearView.transform.localScale.x + 0.1f;//GetGearRendererSize (gearSizeType, gearType).x / 2f;
 
-				Debug.Break ();
+				//Debug.Break ();
 				Debug.LogError (gearView.name + " gearRadius = "+gearRadius);
 
 				if (!_isInstantiatedFirstGear)
@@ -212,7 +212,7 @@ public class GearsFactoryController : Controller
 
 	private Vector3 GetGearRandomScreenPosition(GearSizeType gearSizeType, GearType gearType, bool isInCameraViewField = true)
 	{
-		float gearRadius = GetGearRendererSize (gearSizeType, gearType).x / 2f;
+		float gearRadius = GetGearSpinSize (gearSizeType, gearType).x / 2f;
 		Vector3 position = Vector3.zero;
 		float halfScreenWidth = _screenSize.x / 2f; 
 		float halfScreenHeight = _screenSize.y / 2f;
@@ -304,17 +304,16 @@ public class GearsFactoryController : Controller
 		_isInstantiatedFirstGear = false;
 	}
 
-	private Vector2 GetGearRendererSize(GearSizeType gearSizeType, GearType gearType = GearType.PLAYER_GEAR)
+	private Vector2 GetGearSpinSize(GearSizeType gearSizeType, GearType gearType = GearType.PLAYER_GEAR)
 	{
 		Vector2 gearSize = Vector2.zero;
+		GearView gearPrefabView = gearsPrefabsList.Find (gear => gear.GetComponent<GearModel> ().gearSizeType == gearSizeType && gear.GetComponent<GearModel>().gearType == gearType);
 
-		var gearObj = gearsPrefabsList.Find (gear => gear.GetComponent<GearModel> ().gearSizeType == gearSizeType && gear.GetComponent<GearModel>().gearType == gearType);
-
-		if (gearObj == null)
+		if (gearPrefabView == null)
 			return gearSize;
 
-		GearColliderView spinCollider = new List<GearColliderView> (gearObj.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
-		float gearRadius = spinCollider.GetComponent<CircleCollider2D>().radius * gearObj.transform.localScale.x ;//GetGearRendererSize (gearSizeType, gearType).x / 2f;
+		GearColliderView spinCollider = new List<GearColliderView> (gearPrefabView.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.SPIN);
+		float gearRadius = spinCollider.GetComponent<CircleCollider2D>().radius * gearPrefabView.transform.localScale.x ;//GetGearRendererSize (gearSizeType, gearType).x / 2f;
 
 		//Debug.LogError ("Gear: "+gearType + "sizeType: "+gearSizeType+ " size = "+ gearRadius);
 		//gearSize = gearObj.GetComponent<SpriteRenderer> ().bounds.size;
