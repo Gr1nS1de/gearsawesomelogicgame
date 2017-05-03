@@ -90,6 +90,9 @@ public class GearsFactoryController : Controller
 
 		foreach (GearView gearPrefab in gearsPrefabsList)
 		{
+			if (gearPrefab == null)
+				continue;
+			
 			GearModel gearModel = gearPrefab.GetComponent<GearModel> ();
 
 			//If types is not equal
@@ -163,6 +166,7 @@ public class GearsFactoryController : Controller
 					Vector3 randomPosition;
 					List<GearView> excludedRandomGearsList = new List<GearView> ();
 					GearType searchedRandomGearType = GearType.PLAYER_GEAR;
+					bool isTriedMotor = false;
 
 					do
 					{
@@ -184,6 +188,16 @@ public class GearsFactoryController : Controller
 
 								_lastGearPosition = anotherRandomPlayerGear.transform.position;
 								_lastGearRadius = anotherGearRadius;
+							}else if(isTriedMotor)
+							{
+								GearView motorGear = GetRandomGear(GearType.MOTOR_GEAR);
+								GearColliderView motorBaseCollider = new List<GearColliderView> (motorGear.GetComponentsInChildren<GearColliderView> ()).Find (gearCollider => gearCollider.ColliderType == GearColliderType.BASE);
+								float motorGearRadius = motorBaseCollider.ColliderRadius * motorGear.transform.localScale.x + 0.1f;
+
+								_lastGearPosition = motorGear.transform.position;
+								_lastGearRadius = motorGearRadius;
+
+								isTriedMotor = true;
 							}else
 							{
 								Debug.LogError("Not found non-checked another player gear!");
@@ -307,7 +321,7 @@ public class GearsFactoryController : Controller
 	private Vector2 GetGearSpinSize(GearSizeType gearSizeType, GearType gearType = GearType.PLAYER_GEAR)
 	{
 		Vector2 gearSize = Vector2.zero;
-		GearView gearPrefabView = gearsPrefabsList.Find (gear => gear.GetComponent<GearModel> ().gearSizeType == gearSizeType && gear.GetComponent<GearModel>().gearType == gearType);
+		GearView gearPrefabView = gearsPrefabsList.Find (gear => gear != null && gear.GetComponent<GearModel> ().gearSizeType == gearSizeType && gear.GetComponent<GearModel>().gearType == gearType);
 
 		if (gearPrefabView == null)
 			return gearSize;

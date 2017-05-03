@@ -15,8 +15,26 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class GM : Controller
 {
-	public static GM instance;
+	public static GM Instance;
 
+	void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else
+		{
+			if (Instance != this)
+				Destroy (this.gameObject);
+		}
+	}
+
+	void Start()
+	{
+
+	}
+	/*
 	public Gradient		backgroundMenuGradient 	{ get { return _backgroundMenuGradient; }		set { _backgroundMenuGradient = value; } } 
 	public Gradient		backgroundGameGradient 	{ get { return _backgroundGameGradient; } }
 	public float		menuGradientDuration	{ get { return _menuGradientDuration; } }
@@ -34,13 +52,7 @@ public class GM : Controller
 	[SerializeField]
 	private float		_gameGradientDuration;
 
-	public GameObject	RoadContainer;
-	public GameObject	ObstaclesContainer;
 	public Sprite[]		PlayerSprites;
-	[HideInInspector]
-	public string		destructibleObstaclePieceLayerName = "DestructibleObstaclePiece";
-
-	public Vector3[] Points;
 
 	private	GameState	gameState				{ get { return game.model.gameState; } }
 	private GameState	_lastGameState;
@@ -52,27 +64,14 @@ public class GM : Controller
 		if (instance == null)
 		{
 			instance = this;
-			DontDestroyOnLoad (this);
 		}
 		else
 		{
 			if (instance != this)
 				Destroy (this.gameObject);
 		}
-
-		/*Vector3[] waypoints = new[] { new Vector3(-0.1407235f,1.143139f,10f), new Vector3(0.01516186f,0.8959453f,10f), new Vector3(0.1749056f,1.125976f,10f) };
-		Vector3[] points = Utils.MakeSmoothCurve(waypoints,3.0f);
-		var lineRenderer = GetComponent<LineRenderer> ();
-		lineRenderer.SetColors(Color.white, Color.blue);
-		lineRenderer.SetWidth(0.5f,0.5f);
-		lineRenderer.SetVertexCount(points.Length);
-		var counter = 0;
-		foreach(var i in points){
-			lineRenderer.SetPosition(counter, i);
-			++counter;
-		}*/
 	}
-
+	
 	void Update()
 	{
 		if (!game)
@@ -119,5 +118,5 @@ public class GM : Controller
 			currentColor = Color.Lerp (currentBackgroundColor, currentColor, Time.deltaTime * 5f);
 
 		return currentColor;
-	}
+	}*/
 }
